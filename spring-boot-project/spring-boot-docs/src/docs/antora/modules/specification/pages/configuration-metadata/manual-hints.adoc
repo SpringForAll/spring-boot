@@ -1,5 +1,5 @@
 [[appendix.configuration-metadata.manual-hints]]
-= Providing Manual Hints
+= 提供手动提示
 
 为了改善用户体验并进一步帮助用户配置给定属性，你可以提供额外的元数据：
 
@@ -9,7 +9,7 @@
 
 
 [[appendix.configuration-metadata.manual-hints.value-hint]]
-== Value Hint
+== 值提示
 
 每个提示的 `name` 属性引用属性的 `name`。
 在 xref:configuration-metadata/format.adoc[前面显示的初始示例]中，我们为 `spring.jpa.hibernate.ddl-auto` 属性提供了五个值：`none`、`validate`、`update`、`create` 和 `create-drop`。
@@ -48,7 +48,7 @@ include-code::MyProperties[]
 
 
 [[appendix.configuration-metadata.manual-hints.value-providers]]
-== Value Providers
+== 值提供者
 
 提供者是为属性附加语义的强大方式。
 在本节中，我们定义了你可以在自己的提示中使用的官方提供者。
@@ -62,7 +62,7 @@ include-code::MyProperties[]
 
 [cols="2,4"]
 |===
-| Name | Description
+| 名称 | 描述
 
 | `any`
 | 允许提供任何额外的值。
@@ -86,9 +86,9 @@ include-code::MyProperties[]
 | 自动完成项目中定义的 Spring profile 名称。
 |===
 
-TIP: Only one provider can be active for a given property, but you can specify several providers if they can all manage the property _in some way_.
-Make sure to place the most powerful provider first, as the IDE must use the first one in the JSON section that it can handle.
-If no provider for a given property is supported, no special content assistance is provided, either.
+提示：对于给定属性，只能激活一个提供者，但如果它们都能以某种方式管理属性，你可以指定多个提供者。
+确保将最强大的提供者放在首位，因为 IDE 必须使用 JSON 部分中它可以处理的第一个。
+如果不支持给定属性的提供者，则不提供特殊内容帮助。
 
 
 
@@ -129,14 +129,14 @@ If no provider for a given property is supported, no special content assistance 
 
 
 [[appendix.configuration-metadata.manual-hints.value-providers.class-reference]]
-=== Class Reference
+=== 类引用
 
 **class-reference** 提供者自动完成项目中可用的类。
 此提供者支持以下参数：
 
 [cols="1,1,2,4"]
 |===
-| Parameter | Type | Default value | Description
+| 参数 | 类型 | 默认值 | 描述
 
 | `target`
 | javadoc:java.lang.String[] (`Class`)
@@ -152,7 +152,7 @@ If no provider for a given property is supported, no special content assistance 
 |===
 
 
-The following metadata snippet corresponds to the standard `server.servlet.jsp.class-name` property that defines the class name to use must be an javadoc:jakarta.servlet.http.HttpServlet[]:
+以下元数据片段对应于定义要使用的类名的标准 `server.servlet.jsp.class-name` 属性，必须是 javadoc:jakarta.servlet.http.HttpServlet[]：
 
 [source,json]
 ----
@@ -174,7 +174,7 @@ The following metadata snippet corresponds to the standard `server.servlet.jsp.c
 
 
 [[appendix.configuration-metadata.manual-hints.value-providers.handle-as]]
-=== Handle As
+=== 处理为
 
 **handle-as** 提供者允许你将属性的类型替换为更高级别的类型。
 这通常发生在属性具有 javadoc:java.lang.String[] 类型时，因为你不想让你的配置类依赖于可能不在类路径上的类。
@@ -182,7 +182,7 @@ The following metadata snippet corresponds to the standard `server.servlet.jsp.c
 
 [cols="1,1,2,4"]
 |===
-| Parameter | Type | Default value | Description
+| 参数 | 类型 | 默认值 | 描述
 
 | **`target`**
 | javadoc:java.lang.String[] (`Class`)
@@ -191,19 +191,19 @@ The following metadata snippet corresponds to the standard `server.servlet.jsp.c
   此参数是必需的。
 |===
 
-The following types can be used:
+可以使用以下类型：
 
-* Any javadoc:java.lang.Enum[]: Lists the possible values for the property.
-  (We recommend defining the property with the javadoc:java.lang.Enum[] type, as no further hint should be required for the IDE to auto-complete the values)
-* javadoc:java.nio.charset.Charset[]: Supports auto-completion of charset/encoding values (such as `UTF-8`)
-* javadoc:java.util.Locale[]: auto-completion of locales (such as `en_US`)
-* javadoc:org.springframework.util.MimeType[]: Supports auto-completion of content type values (such as `text/plain`)
-* javadoc:org.springframework.core.io.Resource[]: Supports auto-completion of Spring's Resource abstraction to refer to a file on the filesystem or on the classpath (such as `classpath:/sample.properties`)
+* 任何 javadoc:java.lang.Enum[]: 列出属性的可能值。
+  （我们建议使用 javadoc:java.lang.Enum[] 类型定义属性，因为不需要进一步提示 IDE 自动完成值）
+* javadoc:java.nio.charset.Charset[]: 支持字符集/编码值的自动完成（例如 `UTF-8`）
+* javadoc:java.util.Locale[]: 自动完成区域设置（例如 `en_US`）
+* javadoc:org.springframework.util.MimeType[]: 支持内容类型值的自动完成（例如 `text/plain`）
+* javadoc:org.springframework.core.io.Resource[]: 支持 Spring 的资源抽象的自动完成，以引用文件系统或类路径上的文件（例如 `classpath:/sample.properties`）
 
-TIP: If multiple values can be provided, use a javadoc:java.util.Collection[] or _Array_ type to teach the IDE about it.
+提示：如果可以提供多个值，请使用 javadoc:java.util.Collection[] 或 _Array_ 类型来教 IDE。
 
-The following metadata snippet corresponds to the standard `spring.liquibase.change-log` property that defines the path to the changelog to use.
-It is actually used internally as a javadoc:org.springframework.core.io.Resource[] but cannot be exposed as such, because we need to keep the original String value to pass it to the Liquibase API.
+以下元数据片段对应于定义要使用的变更日志路径的标准 `spring.liquibase.change-log` 属性。
+它实际上在内部用作 javadoc:org.springframework.core.io.Resource[]，但不能以这种方式公开，因为我们需要保留原始字符串值以传递给 Liquibase API。
 
 [source,json]
 ----
@@ -225,7 +225,7 @@ It is actually used internally as a javadoc:org.springframework.core.io.Resource
 
 
 [[appendix.configuration-metadata.manual-hints.value-providers.logger-name]]
-=== Logger Name
+=== 日志记录器名称
 
 **logger-name** 提供者自动完成有效的日志记录器名称和 xref:reference:features/logging.adoc#features.logging.log-groups[日志记录器组]。
 通常，当前项目中可用的包和类名可以自动完成。
@@ -236,7 +236,7 @@ It is actually used internally as a javadoc:org.springframework.core.io.Resource
 
 [cols="1,1,2,4"]
 |===
-| Parameter | Type | Default value | Description
+| 参数 | 类型 | 默认值 | 描述
 
 | `group`
 | `boolean`
@@ -244,11 +244,11 @@ It is actually used internally as a javadoc:org.springframework.core.io.Resource
 | 指定是否应考虑已知组。
 |===
 
-Since a logger name can be any arbitrary name, this provider should allow any value but could highlight valid package and class names that are not available in the project's classpath.
+由于日志记录器名称可以是任意名称，此提供者应允许任何值，但可以突出显示项目类路径中不可用的有效包和类名。
 
-The following metadata snippet corresponds to the standard `logging.level` property.
-Keys are _logger names_, and values correspond to the standard log levels or any custom level.
-As Spring Boot defines a few logger groups out-of-the-box, dedicated value hints have been added for those.
+以下元数据片段对应于标准 `logging.level` 属性。
+键是 _logger names_，值对应于标准日志级别或任何自定义级别。
+由于 Spring Boot 开箱即用地定义了一些日志记录器组，因此为这些组添加了专用值提示。
 
 [source,json]
 ----
@@ -313,14 +313,14 @@ As Spring Boot defines a few logger groups out-of-the-box, dedicated value hints
 
 
 [[appendix.configuration-metadata.manual-hints.value-providers.spring-bean-reference]]
-=== Spring Bean Reference
+=== Spring Bean 引用
 
 **spring-bean-reference** 提供者自动完成当前项目配置中定义的 bean。
 此提供者支持以下参数：
 
 [cols="1,1,2,4"]
 |===
-| Parameter | Type | Default value | Description
+| 参数 | 类型 | 默认值 | 描述
 
 | `target`
 | javadoc:java.lang.String[] (`Class`)
@@ -329,7 +329,7 @@ As Spring Boot defines a few logger groups out-of-the-box, dedicated value hints
   通常用于过滤掉非候选 bean。
 |===
 
-The following metadata snippet corresponds to the standard `spring.jmx.server` property that defines the name of the javadoc:javax.management.MBeanServer[] bean to use:
+以下元数据片段对应于定义要使用的 javadoc:javax.management.MBeanServer[] bean 名称的标准 `spring.jmx.server` 属性：
 
 [source,json]
 ----
@@ -348,17 +348,14 @@ The following metadata snippet corresponds to the standard `spring.jmx.server` p
 ]}
 ----
 
-NOTE: The binder is not aware of the metadata.
-If you provide that hint, you still need to transform the bean name into an actual Bean reference using by the javadoc:org.springframework.context.ApplicationContext[].
-
 
 
 [[appendix.configuration-metadata.manual-hints.value-providers.spring-profile-name]]
-=== Spring Profile Name
+=== Spring Profile 名称
 
 **spring-profile-name** 提供者自动完成当前项目配置中定义的 Spring profile。
 
-The following metadata snippet corresponds to the standard `spring.profiles.active` property that defines the name of the Spring profile(s) to enable:
+以下元数据片段对应于定义要启用的 Spring profile 名称的标准 `spring.profiles.active` 属性：
 
 [source,json]
 ----
