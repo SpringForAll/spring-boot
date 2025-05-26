@@ -33,11 +33,18 @@ gradle build
 
 ## 构建
 
+```yaml
+# build/.gradle/nodeproject/antora-playbook.yml，最后添加以下内容
+ui:
+  bundle:
+    url: ./ui-bundle
+    snapshot: true
+```
+
 ```bash
 # 构建命令
 antora build/.gradle/nodeproject/antora-playbook.yml
 ```
 
 结果目录：`build/site`
-
 
