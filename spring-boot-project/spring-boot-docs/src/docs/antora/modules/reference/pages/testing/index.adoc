@@ -1,15 +1,15 @@
 [[testing]]
-= Testing
+= 测试
 
-Spring Boot provides a number of utilities and annotations to help when testing your application.
-Test support is provided by two modules: `spring-boot-test` contains core items, and `spring-boot-test-autoconfigure` supports auto-configuration for tests.
+Spring Boot提供了许多工具和注解来帮助测试您的应用程序。
+测试支持由两个模块提供：`spring-boot-test` 包含核心项目，`spring-boot-test-autoconfigure` 支持测试的自动配置。
 
-Most developers use the `spring-boot-starter-test` starter, which imports both Spring Boot test modules as well as JUnit Jupiter, AssertJ, Hamcrest, and a number of other useful libraries.
+大多数开发人员使用 `spring-boot-starter-test` starter，它导入了Spring Boot测试模块以及JUnit Jupiter、AssertJ、Hamcrest和其他一些有用的库。
 
 [TIP]
 ====
-If you have tests that use JUnit 4, JUnit 5's vintage engine can be used to run them.
-To use the vintage engine, add a dependency on `junit-vintage-engine`, as shown in the following example:
+如果您有使用JUnit 4的测试，可以使用JUnit 5的vintage引擎来运行它们。
+要使用vintage引擎，添加对 `junit-vintage-engine` 的依赖，如下例所示：
 
 [source,xml]
 ----
@@ -27,4 +27,4 @@ To use the vintage engine, add a dependency on `junit-vintage-engine`, as shown 
 ----
 ====
 
-`hamcrest-core` is excluded in favor of `org.hamcrest:hamcrest` that is part of `spring-boot-starter-test`.
+`hamcrest-core` 被排除，以支持 `spring-boot-starter-test` 中包含的 `org.hamcrest:hamcrest`。

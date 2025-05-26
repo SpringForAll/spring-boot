@@ -1,14 +1,14 @@
 [[testing.spring-applications]]
-= Testing Spring Applications
+= 测试Spring应用程序
 
-One of the major advantages of dependency injection is that it should make your code easier to unit test.
-You can instantiate objects by using the `new` operator without even involving Spring.
-You can also use _mock objects_ instead of real dependencies.
+依赖注入的主要优势之一是它应该使您的代码更容易进行单元测试。
+您可以使用 `new` 运算符实例化对象，甚至不需要涉及Spring。
+您还可以使用_模拟对象_代替真实依赖。
 
-Often, you need to move beyond unit testing and start integration testing (with a Spring javadoc:org.springframework.context.ApplicationContext[]).
-It is useful to be able to perform integration testing without requiring deployment of your application or needing to connect to other infrastructure.
+通常，您需要超越单元测试并开始集成测试（使用Spring javadoc:org.springframework.context.ApplicationContext[]）。
+能够执行集成测试而不需要部署应用程序或连接到其他基础设施是很有用的。
 
-The Spring Framework includes a dedicated test module for such integration testing.
-You can declare a dependency directly to `org.springframework:spring-test` or use the `spring-boot-starter-test` starter to pull it in transitively.
+Spring Framework包含一个专门用于此类集成测试的测试模块。
+您可以直接声明对 `org.springframework:spring-test` 的依赖，或使用 `spring-boot-starter-test` starter来间接引入它。
 
-If you have not used the `spring-test` module before, you should start by reading the {url-spring-framework-docs}/testing.html[relevant section] of the Spring Framework reference documentation.
+如果您之前没有使用过 `spring-test` 模块，您应该先阅读Spring Framework参考文档中的{url-spring-framework-docs}/testing.html[相关部分]。

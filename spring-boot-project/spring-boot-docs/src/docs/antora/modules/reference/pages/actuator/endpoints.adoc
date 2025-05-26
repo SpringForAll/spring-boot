@@ -1,128 +1,128 @@
 [[actuator.endpoints]]
-= Endpoints
+= 端点
 
-Actuator endpoints let you monitor and interact with your application.
-Spring Boot includes a number of built-in endpoints and lets you add your own.
-For example, the `health` endpoint provides basic application health information.
+Actuator 端点让你可以监控和与你的应用程序交互。
+Spring Boot 包含了许多内置端点，并允许你添加自己的端点。
+例如，`health` 端点提供基本的应用程序健康信息。
 
-You can xref:actuator/endpoints.adoc#actuator.endpoints.controlling-access[control access] to each individual endpoint and xref:actuator/endpoints.adoc#actuator.endpoints.exposing[expose them (make them remotely accessible) over HTTP or JMX].
-An endpoint is considered to be available when access to it is permitted and it is exposed.
-The built-in endpoints are auto-configured only when they are available.
-Most applications choose exposure over HTTP, where the ID of the endpoint and a prefix of `/actuator` is mapped to a URL.
-For example, by default, the `health` endpoint is mapped to `/actuator/health`.
+你可以 xref:actuator/endpoints.adoc#actuator.endpoints.controlling-access[控制访问] 每个单独的端点，并 xref:actuator/endpoints.adoc#actuator.endpoints.exposing[通过 HTTP 或 JMX 暴露它们（使它们可以远程访问）]。
+当端点的访问被允许并且它被暴露时，该端点就被认为是可用的。
+内置端点只有在可用时才会自动配置。
+大多数应用程序选择通过 HTTP 暴露端点，其中端点的 ID 和 `/actuator` 前缀被映射到一个 URL。
+例如，默认情况下，`health` 端点被映射到 `/actuator/health`。
 
-TIP: To learn more about the Actuator's endpoints and their request and response formats, see the xref:api:rest/actuator/index.adoc[API documentation].
+提示：要了解更多关于 Actuator 端点及其请求和响应格式的信息，请参阅 xref:api:rest/actuator/index.adoc[API 文档]。
 
-The following technology-agnostic endpoints are available:
+以下是与技术无关的可用端点：
 
 [cols="2,5"]
 |===
-| ID | Description
+| ID | 描述
 
 | `auditevents`
-| Exposes audit events information for the current application.
-  Requires an javadoc:org.springframework.boot.actuate.audit.AuditEventRepository[] bean.
+| 暴露当前应用程序的审计事件信息。
+  需要 javadoc:org.springframework.boot.actuate.audit.AuditEventRepository[] bean。
 
 | `beans`
-| Displays a complete list of all the Spring beans in your application.
+| 显示应用程序中所有 Spring bean 的完整列表。
 
 | `caches`
-| Exposes available caches.
+| 暴露可用的缓存。
 
 | `conditions`
-| Shows the conditions that were evaluated on configuration and auto-configuration classes and the reasons why they did or did not match.
+| 显示在配置和自动配置类上评估的条件以及它们匹配或不匹配的原因。
 
 | `configprops`
-| Displays a collated list of all javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation].
-Subject to xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[sanitization].
+| 显示所有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 的整理列表。
+  受 xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[脱敏] 影响。
 
 | `env`
-| Exposes properties from Spring's javadoc:org.springframework.core.env.ConfigurableEnvironment[].
-Subject to xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[sanitization].
+| 暴露来自 Spring 的 javadoc:org.springframework.core.env.ConfigurableEnvironment[] 的属性。
+  受 xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[脱敏] 影响。
 
 | `flyway`
-| Shows any Flyway database migrations that have been applied.
-  Requires one or more javadoc:org.flywaydb.core.Flyway[] beans.
+| 显示已应用的任何 Flyway 数据库迁移。
+  需要一个或多个 javadoc:org.flywaydb.core.Flyway[] bean。
 
 | `health`
-| Shows application health information.
+| 显示应用程序健康信息。
 
 | `httpexchanges`
-| Displays HTTP exchange information (by default, the last 100 HTTP request-response exchanges).
-  Requires an javadoc:org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository[] bean.
+| 显示 HTTP 交换信息（默认情况下，最后 100 个 HTTP 请求-响应交换）。
+  需要 javadoc:org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository[] bean。
 
 | `info`
-| Displays arbitrary application info.
+| 显示任意应用程序信息。
 
 | `integrationgraph`
-| Shows the Spring Integration graph.
-  Requires a dependency on `spring-integration-core`.
+| 显示 Spring Integration 图。
+  需要依赖 `spring-integration-core`。
 
 | `loggers`
-| Shows and modifies the configuration of loggers in the application.
+| 显示和修改应用程序中日志记录器的配置。
 
 | `liquibase`
-| Shows any Liquibase database migrations that have been applied.
-  Requires one or more javadoc:{url-liquibase-javadoc}/liquibase.Liquibase[] beans.
+| 显示已应用的任何 Liquibase 数据库迁移。
+  需要一个或多个 javadoc:{url-liquibase-javadoc}/liquibase.Liquibase[] bean。
 
 | `metrics`
-| Shows "`metrics`" information for the current application to diagnose the metrics the application has recorded.
+| 显示当前应用程序的"指标"信息，用于诊断应用程序记录的指标。
 
 | `mappings`
-| Displays a collated list of all javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] paths.
+| 显示所有 javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] 路径的整理列表。
 
 |`quartz`
-|Shows information about Quartz Scheduler jobs.
-Subject to xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[sanitization].
+|显示 Quartz Scheduler 作业的信息。
+受 xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[脱敏] 影响。
 
 | `scheduledtasks`
-| Displays the scheduled tasks in your application.
+| 显示应用程序中的计划任务。
 
 | `sessions`
-| Allows retrieval and deletion of user sessions from a Spring Session-backed session store.
-  Requires a servlet-based web application that uses Spring Session.
+| 允许从 Spring Session 支持的会话存储中检索和删除用户会话。
+  需要基于 servlet 的 Web 应用程序并使用 Spring Session。
 
 | `shutdown`
-| Lets the application be gracefully shutdown.
-  Only works when using jar packaging.
-  Disabled by default.
+| 允许应用程序优雅地关闭。
+  仅在使用 jar 打包时有效。
+  默认禁用。
 
 | `startup`
-| Shows the xref:features/spring-application.adoc#features.spring-application.startup-tracking[startup steps data] collected by the javadoc:org.springframework.core.metrics.ApplicationStartup[].
-  Requires the javadoc:org.springframework.boot.SpringApplication[] to be configured with a javadoc:org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup[].
+| 显示由 javadoc:org.springframework.core.metrics.ApplicationStartup[] 收集的 xref:features/spring-application.adoc#features.spring-application.startup-tracking[启动步骤数据]。
+  需要 javadoc:org.springframework.boot.SpringApplication[] 配置为使用 javadoc:org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup[]。
 
 | `threaddump`
-| Performs a thread dump.
+| 执行线程转储。
 |===
 
-If your application is a web application (Spring MVC, Spring WebFlux, or Jersey), you can use the following additional endpoints:
+如果你的应用程序是 Web 应用程序（Spring MVC、Spring WebFlux 或 Jersey），你可以使用以下额外的端点：
 
 [cols="2,5"]
 |===
-| ID | Description
+| ID | 描述
 
 | `heapdump`
-| Returns a heap dump file.
-  On a HotSpot JVM, an `HPROF`-format file is returned.
-  On an OpenJ9 JVM, a `PHD`-format file is returned.
+| 返回堆转储文件。
+  在 HotSpot JVM 上，返回 `HPROF` 格式的文件。
+  在 OpenJ9 JVM 上，返回 `PHD` 格式的文件。
 
 | `logfile`
-| Returns the contents of the logfile (if the `logging.file.name` or the `logging.file.path` property has been set).
-  Supports the use of the HTTP `Range` header to retrieve part of the log file's content.
+| 返回日志文件的内容（如果设置了 `logging.file.name` 或 `logging.file.path` 属性）。
+  支持使用 HTTP `Range` 头来检索日志文件的部分内容。
 
 | `prometheus`
-| Exposes metrics in a format that can be scraped by a Prometheus server.
-  Requires a dependency on `micrometer-registry-prometheus`.
+| 以可以被 Prometheus 服务器抓取的格式暴露指标。
+  需要依赖 `micrometer-registry-prometheus`。
 |===
 
 
 
 [[actuator.endpoints.controlling-access]]
-== Controlling Access to Endpoints
+== 控制端点访问
 
-By default, access to all endpoints except for `shutdown` is unrestricted.
-To configure the permitted access to an endpoint, use its `management.endpoint.<id>.access` property.
-The following example allows unrestricted access to the `shutdown` endpoint:
+默认情况下，除了 `shutdown` 之外的所有端点的访问都是不受限制的。
+要配置允许访问的端点，使用其 `management.endpoint.<id>.access` 属性。
+以下示例允许对 `shutdown` 端点进行不受限制的访问：
 
 [configprops,yaml]
 ----
@@ -132,8 +132,8 @@ management:
       access: unrestricted
 ----
 
-If you prefer access to be opt-in rather than opt-out, set the configprop:management.endpoints.access.default[] property to `none` and use individual endpoint `access` properties to opt back in.
-The following example allows read-only access to the `loggers` endpoint and denies access to all other endpoints:
+如果你希望访问是选择加入而不是选择退出，将 configprop:management.endpoints.access.default[] 属性设置为 `none`，并使用单独的端点 `access` 属性来选择加入。
+以下示例允许对 `loggers` 端点进行只读访问，并拒绝访问所有其他端点：
 
 [configprops,yaml]
 ----
@@ -146,36 +146,36 @@ management:
       access: read-only
 ----
 
-NOTE: Inaccessible endpoints are removed entirely from the application context.
-If you want to change only the technologies over which an endpoint is exposed, use the xref:actuator/endpoints.adoc#actuator.endpoints.exposing[`include` and `exclude` properties] instead.
+注意：不可访问的端点会从应用程序上下文中完全移除。
+如果你只想更改端点暴露的技术，请使用 xref:actuator/endpoints.adoc#actuator.endpoints.exposing[`include` 和 `exclude` 属性]。
 
 
 
 [[actuator.endpoints.controlling-access.limiting]]
-=== Limiting Access
+=== 限制访问
 
-Application-wide endpoint access can be limited using the configprop:management.endpoints.access.max-permitted[] property.
-This property takes precedence over the default access or an individual endpoint's access level.
-Set it to `none` to make all endpoints inaccessible.
-Set it to `read-only` to only allow read access to endpoints.
+可以使用 configprop:management.endpoints.access.max-permitted[] 属性限制应用程序范围的端点访问。
+此属性优先于默认访问或单个端点的访问级别。
+将其设置为 `none` 可使所有端点不可访问。
+将其设置为 `read-only` 只允许对端点进行读取访问。
 
-For javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation], javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint[format=annotation], and javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation], read access equates to the endpoint methods annotated with javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation].
-For javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoint[format=annotation] and javadoc:org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint[format=annotation], read access equates to request mappings that can handle `GET` and `HEAD` requests.
-For javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpoint[format=annotation], read access equates to `GET` and `HEAD` requests.
+对于 javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation]、javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint[format=annotation] 和 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation]，读取访问等同于使用 javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation] 注解的端点方法。
+对于 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoint[format=annotation] 和 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint[format=annotation]，读取访问等同于可以处理 `GET` 和 `HEAD` 请求的请求映射。
+对于 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpoint[format=annotation]，读取访问等同于 `GET` 和 `HEAD` 请求。
 
 
 
 [[actuator.endpoints.exposing]]
-== Exposing Endpoints
+== 暴露端点
 
-By default, only the health endpoint is exposed over HTTP and JMX.
-Since Endpoints may contain sensitive information, you should carefully consider when to expose them.
+默认情况下，只有 health 端点通过 HTTP 和 JMX 暴露。
+由于端点可能包含敏感信息，你应该仔细考虑何时暴露它们。
 
-To change which endpoints are exposed, use the following technology-specific `include` and `exclude` properties:
+要更改哪些端点被暴露，使用以下技术特定的 `include` 和 `exclude` 属性：
 
 [cols="3,1"]
 |===
-| Property | Default
+| 属性 | 默认值
 
 | configprop:management.endpoints.jmx.exposure.exclude[]
 |
@@ -190,12 +190,12 @@ To change which endpoints are exposed, use the following technology-specific `in
 | `health`
 |===
 
-The `include` property lists the IDs of the endpoints that are exposed.
-The `exclude` property lists the IDs of the endpoints that should not be exposed.
-The `exclude` property takes precedence over the `include` property.
-You can configure both the `include` and the `exclude` properties with a list of endpoint IDs.
+`include` 属性列出了被暴露的端点的 ID。
+`exclude` 属性列出了不应该被暴露的端点的 ID。
+`exclude` 属性优先于 `include` 属性。
+你可以使用端点 ID 列表配置 `include` 和 `exclude` 属性。
 
-For example, to only expose the `health` and `info` endpoints over JMX, use the following property:
+例如，要仅通过 JMX 暴露 `health` 和 `info` 端点，使用以下属性：
 
 [configprops,yaml]
 ----
@@ -206,8 +206,8 @@ management:
         include: "health,info"
 ----
 
-`*` can be used to select all endpoints.
-For example, to expose everything over HTTP except the `env` and `beans` endpoints, use the following properties:
+`*` 可用于选择所有端点。
+例如，要通过 HTTP 暴露除 `env` 和 `beans` 端点之外的所有内容，使用以下属性：
 
 [configprops,yaml]
 ----
@@ -219,37 +219,37 @@ management:
         exclude: "env,beans"
 ----
 
-NOTE: `*` has a special meaning in YAML, so be sure to add quotation marks if you want to include (or exclude) all endpoints.
+注意：`*` 在 YAML 中有特殊含义，所以如果你想包含（或排除）所有端点，请确保添加引号。
 
-NOTE: If your application is exposed publicly, we strongly recommend that you also xref:actuator/endpoints.adoc#actuator.endpoints.security[secure your endpoints].
+注意：如果你的应用程序是公开暴露的，我们强烈建议你也 xref:actuator/endpoints.adoc#actuator.endpoints.security[保护你的端点]。
 
-TIP: If you want to implement your own strategy for when endpoints are exposed, you can register an javadoc:org.springframework.boot.actuate.endpoint.EndpointFilter[] bean.
+提示：如果你想实现自己的端点暴露策略，你可以注册一个 javadoc:org.springframework.boot.actuate.endpoint.EndpointFilter[] bean。
 
 
 
 [[actuator.endpoints.security]]
-== Security
+== 安全性
 
-For security purposes, only the `/health` endpoint is exposed over HTTP by default.
-You can use the configprop:management.endpoints.web.exposure.include[] property to configure the endpoints that are exposed.
+出于安全考虑，默认情况下只有 `/health` 端点通过 HTTP 暴露。
+你可以使用 configprop:management.endpoints.web.exposure.include[] 属性来配置要暴露的端点。
 
-NOTE: Before setting the `management.endpoints.web.exposure.include`, ensure that the exposed actuators do not contain sensitive information, are secured by placing them behind a firewall, or are secured by something like Spring Security.
+注意：在设置 `management.endpoints.web.exposure.include` 之前，确保暴露的 actuator 不包含敏感信息，通过将它们放在防火墙后面来保护它们，或者通过 Spring Security 等工具来保护它们。
 
-If Spring Security is on the classpath and no other javadoc:org.springframework.security.web.SecurityFilterChain[] bean is present, all actuators other than `/health` are secured by Spring Boot auto-configuration.
-If you define a custom javadoc:org.springframework.security.web.SecurityFilterChain[] bean, Spring Boot auto-configuration backs off and lets you fully control the actuator access rules.
+如果类路径上有 Spring Security 且没有其他 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，除了 `/health` 之外的所有 actuator 都会被 Spring Boot 自动配置保护。
+如果你定义了一个自定义的 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，Spring Boot 自动配置会退出，让你完全控制 actuator 访问规则。
 
-If you wish to configure custom security for HTTP endpoints (for example, to allow only users with a certain role to access them), Spring Boot provides some convenient javadoc:org.springframework.security.web.util.matcher.RequestMatcher[] objects that you can use in combination with Spring Security.
+如果你希望为 HTTP 端点配置自定义安全性（例如，只允许具有特定角色的用户访问它们），Spring Boot 提供了一些方便的 javadoc:org.springframework.security.web.util.matcher.RequestMatcher[] 对象，你可以将它们与 Spring Security 结合使用。
 
-A typical Spring Security configuration might look something like the following example:
+一个典型的 Spring Security 配置可能如下所示：
 
 include-code::typical/MySecurityConfiguration[]
 
-The preceding example uses `EndpointRequest.toAnyEndpoint()` to match a request to any endpoint and then ensures that all have the `ENDPOINT_ADMIN` role.
-Several other matcher methods are also available on javadoc:org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest[].
-See the xref:api:rest/actuator/index.adoc[API documentation] for details.
+前面的示例使用 `EndpointRequest.toAnyEndpoint()` 来匹配对任何端点的请求，然后确保所有端点都具有 `ENDPOINT_ADMIN` 角色。
+javadoc:org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest[] 上还有其他几个匹配器方法。
+有关详细信息，请参阅 xref:api:rest/actuator/index.adoc[API 文档]。
 
-If you deploy applications behind a firewall, you may prefer that all your actuator endpoints can be accessed without requiring authentication.
-You can do so by changing the configprop:management.endpoints.web.exposure.include[] property, as follows:
+如果你在防火墙后面部署应用程序，你可能希望所有 actuator 端点都可以在不要求认证的情况下访问。
+你可以通过更改 configprop:management.endpoints.web.exposure.include[] 属性来实现这一点，如下所示：
 
 [configprops,yaml]
 ----
@@ -260,33 +260,33 @@ management:
         include: "*"
 ----
 
-Additionally, if Spring Security is present, you would need to add custom security configuration that allows unauthenticated access to the endpoints, as the following example shows:
+此外，如果存在 Spring Security，你需要添加允许对端点进行未认证访问的自定义安全配置，如下例所示：
 
 include-code::exposeall/MySecurityConfiguration[]
 
-NOTE: In both of the preceding examples, the configuration applies only to the actuator endpoints.
-Since Spring Boot's security configuration backs off completely in the presence of any javadoc:org.springframework.security.web.SecurityFilterChain[] bean, you need to configure an additional javadoc:org.springframework.security.web.SecurityFilterChain[] bean with rules that apply to the rest of the application.
+注意：在前面的两个示例中，配置仅适用于 actuator 端点。
+由于 Spring Boot 的安全配置在存在任何 javadoc:org.springframework.security.web.SecurityFilterChain[] bean 时会完全退出，你需要配置一个额外的 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，其中包含适用于应用程序其余部分的规则。
 
 
 
 [[actuator.endpoints.security.csrf]]
-=== Cross Site Request Forgery Protection
+=== 跨站请求伪造保护
 
-Since Spring Boot relies on Spring Security's defaults, CSRF protection is turned on by default.
-This means that the actuator endpoints that require a `POST` (shutdown and loggers endpoints), a `PUT`, or a `DELETE` get a 403 (forbidden) error when the default security configuration is in use.
+由于 Spring Boot 依赖 Spring Security 的默认值，CSRF 保护默认是开启的。
+这意味着当使用默认安全配置时，需要 `POST`（shutdown 和 loggers 端点）、`PUT` 或 `DELETE` 的 actuator 端点会收到 403（禁止）错误。
 
-NOTE: We recommend disabling CSRF protection completely only if you are creating a service that is used by non-browser clients.
+注意：我们建议只有在创建非浏览器客户端使用的服务时才完全禁用 CSRF 保护。
 
-You can find additional information about CSRF protection in the {url-spring-security-docs}/features/exploits/csrf.html[Spring Security Reference Guide].
+你可以在 {url-spring-security-docs}/features/exploits/csrf.html[Spring Security 参考指南] 中找到有关 CSRF 保护的更多信息。
 
 
 
 [[actuator.endpoints.caching]]
-== Configuring Endpoints
+== 配置端点
 
-Endpoints automatically cache responses to read operations that do not take any parameters.
-To configure the amount of time for which an endpoint caches a response, use its `cache.time-to-live` property.
-The following example sets the time-to-live of the `beans` endpoint's cache to 10 seconds:
+端点会自动缓存对不接收任何参数的读取操作的响应。
+要配置端点缓存响应的时间，使用其 `cache.time-to-live` 属性。
+以下示例将 `beans` 端点的缓存生存时间设置为 10 秒：
 
 [configprops,yaml]
 ----
@@ -297,33 +297,33 @@ management:
         time-to-live: "10s"
 ----
 
-NOTE: The `management.endpoint.<name>` prefix uniquely identifies the endpoint that is being configured.
+注意：`management.endpoint.<name>` 前缀唯一标识正在配置的端点。
 
 
 
 [[actuator.endpoints.sanitization]]
-== Sanitize Sensitive Values
+== 脱敏敏感值
 
-Information returned by the `/env`, `/configprops` and `/quartz` endpoints can be sensitive, so by default values are always fully sanitized (replaced by `+******+`).
+由 `/env`、`/configprops` 和 `/quartz` 端点返回的信息可能是敏感的，因此默认情况下值总是完全脱敏（替换为 `+******+`）。
 
-Values can only be viewed in an unsanitized form when:
+只有在以下情况下才能以未脱敏的形式查看值：
 
-- The `show-values` property has been set to something other than `never`
-- No custom xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] beans apply
+- `show-values` 属性已设置为 `never` 以外的值
+- 没有自定义的 xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] bean 适用
 
-The `show-values` property can be configured for sanitizable endpoints to one of the following values:
+`show-values` 属性可以为可脱敏的端点配置为以下值之一：
 
-- `never`  - values are always fully sanitized (replaced by `+******+`)
-- `always` - values are shown to all users (as long as no javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean applies)
-- `when-authorized` - values are shown only to authorized users (as long as no javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean applies)
+- `never`  - 值总是完全脱敏（替换为 `+******+`）
+- `always` - 向所有用户显示值（只要没有 javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean 适用）
+- `when-authorized` - 仅向授权用户显示值（只要没有 javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean 适用）
 
-For HTTP endpoints, a user is considered to be authorized if they have authenticated and have the roles configured by the endpoint's roles property.
-By default, any authenticated user is authorized.
+对于 HTTP 端点，如果用户已认证并具有端点 `roles` 属性配置的角色，则认为该用户已授权。
+默认情况下，任何已认证的用户都被视为已授权。
 
-For JMX endpoints, all users are always authorized.
+对于 JMX 端点，所有用户始终被视为已授权。
 
-The following example allows all users with the `admin` role to view values from the `/env` endpoint in their original form.
-Unauthorized users, or users without the `admin` role, will see only sanitized values.
+以下示例允许所有具有 `admin` 角色的用户以原始形式查看 `/env` 端点的值。
+未授权用户或没有 `admin` 角色的用户将只能看到脱敏的值。
 
 [configprops,yaml]
 ----
@@ -334,17 +334,17 @@ management:
       roles: "admin"
 ----
 
-NOTE: This example assumes that no xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] beans have been defined.
+注意：此示例假设没有定义 xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] bean。
 
 
 
 [[actuator.endpoints.hypermedia]]
-== Hypermedia for Actuator Web Endpoints
+== Actuator Web 端点的超媒体
 
-A "`discovery page`" is added with links to all the endpoints.
-The "`discovery page`" is available on `/actuator` by default.
+添加了一个"发现页面"，其中包含指向所有端点的链接。
+默认情况下，"发现页面"在 `/actuator` 上可用。
 
-To disable the "`discovery page`", add the following property to your application properties:
+要禁用"发现页面"，在应用程序属性中添加以下属性：
 
 [configprops,yaml]
 ----
@@ -355,20 +355,20 @@ management:
         enabled: false
 ----
 
-When a custom management context path is configured, the "`discovery page`" automatically moves from `/actuator` to the root of the management context.
-For example, if the management context path is `/management`, the discovery page is available from `/management`.
-When the management context path is set to `/`, the discovery page is disabled to prevent the possibility of a clash with other mappings.
+当配置了自定义管理上下文路径时，"发现页面"会自动从 `/actuator` 移动到管理上下文的根目录。
+例如，如果管理上下文路径是 `/management`，则发现页面在 `/management` 上可用。
+当管理上下文路径设置为 `/` 时，发现页面会被禁用，以防止与其他映射发生冲突。
 
 
 
 [[actuator.endpoints.cors]]
-== CORS Support
+== CORS 支持
 
-https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[Cross-origin resource sharing] (CORS) is a https://www.w3.org/TR/cors/[W3C specification] that lets you specify in a flexible way what kind of cross-domain requests are authorized.
-If you use Spring MVC or Spring WebFlux, you can configure Actuator's web endpoints to support such scenarios.
+https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[跨源资源共享] (CORS) 是一个 https://www.w3.org/TR/cors/[W3C 规范]，它让你可以灵活地指定允许什么样的跨域请求。
+如果你使用 Spring MVC 或 Spring WebFlux，你可以配置 Actuator 的 Web 端点以支持此类场景。
 
-CORS support is disabled by default and is only enabled once you have set the configprop:management.endpoints.web.cors.allowed-origins[] property.
-The following configuration permits `GET` and `POST` calls from the `example.com` domain:
+CORS 支持默认是禁用的，只有在设置了 configprop:management.endpoints.web.cors.allowed-origins[] 属性后才会启用。
+以下配置允许来自 `example.com` 域的 `GET` 和 `POST` 调用：
 
 [configprops,yaml]
 ----
@@ -380,7 +380,7 @@ management:
         allowed-methods: "GET,POST"
 ----
 
-TIP: See javadoc:org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties[] for a complete list of options.
+提示：有关完整选项列表，请参阅 javadoc:org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties[]。
 
 
 

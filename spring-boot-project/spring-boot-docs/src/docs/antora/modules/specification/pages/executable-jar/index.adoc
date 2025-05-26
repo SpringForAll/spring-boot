@@ -1,8 +1,8 @@
 [appendix]
 [[appendix.executable-jar]]
-= The Executable Jar Format
+= 可执行 Jar 格式
 
-The `spring-boot-loader` modules lets Spring Boot support executable jar and war files.
-If you use the Maven plugin or the Gradle plugin, executable jars are automatically generated, and you generally do not need to know the details of how they work.
+`spring-boot-loader` 模块让 Spring Boot 支持可执行的 jar 和 war 文件。
+如果您使用 Maven 插件或 Gradle 插件，可执行 jar 会自动生成，您通常不需要了解它们的工作原理细节。
 
-If you need to create executable jars from a different build system or if you are just curious about the underlying technology, this appendix provides some background.
+如果您需要从不同的构建系统创建可执行 jar，或者您只是对底层技术感到好奇，本附录提供了一些背景信息。

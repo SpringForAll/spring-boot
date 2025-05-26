@@ -1,125 +1,125 @@
 [[features.logging]]
-= Logging
+= 日志记录
 
-Spring Boot uses https://commons.apache.org/logging[Commons Logging] for all internal logging but leaves the underlying log implementation open.
-Default configurations are provided for {apiref-openjdk}/java.logging/java/util/logging/package-summary.html[Java Util Logging], https://logging.apache.org/log4j/2.x/[Log4j2], and https://logback.qos.ch/[Logback].
-In each case, loggers are pre-configured to use console output with optional file output also available.
+Spring Boot 使用 https://commons.apache.org/logging[Commons Logging] 进行所有内部日志记录，但保持底层日志实现开放。
+为 {apiref-openjdk}/java.logging/java/util/logging/package-summary.html[Java Util Logging]、https://logging.apache.org/log4j/2.x/[Log4j2] 和 https://logback.qos.ch/[Logback] 提供了默认配置。
+在每种情况下，日志记录器都预配置为使用控制台输出，同时也可选择文件输出。
 
-By default, if you use the starters, Logback is used for logging.
-Appropriate Logback routing is also included to ensure that dependent libraries that use Java Util Logging, Commons Logging, Log4J, or SLF4J all work correctly.
+默认情况下，如果您使用 starters，则使用 Logback 进行日志记录。
+还包含了适当的 Logback 路由，以确保使用 Java Util Logging、Commons Logging、Log4J 或 SLF4J 的依赖库都能正常工作。
 
-TIP: There are a lot of logging frameworks available for Java.
-Do not worry if the above list seems confusing.
-Generally, you do not need to change your logging dependencies and the Spring Boot defaults work just fine.
+TIP: Java 有很多可用的日志框架。
+如果上面的列表看起来令人困惑，请不要担心。
+通常，您不需要更改日志依赖项，Spring Boot 的默认设置就能很好地工作。
 
-TIP: When you deploy your application to a servlet container or application server, logging performed with the Java Util Logging API is not routed into your application's logs.
-This prevents logging performed by the container or other applications that have been deployed to it from appearing in your application's logs.
+TIP: 当您将应用程序部署到 servlet 容器或应用程序服务器时，使用 Java Util Logging API 执行的日志记录不会路由到您的应用程序日志中。
+这可以防止容器或其他已部署到其中的应用程序执行的日志记录出现在您的应用程序日志中。
 
 
 
 [[features.logging.log-format]]
-== Log Format
+== 日志格式
 
-The default log output from Spring Boot resembles the following example:
+Spring Boot 的默认日志输出类似于以下示例：
 
 [source]
 ----
 include::ROOT:partial$logging/logging-format.txt[]
 ----
 
-The following items are output:
+输出以下项目：
 
-* Date and Time: Millisecond precision and easily sortable.
-* Log Level: `ERROR`, `WARN`, `INFO`, `DEBUG`, or `TRACE`.
-* Process ID.
-* A `---` separator to distinguish the start of actual log messages.
-* Application name: Enclosed in square brackets (logged by default only if configprop:spring.application.name[] is set)
-* Application group: Enclosed in square brackets (logged by default only if configprop:spring.application.group[] is set)
-* Thread name: Enclosed in square brackets (may be truncated for console output).
-* Correlation ID: If tracing is enabled (not shown in the sample above)
-* Logger name: This is usually the source class name (often abbreviated).
-* The log message.
+* 日期和时间：毫秒精度且易于排序。
+* 日志级别：`ERROR`、`WARN`、`INFO`、`DEBUG` 或 `TRACE`。
+* 进程 ID。
+* `---` 分隔符，用于区分实际日志消息的开始。
+* 应用程序名称：用方括号括起来（默认仅在设置 configprop:spring.application.name[] 时记录）
+* 应用程序组：用方括号括起来（默认仅在设置 configprop:spring.application.group[] 时记录）
+* 线程名称：用方括号括起来（控制台输出可能会被截断）。
+* 关联 ID：如果启用了跟踪（上面的示例中未显示）
+* 日志记录器名称：通常是源类名（通常缩写）。
+* 日志消息。
 
-NOTE: Logback does not have a `FATAL` level.
-It is mapped to `ERROR`.
+NOTE: Logback 没有 `FATAL` 级别。
+它被映射到 `ERROR`。
 
-TIP: If you have a configprop:spring.application.name[] property but don't want it logged you can set configprop:logging.include-application-name[] to `false`.
+TIP: 如果您有 configprop:spring.application.name[] 属性但不想记录它，可以将 configprop:logging.include-application-name[] 设置为 `false`。
 
-TIP: If you have a configprop:spring.application.group[] property but don't want it logged you can set configprop:logging.include-application-group[] to `false`.
+TIP: 如果您有 configprop:spring.application.group[] 属性但不想记录它，可以将 configprop:logging.include-application-group[] 设置为 `false`。
 
-TIP: For more details about correlation IDs, please xref:reference:actuator/tracing.adoc#actuator.micrometer-tracing.logging[see this documentation].
+TIP: 有关关联 ID 的更多详细信息，请参阅 xref:reference:actuator/tracing.adoc#actuator.micrometer-tracing.logging[此文档]。
 
 
 
 [[features.logging.console-output]]
-== Console Output
+== 控制台输出
 
-The default log configuration echoes messages to the console as they are written.
-By default, `ERROR`-level, `WARN`-level, and `INFO`-level messages are logged.
-You can also enable a "`debug`" mode by starting your application with a `--debug` flag.
+默认日志配置会在写入消息时将其回显到控制台。
+默认情况下，记录 `ERROR` 级别、`WARN` 级别和 `INFO` 级别的消息。
+您还可以通过使用 `--debug` 标志启动应用程序来启用"debug"模式。
 
 [source,shell]
 ----
 $ java -jar myapp.jar --debug
 ----
 
-NOTE: You can also specify `debug=true` in your `application.properties`.
+NOTE: 您也可以在 `application.properties` 中指定 `debug=true`。
 
-When the debug mode is enabled, a selection of core loggers (embedded container, Hibernate, and Spring Boot) are configured to output more information.
-Enabling the debug mode does _not_ configure your application to log all messages with `DEBUG` level.
+启用调试模式时，会配置一组核心日志记录器（嵌入式容器、Hibernate 和 Spring Boot）以输出更多信息。
+启用调试模式不会将您的应用程序配置为记录所有 `DEBUG` 级别的消息。
 
-Alternatively, you can enable a "`trace`" mode by starting your application with a `--trace` flag (or `trace=true` in your `application.properties`).
-Doing so enables trace logging for a selection of core loggers (embedded container, Hibernate schema generation, and the whole Spring portfolio).
+或者，您可以通过使用 `--trace` 标志（或在 `application.properties` 中设置 `trace=true`）启动应用程序来启用"trace"模式。
+这样做会为一组核心日志记录器（嵌入式容器、Hibernate 模式生成和整个 Spring 组合）启用跟踪日志记录。
 
 
 
 [[features.logging.console-output.color-coded]]
-=== Color-coded Output
+=== 彩色编码输出
 
-If your terminal supports ANSI, color output is used to aid readability.
-You can set `spring.output.ansi.enabled` to a javadoc:org.springframework.boot.ansi.AnsiOutput$Enabled[supported value] to override the auto-detection.
+如果您的终端支持 ANSI，则使用彩色输出以提高可读性。
+您可以将 `spring.output.ansi.enabled` 设置为 javadoc:org.springframework.boot.ansi.AnsiOutput$Enabled[支持的值] 来覆盖自动检测。
 
-Color coding is configured by using the `%clr` conversion word.
-In its simplest form, the converter colors the output according to the log level, as shown in the following example:
+通过使用 `%clr` 转换字来配置颜色编码。
+在其最简单的形式中，转换器根据日志级别为输出着色，如下例所示：
 
 [source]
 ----
 %clr(%5p)
 ----
 
-The following table describes the mapping of log levels to colors:
+下表描述了日志级别到颜色的映射：
 
 |===
-| Level | Color
+| 级别 | 颜色
 
 | `FATAL`
-| Red
+| 红色
 
 | `ERROR`
-| Red
+| 红色
 
 | `WARN`
-| Yellow
+| 黄色
 
 | `INFO`
-| Green
+| 绿色
 
 | `DEBUG`
-| Green
+| 绿色
 
 | `TRACE`
-| Green
+| 绿色
 |===
 
-Alternatively, you can specify the color or style that should be used by providing it as an option to the conversion.
-For example, to make the text yellow, use the following setting:
+或者，您可以通过将其作为转换的选项来指定应使用的颜色或样式。
+例如，要使文本变为黄色，请使用以下设置：
 
 [source]
 ----
 %clr(%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}){yellow}
 ----
 
-The following colors and styles are supported:
+支持以下颜色和样式：
 
 * `blue`
 * `cyan`
@@ -132,82 +132,82 @@ The following colors and styles are supported:
 
 
 [[features.logging.file-output]]
-== File Output
+== 文件输出
 
-By default, Spring Boot logs only to the console and does not write log files.
-If you want to write log files in addition to the console output, you need to set a configprop:logging.file.name[] or configprop:logging.file.path[] property (for example, in your `application.properties`).
-If both properties are set, `logging.file.path` is ignored and only `logging.file.name` is used.
+默认情况下，Spring Boot 仅记录到控制台，不写入日志文件。
+如果您想在控制台输出之外写入日志文件，需要设置 configprop:logging.file.name[] 或 configprop:logging.file.path[] 属性（例如，在 `application.properties` 中）。
+如果同时设置了这两个属性，则忽略 `logging.file.path`，仅使用 `logging.file.name`。
 
-The following table shows how the `logging.*` properties can be used together:
+下表显示了如何一起使用 `logging.*` 属性：
 
-.Logging properties
+.日志属性
 [cols="1,1,4"]
 |===
-| configprop:logging.file.name[] | configprop:logging.file.path[] | Description
+| configprop:logging.file.name[] | configprop:logging.file.path[] | 描述
 
-| _(none)_
-| _(none)_
-| Console only logging.
+| _(无)_
+| _(无)_
+| 仅控制台日志记录。
 
-| Specific file (for example, `my.log`)
-| _(none)_
-| Writes to the location specified by `logging.file.name`.
-  The location can be absolute or relative to the current directory.
+| 特定文件（例如，`my.log`）
+| _(无)_
+| 写入到 `logging.file.name` 指定的位置。
+  位置可以是绝对路径或相对于当前目录。
 
-| _(none)_
-| Specific directory (for example, `/var/log`)
-| Writes `spring.log` to the directory specified by `logging.file.path`.
-  The directory can be absolute or relative to the current directory.
+| _(无)_
+| 特定目录（例如，`/var/log`）
+| 将 `spring.log` 写入到 `logging.file.path` 指定的目录。
+  目录可以是绝对路径或相对于当前目录。
 
-| Specific file
-| Specific directory
-| Writes to the location specified by `logging.file.name` and ignores `logging.file.path`.
-  The location can be absolute or relative to the current directory.
+| 特定文件
+| 特定目录
+| 写入到 `logging.file.name` 指定的位置，忽略 `logging.file.path`。
+  位置可以是绝对路径或相对于当前目录。
 |===
 
-Log files rotate when they reach 10 MB and, as with console output, `ERROR`-level, `WARN`-level, and `INFO`-level messages are logged by default.
+当日志文件达到 10 MB 时会进行轮转，与控制台输出一样，默认记录 `ERROR` 级别、`WARN` 级别和 `INFO` 级别的消息。
 
-TIP: Logging properties are independent of the actual logging infrastructure.
-As a result, specific configuration keys (such as `logback.configurationFile` for Logback) are not managed by spring Boot.
+TIP: 日志属性与实际日志基础设施无关。
+因此，Spring Boot 不管理特定的配置键（例如 Logback 的 `logback.configurationFile`）。
 
 
 
 [[features.logging.file-rotation]]
-== File Rotation
+== 文件轮转
 
-If you are using the Logback, it is possible to fine-tune log rotation settings using your `application.properties` or `application.yaml` file.
-For all other logging system, you will need to configure rotation settings directly yourself (for example, if you use Log4j2 then you could add a `log4j2.xml` or `log4j2-spring.xml` file).
+如果您使用 Logback，可以使用 `application.properties` 或 `application.yaml` 文件微调日志轮转设置。
+对于所有其他日志系统，您需要直接自己配置轮转设置（例如，如果您使用 Log4j2，则可以添加 `log4j2.xml` 或 `log4j2-spring.xml` 文件）。
 
-The following rotation policy properties are supported:
+支持以下轮转策略属性：
 
 |===
-| Name | Description
+| 名称 | 描述
 
 | configprop:logging.logback.rollingpolicy.file-name-pattern[]
-| The filename pattern used to create log archives.
+| 用于创建日志归档的文件名模式。
 
 | configprop:logging.logback.rollingpolicy.clean-history-on-start[]
-| If log archive cleanup should occur when the application starts.
+| 是否在应用程序启动时清理日志归档。
 
 | configprop:logging.logback.rollingpolicy.max-file-size[]
-| The maximum size of log file before it is archived.
+| 归档前的最大日志文件大小。
 
 | configprop:logging.logback.rollingpolicy.total-size-cap[]
-| The maximum amount of size log archives can take before being deleted.
+| 在删除之前可以保留的日志归档的最大总大小。
 
 | configprop:logging.logback.rollingpolicy.max-history[]
-| The maximum number of archive log files to keep (defaults to 7).
+| 要保留的最大归档日志文件数（默认为 7）。
 |===
 
 
 
 [[features.logging.log-levels]]
-== Log Levels
+== 日志级别
 
-All the supported logging systems can have the logger levels set in the Spring javadoc:org.springframework.core.env.Environment[] (for example, in `application.properties`) by using `+logging.level.<logger-name>=<level>+` where `level` is one of TRACE, DEBUG, INFO, WARN, ERROR, FATAL, or OFF.
-The `root` logger can be configured by using `logging.level.root`.
+所有支持的日志系统都可以在 Spring javadoc:org.springframework.core.env.Environment[] 中设置日志记录器级别（例如，在 `application.properties` 中），方法是使用 `+logging.level.<logger-name>=<level>+`，其中 `level` 是 TRACE、DEBUG、INFO、WARN、ERROR、FATAL 或 OFF 之一。
+可以使用 `logging.level.root` 配置 `root` 日志记录器。
 
-The following example shows potential logging settings in `application.properties`:
+以下示例显示了 `application.properties` 中可能的日志设置：
 
 [configprops,yaml]
 ----
@@ -218,23 +218,23 @@ logging:
     org.hibernate: "error"
 ----
 
-It is also possible to set logging levels using environment variables.
-For example, `LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=DEBUG` will set `org.springframework.web` to `DEBUG`.
+也可以使用环境变量设置日志级别。
+例如，`LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_WEB=DEBUG` 将把 `org.springframework.web` 设置为 `DEBUG`。
 
-NOTE: The above approach will only work for package level logging.
-Since relaxed binding xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding.maps-from-environment-variables[always converts environment variables to lowercase], it is not possible to configure logging for an individual class in this way.
-If you need to configure logging for a class, you can use xref:features/external-config.adoc#features.external-config.application-json[the `SPRING_APPLICATION_JSON`] variable.
+NOTE: 上述方法仅适用于包级别的日志记录。
+由于宽松绑定 xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding.maps-from-environment-variables[始终将环境变量转换为小写]，因此无法以这种方式配置单个类的日志记录。
+如果您需要为类配置日志记录，可以使用 xref:features/external-config.adoc#features.external-config.application-json[`SPRING_APPLICATION_JSON`] 变量。
 
 
 
 [[features.logging.log-groups]]
-== Log Groups
+== 日志组
 
-It is often useful to be able to group related loggers together so that they can all be configured at the same time.
-For example, you might commonly change the logging levels for _all_ Tomcat related loggers, but you can not easily remember top level packages.
+通常能够将相关的日志记录器组合在一起，以便可以同时配置它们。
+例如，您可能经常更改所有 Tomcat 相关日志记录器的日志级别，但您不容易记住顶级包。
 
-To help with this, Spring Boot allows you to define logging groups in your Spring javadoc:org.springframework.core.env.Environment[].
-For example, here is how you could define a "`tomcat`" group by adding it to your `application.properties`:
+为了帮助解决这个问题，Spring Boot 允许您在 Spring javadoc:org.springframework.core.env.Environment[] 中定义日志组。
+例如，以下是如何通过将其添加到 `application.properties` 来定义"tomcat"组：
 
 [configprops,yaml]
 ----
@@ -243,7 +243,7 @@ logging:
     tomcat: "org.apache.catalina,org.apache.coyote,org.apache.tomcat"
 ----
 
-Once defined, you can change the level for all the loggers in the group with a single line:
+定义后，您可以用一行代码更改组中所有日志记录器的级别：
 
 [configprops,yaml]
 ----
@@ -252,11 +252,11 @@ logging:
     tomcat: "trace"
 ----
 
-Spring Boot includes the following pre-defined logging groups that can be used out-of-the-box:
+Spring Boot 包含以下预定义的日志组，可以直接使用：
 
 [cols="1,4"]
 |===
-| Name | Loggers
+| 名称 | 日志记录器
 
 | web
 | `org.springframework.core.codec`, `org.springframework.http`, `org.springframework.web`, `org.springframework.boot.actuate.endpoint.web`, `org.springframework.boot.web.servlet.ServletContextInitializerBeans`
@@ -268,16 +268,16 @@ Spring Boot includes the following pre-defined logging groups that can be used o
 
 
 [[features.logging.shutdown-hook]]
-== Using a Log Shutdown Hook
+== 使用日志关闭钩子
 
-In order to release logging resources when your application terminates, a shutdown hook that will trigger log system cleanup when the JVM exits is provided.
-This shutdown hook is registered automatically unless your application is deployed as a war file.
-If your application has complex context hierarchies the shutdown hook may not meet your needs.
-If it does not, disable the shutdown hook and investigate the options provided directly by the underlying logging system.
-For example, Logback offers https://logback.qos.ch/manual/loggingSeparation.html[context selectors] which allow each Logger to be created in its own context.
-You can use the configprop:logging.register-shutdown-hook[] property to disable the shutdown hook.
-Setting it to `false` will disable the registration.
-You can set the property in your `application.properties` or `application.yaml` file:
+为了在应用程序终止时释放日志资源，提供了一个关闭钩子，它将在 JVM 退出时触发日志系统清理。
+除非您的应用程序部署为 war 文件，否则会自动注册此关闭钩子。
+如果您的应用程序具有复杂的上下文层次结构，关闭钩子可能无法满足您的需求。
+如果是这样，请禁用关闭钩子并直接调查底层日志系统提供的选项。
+例如，Logback 提供 https://logback.qos.ch/manual/loggingSeparation.html[上下文选择器]，允许每个 Logger 在其自己的上下文中创建。
+您可以使用 configprop:logging.register-shutdown-hook[] 属性禁用关闭钩子。
+将其设置为 `false` 将禁用注册。
+您可以在 `application.properties` 或 `application.yaml` 文件中设置该属性：
 
 [configprops,yaml]
 ----
@@ -288,131 +288,131 @@ logging:
 
 
 [[features.logging.custom-log-configuration]]
-== Custom Log Configuration
+== 自定义日志配置
 
-The various logging systems can be activated by including the appropriate libraries on the classpath and can be further customized by providing a suitable configuration file in the root of the classpath or in a location specified by the following Spring javadoc:org.springframework.core.env.Environment[] property: configprop:logging.config[].
+通过在类路径中包含适当的库可以激活各种日志系统，并且可以通过在类路径的根目录或由以下 Spring javadoc:org.springframework.core.env.Environment[] 属性指定的位置提供适当的配置文件来进一步自定义：configprop:logging.config[]。
 
-You can force Spring Boot to use a particular logging system by using the `org.springframework.boot.logging.LoggingSystem` system property.
-The value should be the fully qualified class name of a javadoc:org.springframework.boot.logging.LoggingSystem[] implementation.
-You can also disable Spring Boot's logging configuration entirely by using a value of `none`.
+您可以通过使用 `org.springframework.boot.logging.LoggingSystem` 系统属性强制 Spring Boot 使用特定的日志系统。
+该值应该是 javadoc:org.springframework.boot.logging.LoggingSystem[] 实现的完全限定类名。
+您还可以通过使用 `none` 值完全禁用 Spring Boot 的日志配置。
 
-NOTE: Since logging is initialized *before* the javadoc:org.springframework.context.ApplicationContext[] is created, it is not possible to control logging from javadoc:org.springframework.context.annotation.PropertySources[format=annotation] in Spring javadoc:org.springframework.context.annotation.Configuration[format=annotation] files.
-The only way to change the logging system or disable it entirely is through System properties.
+NOTE: 由于日志记录在创建 javadoc:org.springframework.context.ApplicationContext[] *之前* 初始化，因此无法从 Spring javadoc:org.springframework.context.annotation.Configuration[format=annotation] 文件中的 javadoc:org.springframework.context.annotation.PropertySources[format=annotation] 控制日志记录。
+更改日志系统或完全禁用它只能通过系统属性来实现。
 
-Depending on your logging system, the following files are loaded:
+根据您的日志系统，加载以下文件：
 
 |===
-| Logging System | Customization
+| 日志系统 | 自定义
 
 | Logback
-| `logback-spring.xml`, `logback-spring.groovy`, `logback.xml`, or `logback.groovy`
+| `logback-spring.xml`, `logback-spring.groovy`, `logback.xml`, 或 `logback.groovy`
 
 | Log4j2
-| `log4j2-spring.xml` or `log4j2.xml`
+| `log4j2-spring.xml` 或 `log4j2.xml`
 
 | JDK (Java Util Logging)
 | `logging.properties`
 |===
 
-NOTE: When possible, we recommend that you use the `-spring` variants for your logging configuration (for example, `logback-spring.xml` rather than `logback.xml`).
-If you use standard configuration locations, Spring cannot completely control log initialization.
+NOTE: 如果可能，我们建议您使用日志配置的 `-spring` 变体（例如，使用 `logback-spring.xml` 而不是 `logback.xml`）。
+如果您使用标准配置位置，Spring 无法完全控制日志初始化。
 
-WARNING: There are known classloading issues with Java Util Logging that cause problems when running from an 'executable jar'.
-We recommend that you avoid it when running from an 'executable jar' if at all possible.
+WARNING: Java Util Logging 存在已知的类加载问题，这些问题在从"可执行 jar"运行时会导致问题。
+如果可能，我们建议您在从"可执行 jar"运行时避免使用它。
 
-To help with the customization, some other properties are transferred from the Spring javadoc:org.springframework.core.env.Environment[] to System properties.
-This allows the properties to be consumed by logging system configuration. For example, setting `logging.file.name` in `application.properties` or `LOGGING_FILE_NAME` as an environment variable will result in the `LOG_FILE` System property being set.
-The properties that are transferred are described in the following table:
+为了帮助自定义，一些其他属性从 Spring javadoc:org.springframework.core.env.Environment[] 传输到系统属性。
+这允许日志系统配置使用这些属性。例如，在 `application.properties` 中设置 `logging.file.name` 或将 `LOGGING_FILE_NAME` 作为环境变量将导致设置 `LOG_FILE` 系统属性。
+下表中描述了传输的属性：
 
 |===
-| Spring Environment | System Property | Comments
+| Spring Environment | 系统属性 | 注释
 
 | configprop:logging.exception-conversion-word[]
 | `LOG_EXCEPTION_CONVERSION_WORD`
-| The conversion word used when logging exceptions.
+| 记录异常时使用的转换字。
 
 | configprop:logging.file.name[]
 | `LOG_FILE`
-| If defined, it is used in the default log configuration.
+| 如果定义，则在默认日志配置中使用。
 
 | configprop:logging.file.path[]
 | `LOG_PATH`
-| If defined, it is used in the default log configuration.
+| 如果定义，则在默认日志配置中使用。
 
 | configprop:logging.pattern.console[]
 | `CONSOLE_LOG_PATTERN`
-| The log pattern to use on the console (stdout).
+| 在控制台（stdout）上使用的日志模式。
 
 | configprop:logging.pattern.dateformat[]
 | `LOG_DATEFORMAT_PATTERN`
-| Appender pattern for log date format.
+| 日志日期格式的追加器模式。
 
 | configprop:logging.charset.console[]
 | `CONSOLE_LOG_CHARSET`
-| The charset to use for console logging.
+| 用于控制台日志记录的字符集。
 
 | configprop:logging.threshold.console[]
 | `CONSOLE_LOG_THRESHOLD`
-| The log level threshold to use for console logging.
+| 用于控制台日志记录的日志级别阈值。
 
 | configprop:logging.pattern.file[]
 | `FILE_LOG_PATTERN`
-| The log pattern to use in a file (if `LOG_FILE` is enabled).
+| 在文件中使用的日志模式（如果启用了 `LOG_FILE`）。
 
 | configprop:logging.charset.file[]
 | `FILE_LOG_CHARSET`
-| The charset to use for file logging (if `LOG_FILE` is enabled).
+| 用于文件日志记录的字符集（如果启用了 `LOG_FILE`）。
 
 | configprop:logging.threshold.file[]
 | `FILE_LOG_THRESHOLD`
-| The log level threshold to use for file logging.
+| 用于文件日志记录的日志级别阈值。
 
 | configprop:logging.pattern.level[]
 | `LOG_LEVEL_PATTERN`
-| The format to use when rendering the log level (default `%5p`).
+| 渲染日志级别时使用的格式（默认为 `%5p`）。
 
 | configprop:logging.structured.format.console[]
 | `CONSOLE_LOG_STRUCTURED_FORMAT`
-| The structured logging format to use for console logging.
+| 用于控制台日志记录的结构化日志格式。
 
 | configprop:logging.structured.format.file[]
 | `FILE_LOG_STRUCTURED_FORMAT`
-| The structured logging format to use for file logging.
+| 用于文件日志记录的结构化日志格式。
 
 | `PID`
 | `PID`
-| The current process ID (discovered if possible and when not already defined as an OS environment variable).
+| 当前进程 ID（如果可能且尚未定义为 OS 环境变量）。
 |===
 
-If you use Logback, the following properties are also transferred:
+如果您使用 Logback，以下属性也会被传输：
 
 |===
-| Spring Environment | System Property | Comments
+| Spring Environment | 系统属性 | 注释
 
 | configprop:logging.logback.rollingpolicy.file-name-pattern[]
 | `LOGBACK_ROLLINGPOLICY_FILE_NAME_PATTERN`
-| Pattern for rolled-over log file names (default `$\{LOG_FILE}.%d\{yyyy-MM-dd}.%i.gz`).
+| 轮转日志文件名的模式（默认为 `$\{LOG_FILE}.%d\{yyyy-MM-dd}.%i.gz`）。
 
 | configprop:logging.logback.rollingpolicy.clean-history-on-start[]
 | `LOGBACK_ROLLINGPOLICY_CLEAN_HISTORY_ON_START`
-| Whether to clean the archive log files on startup.
+| 是否在启动时清理归档日志文件。
 
 | configprop:logging.logback.rollingpolicy.max-file-size[]
 | `LOGBACK_ROLLINGPOLICY_MAX_FILE_SIZE`
-| Maximum log file size.
+| 最大日志文件大小。
 
 | configprop:logging.logback.rollingpolicy.total-size-cap[]
 | `LOGBACK_ROLLINGPOLICY_TOTAL_SIZE_CAP`
-| Total size of log backups to be kept.
+| 要保留的日志备份的总大小。
 
 | configprop:logging.logback.rollingpolicy.max-history[]
 | `LOGBACK_ROLLINGPOLICY_MAX_HISTORY`
-| Maximum number of archive log files to keep.
+| 要保留的最大归档日志文件数。
 |===
 
 
-All the supported logging systems can consult System properties when parsing their configuration files.
-See the default configurations in `spring-boot.jar` for examples:
+所有支持的日志系统在解析其配置文件时都可以查询系统属性。
+有关示例，请参阅 `spring-boot.jar` 中的默认配置：
 
 * {code-spring-boot}/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/defaults.xml[Logback]
 * {code-spring-boot}/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/log4j2/log4j2.xml[Log4j 2]
@@ -420,14 +420,14 @@ See the default configurations in `spring-boot.jar` for examples:
 
 [TIP]
 ====
-If you want to use a placeholder in a logging property, you should use xref:features/external-config.adoc#features.external-config.files.property-placeholders[Spring Boot's syntax] and not the syntax of the underlying framework.
-Notably, if you use Logback, you should use `:` as the delimiter between a property name and its default value and not use `:-`.
+如果要在日志属性中使用占位符，应使用 xref:features/external-config.adoc#features.external-config.files.property-placeholders[Spring Boot 的语法]，而不是底层框架的语法。
+特别是，如果使用 Logback，应使用 `:` 作为属性名称与其默认值之间的分隔符，而不是使用 `:-`。
 ====
 
 [TIP]
 ====
-You can add MDC and other ad-hoc content to log lines by overriding only the `LOG_LEVEL_PATTERN` (or `logging.pattern.level` with Logback).
-For example, if you use `logging.pattern.level=user:%X\{user} %5p`, then the default log format contains an MDC entry for "user", if it exists, as shown in the following example.
+您可以通过仅覆盖 `LOG_LEVEL_PATTERN`（或使用 Logback 的 `logging.pattern.level`）来添加 MDC 和其他临时内容到日志行。
+例如，如果您使用 `logging.pattern.level=user:%X\{user} %5p`，则默认日志格式包含"user"的 MDC 条目（如果存在），如下例所示。
 
 [source]
 ----
@@ -439,19 +439,19 @@ Handling authenticated request
 
 
 [[features.logging.structured]]
-== Structured Logging
+== 结构化日志记录
 
-Structured logging is a technique where the log output is written in a well-defined, often machine-readable format.
-Spring Boot supports structured logging and has support for the following JSON formats out of the box:
+结构化日志记录是一种技术，其中日志输出以明确定义的、通常是机器可读的格式写入。
+Spring Boot 支持结构化日志记录，并默认支持以下 JSON 格式：
 
 * xref:#features.logging.structured.ecs[Elastic Common Schema (ECS)]
 * xref:#features.logging.structured.gelf[Graylog Extended Log Format (GELF)]
 * xref:#features.logging.structured.logstash[Logstash]
 
-To enable structured logging, set the property configprop:logging.structured.format.console[] (for console output) or configprop:logging.structured.format.file[] (for file output) to the id of the format you want to use.
+要启用结构化日志记录，请将属性 configprop:logging.structured.format.console[]（用于控制台输出）或 configprop:logging.structured.format.file[]（用于文件输出）设置为您要使用的格式的 id。
 
-If you are using xref:#features.logging.custom-log-configuration[Custom Log Configuration], update your configuration to respect `CONSOLE_LOG_STRUCTURED_FORMAT` and `FILE_LOG_STRUCTURED_FORMAT` system properties.
-Take `CONSOLE_LOG_STRUCTURED_FORMAT` for example:
+如果您使用 xref:#features.logging.custom-log-configuration[自定义日志配置]，请更新您的配置以尊重 `CONSOLE_LOG_STRUCTURED_FORMAT` 和 `FILE_LOG_STRUCTURED_FORMAT` 系统属性。
+以 `CONSOLE_LOG_STRUCTURED_FORMAT` 为例：
 [tabs]
 ======
 Logback::
@@ -465,7 +465,7 @@ Logback::
 </encoder>
 ----
 +
-You can also refer to the default configurations included in Spring Boot:
+您还可以参考 Spring Boot 中包含的默认配置：
 +
 * {code-spring-boot}/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/structured-console-appender.xml[Logback Structured Console Appender]
 * {code-spring-boot}/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/logback/structured-file-appender.xml[Logback Structured File Appender]
@@ -477,7 +477,7 @@ Log4j2::
 <StructuredLogLayout format="${sys:CONSOLE_LOG_STRUCTURED_FORMAT}" charset="${sys:CONSOLE_LOG_CHARSET}"/>
 ----
 +
-You can also refer to the default configurations included in Spring Boot:
+您还可以参考 Spring Boot 中包含的默认配置：
 +
 * {code-spring-boot}/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/log4j2/log4j2.xml[Log4j2 Console Appender]
 * {code-spring-boot}/spring-boot-project/spring-boot/src/main/resources/org/springframework/boot/logging/log4j2/log4j2-file.xml[Log4j2 Console and File Appender]
@@ -487,9 +487,9 @@ You can also refer to the default configurations included in Spring Boot:
 [[features.logging.structured.ecs]]
 === Elastic Common Schema
 
-https://www.elastic.co/guide/en/ecs/8.11/ecs-reference.html[Elastic Common Schema] is a JSON based logging format.
+https://www.elastic.co/guide/en/ecs/8.11/ecs-reference.html[Elastic Common Schema] 是一种基于 JSON 的日志格式。
 
-To enable the Elastic Common Schema log format, set the appropriate `format` property to `ecs`:
+要启用 Elastic Common Schema 日志格式，请将适当的 `format` 属性设置为 `ecs`：
 
 [configprops,yaml]
 ----
@@ -500,17 +500,17 @@ logging:
       file: ecs
 ----
 
-A log line looks like this:
+日志行如下所示：
 
 [source,json]
 ----
 {"@timestamp":"2024-01-01T10:15:00.067462556Z","log.level":"INFO","process.pid":39599,"process.thread.name":"main","service.name":"simple","log.logger":"org.example.Application","message":"No active profile set, falling back to 1 default profile: \"default\"","ecs.version":"8.11"}
 ----
 
-This format also adds every key value pair contained in the MDC to the JSON object.
-You can also use the https://www.slf4j.org/manual.html#fluent[SLF4J fluent logging API] to add key value pairs to the logged JSON object with the https://www.slf4j.org/apidocs/org/slf4j/spi/LoggingEventBuilder.html#addKeyValue(java.lang.String,java.lang.Object)[addKeyValue] method.
+此格式还将 MDC 中包含的每个键值对添加到 JSON 对象中。
+您还可以使用 https://www.slf4j.org/manual.html#fluent[SLF4J fluent logging API] 通过 https://www.slf4j.org/apidocs/org/slf4j/spi/LoggingEventBuilder.html#addKeyValue(java.lang.String,java.lang.Object)[addKeyValue] 方法将键值对添加到记录的 JSON 对象中。
 
-The `service` values can be customized using `logging.structured.ecs.service` properties:
+可以使用 `logging.structured.ecs.service` 属性自定义 `service` 值：
 
 [configprops,yaml]
 ----
@@ -524,18 +524,18 @@ logging:
         node-name: Primary
 ----
 
-NOTE: configprop:logging.structured.ecs.service.name[] will default to configprop:spring.application.name[] if not specified.
+NOTE: 如果未指定，configprop:logging.structured.ecs.service.name[] 将默认为 configprop:spring.application.name[]。
 
-NOTE: configprop:logging.structured.ecs.service.version[] will default to configprop:spring.application.version[] if not specified.
+NOTE: 如果未指定，configprop:logging.structured.ecs.service.version[] 将默认为 configprop:spring.application.version[]。
 
 
 
 [[features.logging.structured.gelf]]
 === Graylog Extended Log Format (GELF)
 
-https://go2docs.graylog.org/current/getting_in_log_data/gelf.html[Graylog Extended Log Format] is a JSON based logging format for the Graylog log analytics platform.
+https://go2docs.graylog.org/current/getting_in_log_data/gelf.html[Graylog Extended Log Format] 是用于 Graylog 日志分析平台的基于 JSON 的日志格式。
 
-To enable the Graylog Extended Log Format, set the appropriate `format` property to `gelf`:
+要启用 Graylog Extended Log Format，请将适当的 `format` 属性设置为 `gelf`：
 
 [configprops,yaml]
 ----
@@ -546,17 +546,17 @@ logging:
       file: gelf
 ----
 
-A log line looks like this:
+日志行如下所示：
 
 [source,json]
 ----
 {"version":"1.1","short_message":"No active profile set, falling back to 1 default profile: \"default\"","timestamp":1725958035.857,"level":6,"_level_name":"INFO","_process_pid":47649,"_process_thread_name":"main","_log_logger":"org.example.Application"}
 ----
 
-This format also adds every key value pair contained in the MDC to the JSON object.
-You can also use the https://www.slf4j.org/manual.html#fluent[SLF4J fluent logging API] to add key value pairs to the logged JSON object with the https://www.slf4j.org/apidocs/org/slf4j/spi/LoggingEventBuilder.html#addKeyValue(java.lang.String,java.lang.Object)[addKeyValue] method.
+此格式还将 MDC 中包含的每个键值对添加到 JSON 对象中。
+您还可以使用 https://www.slf4j.org/manual.html#fluent[SLF4J fluent logging API] 通过 https://www.slf4j.org/apidocs/org/slf4j/spi/LoggingEventBuilder.html#addKeyValue(java.lang.String,java.lang.Object)[addKeyValue] 方法将键值对添加到记录的 JSON 对象中。
 
-Several fields can be customized using `logging.structured.gelf` properties:
+可以使用 `logging.structured.gelf` 属性自定义多个字段：
 
 [configprops,yaml]
 ----
@@ -568,18 +568,18 @@ logging:
         version: 1.0
 ----
 
-NOTE: configprop:logging.structured.gelf.host[] will default to configprop:spring.application.name[] if not specified.
+NOTE: 如果未指定，configprop:logging.structured.gelf.host[] 将默认为 configprop:spring.application.name[]。
 
-NOTE: configprop:logging.structured.gelf.service.version[] will default to configprop:spring.application.version[] if not specified.
+NOTE: 如果未指定，configprop:logging.structured.gelf.service.version[] 将默认为 configprop:spring.application.version[]。
 
 
 
 [[features.logging.structured.logstash]]
-=== Logstash JSON format
+=== Logstash JSON 格式
 
-The https://github.com/logfellow/logstash-logback-encoder?tab=readme-ov-file#standard-fields[Logstash JSON format] is a JSON based logging format.
+https://github.com/logfellow/logstash-logback-encoder?tab=readme-ov-file#standard-fields[Logstash JSON 格式] 是一种基于 JSON 的日志格式。
 
-To enable the Logstash JSON log format, set the appropriate `format` property to `logstash`:
+要启用 Logstash JSON 日志格式，请将适当的 `format` 属性设置为 `logstash`：
 
 [configprops,yaml]
 ----
@@ -590,44 +590,44 @@ logging:
       file: logstash
 ----
 
-A log line looks like this:
+日志行如下所示：
 
 [source,json]
 ----
 {"@timestamp":"2024-01-01T10:15:00.111037681+02:00","@version":"1","message":"No active profile set, falling back to 1 default profile: \"default\"","logger_name":"org.example.Application","thread_name":"main","level":"INFO","level_value":20000}
 ----
 
-This format also adds every key value pair contained in the MDC to the JSON object.
-You can also use the https://www.slf4j.org/manual.html#fluent[SLF4J fluent logging API] to add key value pairs to the logged JSON object with the https://www.slf4j.org/apidocs/org/slf4j/spi/LoggingEventBuilder.html#addKeyValue(java.lang.String,java.lang.Object)[addKeyValue] method.
+此格式还将 MDC 中包含的每个键值对添加到 JSON 对象中。
+您还可以使用 https://www.slf4j.org/manual.html#fluent[SLF4J fluent logging API] 通过 https://www.slf4j.org/apidocs/org/slf4j/spi/LoggingEventBuilder.html#addKeyValue(java.lang.String,java.lang.Object)[addKeyValue] 方法将键值对添加到记录的 JSON 对象中。
 
-If you add https://www.slf4j.org/api/org/slf4j/Marker.html[markers], these will show up in a `tags` string array in the JSON.
+如果您添加 https://www.slf4j.org/api/org/slf4j/Marker.html[markers]，这些将显示在 JSON 的 `tags` 字符串数组中。
 
 
 
 [[features.logging.structured.customizing-json]]
-=== Customizing Structured Logging JSON
+=== 自定义结构化日志记录 JSON
 
-Spring Boot attempts to pick sensible defaults for the JSON names and values output for structured logging.
-Sometimes, however, you may want to make small adjustments to the JSON for your own needs.
-For example, it's possible that you might want to change some of the names to match the expectations of your log ingestion system.
-You might also want to filter out certain members since you don't find them useful.
+Spring Boot 尝试为结构化日志记录输出的 JSON 名称和值选择合理的默认值。
+但是，有时您可能想要根据自己的需要对 JSON 进行小的调整。
+例如，您可能想要更改一些名称以匹配日志摄取系统的期望。
+您可能还想过滤掉某些成员，因为您发现它们没有用。
 
-The following properties allow you to change the way that structured logging JSON is written:
+以下属性允许您更改结构化日志记录 JSON 的写入方式：
 
 |===
-| Property | Description
+| 属性 | 描述
 
 | configprop:logging.structured.json.include[] & configprop:logging.structured.json.exclude[]
-| Filters specific paths from the JSON
+| 从 JSON 中过滤特定路径
 
 | configprop:logging.structured.json.rename[]
-| Renames a specific member in the JSON
+| 重命名 JSON 中的特定成员
 
 | configprop:logging.structured.json.add[]
-| Adds additional members to the JSON
+| 向 JSON 添加其他成员
 |===
 
-For example, the following will exclude `log.level`, rename `process.id` to `procid` and add a fixed `corpname` field:
+例如，以下将排除 `log.level`，将 `process.id` 重命名为 `procid` 并添加固定的 `corpname` 字段：
 
 [configprops,yaml]
 ----
@@ -641,40 +641,40 @@ logging:
         corpname: mycorp
 ----
 
-TIP: For more advanced customizations, you can write your own class that implements the javadoc:org.springframework.boot.logging.structured.StructuredLoggingJsonMembersCustomizer[] interface and declare it using the configprop:logging.structured.json.customizer[] property.
-You can also declare implementations by listing them in a `META-INF/spring.factories` file.
+TIP: 对于更高级的自定义，您可以编写自己的类来实现 javadoc:org.springframework.boot.logging.structured.StructuredLoggingJsonMembersCustomizer[] 接口，并使用 configprop:logging.structured.json.customizer[] 属性声明它。
+您还可以通过在 `META-INF/spring.factories` 文件中列出它们来声明实现。
 
 
 
 [[features.logging.structured.other-formats]]
-=== Supporting Other Structured Logging Formats
+=== 支持其他结构化日志记录格式
 
-The structured logging support in Spring Boot is extensible, allowing you to define your own custom format.
-To do this, implement the javadoc:org.springframework.boot.logging.structured.StructuredLogFormatter[] interface. The generic type argument has to be javadoc:ch.qos.logback.classic.spi.ILoggingEvent[] when using Logback and javadoc:org.apache.logging.log4j.core.LogEvent[] when using Log4j2 (that means your implementation is tied to a specific logging system).
-Your implementation is then called with the log event and returns the javadoc:java.lang.String[] to be logged, as seen in this example:
+Spring Boot 中的结构化日志记录支持是可扩展的，允许您定义自己的自定义格式。
+为此，实现 javadoc:org.springframework.boot.logging.structured.StructuredLogFormatter[] 接口。泛型类型参数在使用 Logback 时必须为 javadoc:ch.qos.logback.classic.spi.ILoggingEvent[]，在使用 Log4j2 时必须为 javadoc:org.apache.logging.log4j.core.LogEvent[]（这意味着您的实现与特定的日志系统绑定）。
+然后，您的实现会使用日志事件调用，并返回要记录的 javadoc:java.lang.String[]，如下例所示：
 
 include-code::MyCustomFormat[]
 
-As you can see in the example, you can return any format, it doesn't have to be JSON.
+如您所见，您可以返回任何格式，不必是 JSON。
 
-To enable your custom format, set the property configprop:logging.structured.format.console[] or configprop:logging.structured.format.file[] to the fully qualified class name of your implementation.
+要启用您的自定义格式，请将属性 configprop:logging.structured.format.console[] 或 configprop:logging.structured.format.file[] 设置为您实现的完全限定类名。
 
-Your implementation can use some constructor parameters, which are injected automatically.
-Please see the JavaDoc of javadoc:org.springframework.boot.logging.structured.StructuredLogFormatter[] for more details.
+您的实现可以使用一些构造函数参数，这些参数会自动注入。
+有关更多详细信息，请参阅 javadoc:org.springframework.boot.logging.structured.StructuredLogFormatter[] 的 JavaDoc。
 
 
 
 [[features.logging.logback-extensions]]
-== Logback Extensions
+== Logback 扩展
 
-Spring Boot includes a number of extensions to Logback that can help with advanced configuration.
-You can use these extensions in your `logback-spring.xml` configuration file.
+Spring Boot 包含许多 Logback 扩展，可以帮助进行高级配置。
+您可以在 `logback-spring.xml` 配置文件中使用这些扩展。
 
-NOTE: Because the standard `logback.xml` configuration file is loaded too early, you cannot use extensions in it.
-You need to either use `logback-spring.xml` or define a configprop:logging.config[] property.
+NOTE: 由于标准 `logback.xml` 配置文件加载太早，您无法在其中使用扩展。
+您需要使用 `logback-spring.xml` 或定义 configprop:logging.config[] 属性。
 
-WARNING: The extensions cannot be used with Logback's https://logback.qos.ch/manual/configuration.html#autoScan[configuration scanning].
-If you attempt to do so, making changes to the configuration file results in an error similar to one of the following being logged:
+WARNING: 扩展不能与 Logback 的 https://logback.qos.ch/manual/configuration.html#autoScan[配置扫描] 一起使用。
+如果您尝试这样做，对配置文件进行更改会导致记录类似于以下之一的错误：
 
 [source]
 ----
@@ -685,15 +685,15 @@ ERROR in ch.qos.logback.core.joran.spi.Interpreter@4:71 - no applicable action f
 
 
 [[features.logging.logback-extensions.profile-specific]]
-=== Profile-specific Configuration
+=== 特定于配置文件的配置
 
-The `<springProfile>` tag lets you optionally include or exclude sections of configuration based on the active Spring profiles.
-Profile sections are supported anywhere within the `<configuration>` element.
-Use the `name` attribute to specify which profile accepts the configuration.
-The `<springProfile>` tag can contain a profile name (for example `staging`) or a profile expression.
-A profile expression allows for more complicated profile logic to be expressed, for example `production & (eu-central | eu-west)`.
-Check the {url-spring-framework-docs}/core/beans/environment.html#beans-definition-profiles-java[Spring Framework reference guide] for more details.
-The following listing shows three sample profiles:
+`<springProfile>` 标签允许您根据活动的 Spring 配置文件选择性地包含或排除配置部分。
+配置文件部分在 `<configuration>` 元素内的任何位置都受支持。
+使用 `name` 属性指定哪个配置文件接受配置。
+`<springProfile>` 标签可以包含配置文件名称（例如 `staging`）或配置文件表达式。
+配置文件表达式允许表达更复杂的配置文件逻辑，例如 `production & (eu-central | eu-west)`。
+有关更多详细信息，请查看 {url-spring-framework-docs}/core/beans/environment.html#beans-definition-profiles-java[Spring Framework 参考指南]。
+以下列表显示了三个示例配置文件：
 
 [source,xml]
 ----
@@ -713,15 +713,15 @@ The following listing shows three sample profiles:
 
 
 [[features.logging.logback-extensions.environment-properties]]
-=== Environment Properties
+=== 环境属性
 
-The `<springProperty>` tag lets you expose properties from the Spring javadoc:org.springframework.core.env.Environment[] for use within Logback.
-Doing so can be useful if you want to access values from your `application.properties` file in your Logback configuration.
-The tag works in a similar way to Logback's standard `<property>` tag.
-However, rather than specifying a direct `value`, you specify the `source` of the property (from the javadoc:org.springframework.core.env.Environment[]).
-If you need to store the property somewhere other than in `local` scope, you can use the `scope` attribute.
-If you need a fallback value (in case the property is not set in the javadoc:org.springframework.core.env.Environment[]), you can use the `defaultValue` attribute.
-The following example shows how to expose properties for use within Logback:
+`<springProperty>` 标签允许您从 Spring javadoc:org.springframework.core.env.Environment[] 中公开属性以供 Logback 使用。
+如果您想在 Logback 配置中访问 `application.properties` 文件中的值，这很有用。
+该标签的工作方式类似于 Logback 的标准 `<property>` 标签。
+但是，您不是指定直接的 `value`，而是指定属性的 `source`（来自 javadoc:org.springframework.core.env.Environment[]）。
+如果您需要将属性存储在其他地方而不是 `local` 作用域中，可以使用 `scope` 属性。
+如果您需要回退值（以防在 javadoc:org.springframework.core.env.Environment[] 中未设置属性），可以使用 `defaultValue` 属性。
+以下示例显示了如何公开属性以供 Logback 使用：
 
 [source,xml]
 ----
@@ -733,35 +733,35 @@ The following example shows how to expose properties for use within Logback:
 </appender>
 ----
 
-NOTE: The `source` must be specified in kebab case (such as `my.property-name`).
-However, properties can be added to the javadoc:org.springframework.core.env.Environment[] by using the relaxed rules.
+NOTE: `source` 必须使用 kebab case 指定（例如 `my.property-name`）。
+但是，可以使用宽松规则将属性添加到 javadoc:org.springframework.core.env.Environment[] 中。
 
 
 
 [[features.logging.log4j2-extensions]]
-== Log4j2 Extensions
+== Log4j2 扩展
 
-Spring Boot includes a number of extensions to Log4j2 that can help with advanced configuration.
-You can use these extensions in any `log4j2-spring.xml` configuration file.
+Spring Boot 包含许多 Log4j2 扩展，可以帮助进行高级配置。
+您可以在任何 `log4j2-spring.xml` 配置文件中使用这些扩展。
 
-NOTE: Because the standard `log4j2.xml` configuration file is loaded too early, you cannot use extensions in it.
-You need to either use `log4j2-spring.xml` or define a configprop:logging.config[] property.
+NOTE: 由于标准 `log4j2.xml` 配置文件加载太早，您无法在其中使用扩展。
+您需要使用 `log4j2-spring.xml` 或定义 configprop:logging.config[] 属性。
 
-NOTE: The extensions supersede the https://logging.apache.org/log4j/2.x/log4j-spring-boot.html[Spring Boot support] provided by Log4J.
-You should make sure not to include the `org.apache.logging.log4j:log4j-spring-boot` module in your build.
+NOTE: 这些扩展取代了 Log4J 提供的 https://logging.apache.org/log4j/2.x/log4j-spring-boot.html[Spring Boot 支持]。
+您应确保不要在构建中包含 `org.apache.logging.log4j:log4j-spring-boot` 模块。
 
 
 
 [[features.logging.log4j2-extensions.profile-specific]]
-=== Profile-specific Configuration
+=== 特定于配置文件的配置
 
-The `<SpringProfile>` tag lets you optionally include or exclude sections of configuration based on the active Spring profiles.
-Profile sections are supported anywhere within the `<Configuration>` element.
-Use the `name` attribute to specify which profile accepts the configuration.
-The `<SpringProfile>` tag can contain a profile name (for example `staging`) or a profile expression.
-A profile expression allows for more complicated profile logic to be expressed, for example `production & (eu-central | eu-west)`.
-Check the {url-spring-framework-docs}/core/beans/environment.html#beans-definition-profiles-java[Spring Framework reference guide] for more details.
-The following listing shows three sample profiles:
+`<SpringProfile>` 标签允许您根据活动的 Spring 配置文件选择性地包含或排除配置部分。
+配置文件部分在 `<Configuration>` 元素内的任何位置都受支持。
+使用 `name` 属性指定哪个配置文件接受配置。
+`<SpringProfile>` 标签可以包含配置文件名称（例如 `staging`）或配置文件表达式。
+配置文件表达式允许表达更复杂的配置文件逻辑，例如 `production & (eu-central | eu-west)`。
+有关更多详细信息，请查看 {url-spring-framework-docs}/core/beans/environment.html#beans-definition-profiles-java[Spring Framework 参考指南]。
+以下列表显示了三个示例配置文件：
 
 [source,xml]
 ----
@@ -781,12 +781,12 @@ The following listing shows three sample profiles:
 
 
 [[features.logging.log4j2-extensions.environment-properties-lookup]]
-=== Environment Properties Lookup
+=== 环境属性查找
 
-If you want to refer to properties from your Spring javadoc:org.springframework.core.env.Environment[] within your Log4j2 configuration you can use `spring:` prefixed https://logging.apache.org/log4j/2.x/manual/lookups.html[lookups].
-Doing so can be useful if you want to access values from your `application.properties` file in your Log4j2 configuration.
+如果您想在 Log4j2 配置中引用 Spring javadoc:org.springframework.core.env.Environment[] 中的属性，可以使用 `spring:` 前缀的 https://logging.apache.org/log4j/2.x/manual/lookups.html[查找]。
+如果您想在 Log4j2 配置中访问 `application.properties` 文件中的值，这很有用。
 
-The following example shows how to set Log4j2 properties named `applicationName` and `applicationGroup` that read `spring.application.name` and `spring.application.group` from the Spring javadoc:org.springframework.core.env.Environment[]:
+以下示例显示了如何设置名为 `applicationName` 和 `applicationGroup` 的 Log4j2 属性，这些属性从 Spring javadoc:org.springframework.core.env.Environment[] 中读取 `spring.application.name` 和 `spring.application.group`：
 
 [source,xml]
 ----
@@ -796,20 +796,20 @@ The following example shows how to set Log4j2 properties named `applicationName`
 </Properties>
 ----
 
-NOTE: The lookup key should be specified in kebab case (such as `my.property-name`).
+NOTE: 查找键应使用 kebab case 指定（例如 `my.property-name`）。
 
 
 
 [[features.logging.log4j2-extensions.environment-property-source]]
-=== Log4j2 System Properties
+=== Log4j2 系统属性
 
-Log4j2 supports a number of https://logging.apache.org/log4j/2.x/manual/systemproperties.html[System Properties] that can be used to configure various items.
-For example, the `log4j2.skipJansi` system property can be used to configure if the javadoc:org.apache.logging.log4j.core.appender.ConsoleAppender[] will try to use a https://github.com/fusesource/jansi[Jansi] output stream on Windows.
+Log4j2 支持许多 https://logging.apache.org/log4j/2.x/manual/systemproperties.html[系统属性]，可用于配置各种项目。
+例如，`log4j2.skipJansi` 系统属性可用于配置 javadoc:org.apache.logging.log4j.core.appender.ConsoleAppender[] 是否尝试在 Windows 上使用 https://github.com/fusesource/jansi[Jansi] 输出流。
 
-All system properties that are loaded after the Log4j2 initialization can be obtained from the Spring javadoc:org.springframework.core.env.Environment[].
-For example, you could add `log4j2.skipJansi=false` to your `application.properties` file to have the javadoc:org.apache.logging.log4j.core.appender.ConsoleAppender[] use Jansi on Windows.
+Log4j2 初始化后加载的所有系统属性都可以从 Spring javadoc:org.springframework.core.env.Environment[] 中获取。
+例如，您可以在 `application.properties` 文件中添加 `log4j2.skipJansi=false`，以使 javadoc:org.apache.logging.log4j.core.appender.ConsoleAppender[] 在 Windows 上使用 Jansi。
 
-NOTE: The Spring javadoc:org.springframework.core.env.Environment[] is only considered when system properties and OS environment variables do not contain the value being loaded.
+NOTE: 仅当系统属性和 OS 环境变量不包含正在加载的值时，才会考虑 Spring javadoc:org.springframework.core.env.Environment[]。
 
-WARNING: System properties that are loaded during early Log4j2 initialization cannot reference the Spring javadoc:org.springframework.core.env.Environment[].
-For example, the property Log4j2 uses to allow the default Log4j2 implementation to be chosen is used before the Spring Environment is available.
+WARNING: 在早期 Log4j2 初始化期间加载的系统属性不能引用 Spring javadoc:org.springframework.core.env.Environment[]。
+例如，Log4j2 用于允许选择默认 Log4j2 实现的属性在 Spring Environment 可用之前使用。

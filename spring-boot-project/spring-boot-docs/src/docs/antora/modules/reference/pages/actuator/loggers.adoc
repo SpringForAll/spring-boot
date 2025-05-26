@@ -1,9 +1,9 @@
 [[actuator.loggers]]
-= Loggers
+= 日志记录器
 
-Spring Boot Actuator includes the ability to view and configure the log levels of your application at runtime.
-You can view either the entire list or an individual logger's configuration, which is made up of both the explicitly configured logging level as well as the effective logging level given to it by the logging framework.
-These levels can be one of:
+Spring Boot Actuator 包含在运行时查看和配置应用程序日志级别的功能。
+你可以查看完整列表或单个日志记录器的配置，该配置由显式配置的日志级别以及日志框架给予它的有效日志级别组成。
+这些级别可以是以下之一：
 
 * `TRACE`
 * `DEBUG`
@@ -14,14 +14,14 @@ These levels can be one of:
 * `OFF`
 * `null`
 
-`null` indicates that there is no explicit configuration.
+`null` 表示没有显式配置。
 
 
 
 [[actuator.loggers.configure]]
-== Configure a Logger
+== 配置日志记录器
 
-To configure a given logger, `POST` a partial entity to the resource's URI, as the following example shows:
+要配置给定的日志记录器，请向资源的 URI 发送部分实体，如下例所示：
 
 [source,json]
 ----
@@ -30,14 +30,14 @@ To configure a given logger, `POST` a partial entity to the resource's URI, as t
 }
 ----
 
-TIP: To "`reset`" the specific level of the logger (and use the default configuration instead), you can pass a value of `null` as the `configuredLevel`.
+TIP: 要"重置"日志记录器的特定级别（并改用默认配置），你可以将 `configuredLevel` 的值设置为 `null`。
 
 
 
 [[actuator.loggers.opentelemetry]]
 == OpenTelemetry
-By default, logging via OpenTelemetry is not configured.
-You have to provide the location of the OpenTelemetry logs endpoint to configure it:
+默认情况下，不配置通过 OpenTelemetry 的日志记录。
+你必须提供 OpenTelemetry 日志端点的位置来配置它：
 
 [configprops,yaml]
 ----
@@ -47,12 +47,12 @@ management:
       endpoint: "https://otlp.example.com:4318/v1/logs"
 ----
 
-NOTE: The OpenTelemetry Logback appender and Log4j appender are not part of Spring Boot.
-For more details, see the https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/logback/logback-appender-1.0/library[OpenTelemetry Logback appender] or the https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/log4j/log4j-appender-2.17/library[OpenTelemetry Log4j2 appender] in the https://github.com/open-telemetry/opentelemetry-java-instrumentation[OpenTelemetry Java instrumentation GitHub repository].
+NOTE: OpenTelemetry Logback appender 和 Log4j appender 不是 Spring Boot 的一部分。
+有关更多详细信息，请参见 https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/logback/logback-appender-1.0/library[OpenTelemetry Logback appender] 或 https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/log4j/log4j-appender-2.17/library[OpenTelemetry Log4j2 appender] 在 https://github.com/open-telemetry/opentelemetry-java-instrumentation[OpenTelemetry Java instrumentation GitHub 仓库] 中。
 
-TIP: You have to configure the appender in your `logback-spring.xml` or `log4j2-spring.xml` configuration to get OpenTelemetry logging working.
+TIP: 你必须在 `logback-spring.xml` 或 `log4j2-spring.xml` 配置中配置 appender 才能使 OpenTelemetry 日志记录正常工作。
 
-The `OpenTelemetryAppender` for both Logback and Log4j requires access to an javadoc:io.opentelemetry.api.OpenTelemetry[] instance to function properly.
-This instance must be set programmatically during application startup, which can be done like this:
+Logback 和 Log4j 的 `OpenTelemetryAppender` 都需要访问 javadoc:io.opentelemetry.api.OpenTelemetry[] 实例才能正常工作。
+这个实例必须在应用程序启动期间以编程方式设置，可以这样做：
 
 include-code::OpenTelemetryAppenderInitializer[]

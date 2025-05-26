@@ -1,17 +1,17 @@
 [[community]]
-= Community
+= 社区
 
-If you have trouble with Spring Boot, we would like to help.
+如果您在使用 Spring Boot 时遇到问题，我们很乐意提供帮助。
 
-* Try the xref:how-to:index.adoc[How-to documents].
-They provide solutions to the most common questions.
-* Learn the Spring basics.
-Spring Boot builds on many other Spring projects.
-Check the https://spring.io[spring.io] web-site for a wealth of reference documentation.
-If you are starting out with Spring, try one of the https://spring.io/guides[guides].
-* Ask a question.
-We monitor https://stackoverflow.com[stackoverflow.com] for questions tagged with https://stackoverflow.com/tags/spring-boot[`spring-boot`].
-* Report bugs with Spring Boot at https://github.com/spring-projects/spring-boot/issues.
+* 尝试查看 xref:how-to:index.adoc[操作指南文档]。
+它们提供了对最常见问题的解决方案。
+* 学习 Spring 基础知识。
+Spring Boot 建立在许多其他 Spring 项目之上。
+请访问 https://spring.io[spring.io] 网站，获取丰富的参考文档。
+如果您刚开始使用 Spring，可以尝试 https://spring.io/guides[指南]。
+* 提出问题。
+我们在 https://stackoverflow.com[stackoverflow.com] 上监控带有 https://stackoverflow.com/tags/spring-boot[`spring-boot`] 标签的问题。
+* 在 https://github.com/spring-projects/spring-boot/issues 报告 Spring Boot 的错误。
 
-NOTE: All of Spring Boot is open source, including the documentation.
-If you find problems with the docs or if you want to improve them, please {url-github}[get involved].
+NOTE: Spring Boot 的所有内容，包括文档，都是开源的。
+如果您发现文档有问题或希望改进它们，请 {url-github}[参与其中]。

@@ -1,16 +1,16 @@
 [[actuator.enabling]]
-= Enabling Production-ready Features
+= 启用生产就绪功能
 
-The {code-spring-boot}/spring-boot-project/spring-boot-actuator[`spring-boot-actuator`] module provides all of Spring Boot's production-ready features.
-The recommended way to enable the features is to add a dependency on the `spring-boot-starter-actuator` starter.
+{code-spring-boot}/spring-boot-project/spring-boot-actuator[`spring-boot-actuator`] 模块提供了所有 Spring Boot 的生产就绪功能。
+启用这些功能的推荐方式是添加 `spring-boot-starter-actuator` starter 依赖。
 
-.Definition of Actuator
+.Actuator 的定义
 ****
-An actuator is a manufacturing term that refers to a mechanical device for moving or controlling something.
-Actuators can generate a large amount of motion from a small change.
+Actuator 是一个制造术语，指的是用于移动或控制某物的机械装置。
+Actuator 可以从小的变化产生大量的运动。
 ****
 
-To add the actuator to a Maven-based project, add the following starter dependency:
+要在基于 Maven 的项目中添加 actuator，添加以下 starter 依赖：
 
 [source,xml]
 ----
@@ -22,7 +22,7 @@ To add the actuator to a Maven-based project, add the following starter dependen
 </dependencies>
 ----
 
-For Gradle, use the following declaration:
+对于 Gradle，使用以下声明：
 
 [source,gradle]
 ----

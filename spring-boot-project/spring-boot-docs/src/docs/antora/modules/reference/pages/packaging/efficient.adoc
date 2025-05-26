@@ -1,38 +1,37 @@
 [[packaging.efficient]]
-= Efficient Deployments
+= 高效部署
 
 
 
 [[packaging.efficient.unpacking]]
-== Unpacking the Executable jar
+== 解压可执行jar
 
-You can run your application using the executable jar, but loading the classes from nested jars has a small startup cost.
-Depending on the size of the jar, running the application from an exploded structure is faster and recommended in production.
-Certain PaaS implementations may also choose to extract archives before they run.
-For example, Cloud Foundry operates this way.
+您可以使用可执行jar运行应用程序，但从嵌套jar加载类会有一些启动成本。
+根据jar的大小，从解压后的结构运行应用程序更快，建议在生产环境中使用。
+某些PaaS实现也可能选择在运行之前提取归档文件。
+例如，Cloud Foundry就是这样运行的。
 
-Spring Boot supports extracting your application to a directory using different layouts.
-The default layout is the most efficient, and it is xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.cds[CDS] and xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.aot-cache[AOT cache] friendly.
+Spring Boot支持使用不同的布局将应用程序提取到目录中。
+默认布局是最有效的，它对 xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.cds[CDS] 和 xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.aot-cache[AOT缓存] 友好。
 
-In this layout, the libraries are extracted to a `lib/` folder, and the application jar
-contains the application classes and a manifest which references the libraries in the `lib/` folder.
+在此布局中，库被提取到 `lib/` 文件夹中，应用程序jar包含应用程序类和引用 `lib/` 文件夹中库的清单。
 
-To unpack the executable jar, run this command:
+要解压可执行jar，运行以下命令：
 
 [source,shell]
 ----
 $ java -Djarmode=tools -jar my-app.jar extract
 ----
 
-And then in production, you can run the extracted jar:
+然后在生产环境中，您可以运行解压后的jar：
 
 [source,shell]
 ----
 $ java -jar my-app/my-app.jar
 ----
 
-After startup, you should not expect any differences in execution time between running an executable jar and running an extracted jar.
+启动后，运行可执行jar和解压后的jar之间不应该有任何执行时间差异。
 
-TIP: Run `java -Djarmode=tools -jar my-app.jar help extract` to see all possible options.
+提示：运行 `java -Djarmode=tools -jar my-app.jar help extract` 查看所有可能的选项。
 
 

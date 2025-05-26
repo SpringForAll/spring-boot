@@ -1,44 +1,44 @@
 [[appendix.executable-jar.property-launcher]]
-= PropertiesLauncher Features
+= PropertiesLauncher 特性
 
-javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[] has a few special features that can be enabled with external properties (System properties, environment variables, manifest entries, or `loader.properties`).
-The following table describes these properties:
+javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[] 有一些可以通过外部属性（系统属性、环境变量、清单条目或 `loader.properties`）启用的特殊特性。
+下表描述了这些属性：
 
 |===
-| Key | Purpose
+| 键 | 用途
 
 | `loader.path`
-| Comma-separated Classpath, such as `lib,$\{HOME}/app/lib`.
-  Earlier entries take precedence, like a regular `-classpath` on the `javac` command line.
+| 以逗号分隔的类路径，例如 `lib,$\{HOME}/app/lib`。
+  较早的条目优先，就像 `javac` 命令行上的常规 `-classpath` 一样。
 
 | `loader.home`
-| Used to resolve relative paths in `loader.path`.
-  For example, given `loader.path=lib`, then `${loader.home}/lib` is a classpath location (along with all jar files in that directory).
-  This property is also used to locate a `loader.properties` file, as in the following example `file:///opt/app` It defaults to `${user.dir}`.
+| 用于解析 `loader.path` 中的相对路径。
+  例如，给定 `loader.path=lib`，则 `${loader.home}/lib` 是一个类路径位置（以及该目录中的所有 jar 文件）。
+  此属性也用于定位 `loader.properties` 文件，如下例所示 `file:///opt/app` 它默认为 `${user.dir}`。
 
 | `loader.args`
-| Default arguments for the main method (space separated).
+| main 方法的默认参数（以空格分隔）。
 
 | `loader.main`
-| Name of main class to launch (for example, `com.app.Application`).
+| 要启动的主类的名称（例如，`com.app.Application`）。
 
 | `loader.config.name`
-| Name of properties file (for example, `launcher`).
-  It defaults to `loader`.
+| 属性文件的名称（例如，`launcher`）。
+  它默认为 `loader`。
 
 | `loader.config.location`
-| Path to properties file (for example, `classpath:loader.properties`).
-  It defaults to `loader.properties`.
+| 属性文件的路径（例如，`classpath:loader.properties`）。
+  它默认为 `loader.properties`。
 
 | `loader.system`
-| Boolean flag to indicate that all properties should be added to System properties.
-  It defaults to `false`.
+| 布尔标志，指示所有属性都应添加到系统属性中。
+  它默认为 `false`。
 |===
 
-When specified as environment variables or manifest entries, the following names should be used:
+当指定为环境变量或清单条目时，应使用以下名称：
 
 |===
-| Key | Manifest entry | Environment variable
+| 键 | 清单条目 | 环境变量
 
 | `loader.path`
 | `Loader-Path`
@@ -65,18 +65,18 @@ When specified as environment variables or manifest entries, the following names
 | `LOADER_SYSTEM`
 |===
 
-TIP: Build plugins automatically move the `Main-Class` attribute to `Start-Class` when the uber jar is built.
-If you use that, specify the name of the class to launch by using the `Main-Class` attribute and leaving out `Start-Class`.
+提示：构建插件在构建 uber jar 时会自动将 `Main-Class` 属性移动到 `Start-Class`。
+如果您使用这种方式，请使用 `Main-Class` 属性指定要启动的类的名称，并省略 `Start-Class`。
 
-The following rules apply to working with javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[]:
+以下规则适用于使用 javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[]：
 
-* `loader.properties` is searched for in `loader.home`, then in the root of the classpath, and then in `classpath:/BOOT-INF/classes`.
-  The first location where a file with that name exists is used.
-* `loader.home` is the directory location of an additional properties file (overriding the default) only when `loader.config.location` is not specified.
-* `loader.path` can contain directories (which are scanned recursively for jar and zip files), archive paths, a directory within an archive that is scanned for jar files (for example, `dependencies.jar!/lib`), or wildcard patterns (for the default JVM behavior).
-  Archive paths can be relative to `loader.home` or anywhere in the file system with a `jar:file:` prefix.
-* `loader.path` (if empty) defaults to `BOOT-INF/lib` (meaning a local directory or a nested one if running from an archive).
-  Because of this, javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[] behaves the same as javadoc:org.springframework.boot.loader.launch.JarLauncher[] when no additional configuration is provided.
-* `loader.path` can not be used to configure the location of `loader.properties` (the classpath used to search for the latter is the JVM classpath when javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[] is launched).
-* Placeholder replacement is done from System and environment variables plus the properties file itself on all values before use.
-* The search order for properties (where it makes sense to look in more than one place) is environment variables, system properties, `loader.properties`, the exploded archive manifest, and the archive manifest.
+* `loader.properties` 在 `loader.home` 中搜索，然后在类路径的根目录中搜索，最后在 `classpath:/BOOT-INF/classes` 中搜索。
+  使用找到该名称文件的第一个位置。
+* 仅当未指定 `loader.config.location` 时，`loader.home` 才是额外属性文件（覆盖默认值）的目录位置。
+* `loader.path` 可以包含目录（递归扫描 jar 和 zip 文件）、归档路径、归档文件中扫描 jar 文件的目录（例如，`dependencies.jar!/lib`）或通配符模式（用于默认 JVM 行为）。
+  归档路径可以相对于 `loader.home` 或文件系统中任何带有 `jar:file:` 前缀的位置。
+* `loader.path`（如果为空）默认为 `BOOT-INF/lib`（意味着本地目录或从归档文件运行时嵌套的目录）。
+  因此，当没有提供额外配置时，javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[] 的行为与 javadoc:org.springframework.boot.loader.launch.JarLauncher[] 相同。
+* `loader.path` 不能用于配置 `loader.properties` 的位置（用于搜索后者的类路径是启动 javadoc:org.springframework.boot.loader.launch.PropertiesLauncher[] 时的 JVM 类路径）。
+* 在使用之前，所有值都会从系统变量、环境变量和属性文件本身进行占位符替换。
+* 属性的搜索顺序（在需要查找多个位置的情况下）是环境变量、系统属性、`loader.properties`、展开的归档清单和归档清单。

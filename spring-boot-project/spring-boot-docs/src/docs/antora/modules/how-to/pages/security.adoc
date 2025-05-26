@@ -1,36 +1,36 @@
 [[howto.security]]
-= Security
+= 安全性
 
-This section addresses questions about security when working with Spring Boot, including questions that arise from using Spring Security with Spring Boot.
+本节解决使用 Spring Boot 时的安全性问题，包括使用 Spring Security 与 Spring Boot 时出现的问题。
 
-For more about Spring Security, see the {url-spring-security-site}[Spring Security project page].
+有关 Spring Security 的更多信息，请参阅 {url-spring-security-site}[Spring Security 项目页面]。
 
 
 
 [[howto.security.switch-off-spring-boot-configuration]]
-== Switch Off the Spring Boot Security Configuration
+== 关闭 Spring Boot 安全配置
 
-If you define a javadoc:org.springframework.context.annotation.Configuration[format=annotation] with a javadoc:org.springframework.security.web.SecurityFilterChain[] bean in your application, this action switches off the default webapp security settings in Spring Boot.
+如果您在应用程序中定义了一个带有 javadoc:org.springframework.security.web.SecurityFilterChain[] bean 的 javadoc:org.springframework.context.annotation.Configuration[format=annotation]，这个操作会关闭 Spring Boot 中的默认 Web 应用程序安全设置。
 
 
 
 [[howto.security.change-user-details-service-and-add-user-accounts]]
-== Change the UserDetailsService and Add User Accounts
+== 更改 UserDetailsService 并添加用户账户
 
-If you provide a javadoc:org.springframework.context.annotation.Bean[format=annotation] of type javadoc:org.springframework.security.authentication.AuthenticationManager[], javadoc:org.springframework.security.authentication.AuthenticationProvider[], or javadoc:org.springframework.security.core.userdetails.UserDetailsService[], the default javadoc:org.springframework.context.annotation.Bean[format=annotation] for javadoc:org.springframework.security.provisioning.InMemoryUserDetailsManager[] is not created.
-This means you have the full feature set of Spring Security available (such as {url-spring-security-docs}/servlet/authentication/index.html[various authentication options]).
+如果您提供了一个类型为 javadoc:org.springframework.security.authentication.AuthenticationManager[]、javadoc:org.springframework.security.authentication.AuthenticationProvider[] 或 javadoc:org.springframework.security.core.userdetails.UserDetailsService[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]，则不会创建 javadoc:org.springframework.security.provisioning.InMemoryUserDetailsManager[] 的默认 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
+这意味着您可以使用 Spring Security 的全部功能（如 {url-spring-security-docs}/servlet/authentication/index.html[各种身份验证选项]）。
 
-The easiest way to add user accounts is by providing your own javadoc:org.springframework.security.core.userdetails.UserDetailsService[] bean.
+添加用户账户的最简单方法是提供您自己的 javadoc:org.springframework.security.core.userdetails.UserDetailsService[] bean。
 
 
 
 [[howto.security.enable-https]]
-== Enable HTTPS When Running Behind a Proxy Server
+== 在代理服务器后面运行时启用 HTTPS
 
-Ensuring that all your main endpoints are only available over HTTPS is an important chore for any application.
-If you use Tomcat as a servlet container, then Spring Boot adds Tomcat's own javadoc:org.apache.catalina.valves.RemoteIpValve[] automatically if it detects some environment settings, allowing you to rely on the javadoc:jakarta.servlet.http.HttpServletRequest[] to report whether it is secure or not (even downstream of a proxy server that handles the real SSL termination).
-The standard behavior is determined by the presence or absence of certain request headers (`x-forwarded-for` and `x-forwarded-proto`), whose names are conventional, so it should work with most front-end proxies.
-You can switch on the valve by adding some entries to `application.properties`, as shown in the following example:
+确保所有主要端点只能通过 HTTPS 访问是任何应用程序的重要任务。
+如果您使用 Tomcat 作为 servlet 容器，那么当 Spring Boot 检测到某些环境设置时，它会自动添加 Tomcat 自己的 javadoc:org.apache.catalina.valves.RemoteIpValve[]，允许您依赖 javadoc:jakarta.servlet.http.HttpServletRequest[] 来报告它是否安全（即使在处理实际 SSL 终止的代理服务器下游）。
+标准行为由某些请求头（`x-forwarded-for` 和 `x-forwarded-proto`）的存在或不存在决定，这些头的名称是约定俗成的，因此它应该可以与大多数前端代理一起工作。
+您可以通过在 `application.properties` 中添加一些条目来打开阀门，如下例所示：
 
 [configprops,yaml]
 ----
@@ -41,9 +41,9 @@ server:
       protocol-header: "x-forwarded-proto"
 ----
 
-(The presence of either of those properties switches on the valve.
-Alternatively, you can add the javadoc:org.apache.catalina.valves.RemoteIpValve[] by customizing the javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[] using a javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] bean.)
+（这些属性中的任何一个存在都会打开阀门。
+或者，您可以通过使用 javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] bean 自定义 javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[] 来添加 javadoc:org.apache.catalina.valves.RemoteIpValve[]。）
 
-To configure Spring Security to require a secure channel for all (or some) requests, consider adding your own javadoc:org.springframework.security.web.SecurityFilterChain[] bean that adds the following javadoc:org.springframework.security.config.annotation.web.builders.HttpSecurity[] configuration:
+要将 Spring Security 配置为要求所有（或某些）请求使用安全通道，请考虑添加您自己的 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，该 bean 添加以下 javadoc:org.springframework.security.config.annotation.web.builders.HttpSecurity[] 配置：
 
 include-code::MySecurityConfig[]

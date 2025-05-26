@@ -1,8 +1,8 @@
 [[howto.traditional-deployment]]
-= Traditional Deployment
+= 传统部署
 
-Spring Boot supports traditional deployment as well as more modern forms of deployment.
-This section answers common questions about traditional deployment.
+Spring Boot 支持传统部署方式，也支持更现代的部署方式。
+本节解答了关于传统部署的常见问题。
 
 
 
@@ -116,7 +116,7 @@ All of these should be amenable to translation, but each might require slightly 
 
 Servlet 3.0+ applications might translate pretty easily if they already use the Spring Servlet 3.0+ initializer support classes.
 Normally, all the code from an existing javadoc:org.springframework.web.WebApplicationInitializer[] can be moved into a javadoc:org.springframework.boot.web.servlet.support.SpringBootServletInitializer[].
-If your existing application has more than one javadoc:org.springframework.context.ApplicationContext[] (for example, if it uses javadoc:org.springframework.web.servlet.support.AbstractDispatcherServletInitializer[]) then you might be able to combine all your context sources into a single javadoc:org.springframework.boot.SpringApplication[].
+If your existing application has more than one javadoc:org.springframework.context.ApplicationContext[] (for example, if it uses javadoc:org.springframework.web.servlet.support.AbstractDispatcherServletInitializer[]) then you might be able to combine all your context sources into a javadoc:org.springframework.boot.SpringApplication[].
 The main complication you might encounter is if combining does not work and you need to maintain the context hierarchy.
 See the xref:application.adoc#howto.application.context-hierarchy[entry on building a hierarchy] for examples.
 An existing parent context that contains web-specific features usually needs to be broken up so that all the javadoc:org.springframework.web.context.ServletContextAware[] components are in the child context.

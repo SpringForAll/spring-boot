@@ -1,36 +1,36 @@
 [[actuator.jmx]]
-= Monitoring and Management over JMX
+= 通过 JMX 进行监控和管理
 
-Java Management Extensions (JMX) provide a standard mechanism to monitor and manage applications.
-By default, this feature is not enabled.
-You can turn it on by setting the configprop:spring.jmx.enabled[] configuration property to `true`.
-Spring Boot exposes the most suitable javadoc:javax.management.MBeanServer[] as a bean with an ID of `mbeanServer`.
-Any of your beans that are annotated with Spring JMX annotations (`@org.springframework.jmx.export.annotation.ManagedResource`, javadoc:org.springframework.jmx.export.annotation.ManagedAttribute[format=annotation], or javadoc:org.springframework.jmx.export.annotation.ManagedOperation[format=annotation]) are exposed to it.
+Java Management Extensions (JMX) 提供了一种标准的机制来监控和管理应用程序。
+默认情况下，此功能未启用。
+你可以通过将 configprop:spring.jmx.enabled[] 配置属性设置为 `true` 来启用它。
+Spring Boot 将最合适的 javadoc:javax.management.MBeanServer[] 作为 ID 为 `mbeanServer` 的 bean 暴露出来。
+任何使用 Spring JMX 注解（`@org.springframework.jmx.export.annotation.ManagedResource`、javadoc:org.springframework.jmx.export.annotation.ManagedAttribute[format=annotation] 或 javadoc:org.springframework.jmx.export.annotation.ManagedOperation[format=annotation]）的 bean 都会被暴露给它。
 
-If your platform provides a standard javadoc:javax.management.MBeanServer[], Spring Boot uses that and defaults to the VM javadoc:javax.management.MBeanServer[], if necessary.
-If all that fails, a new javadoc:javax.management.MBeanServer[] is created.
+如果你的平台提供了标准的 javadoc:javax.management.MBeanServer[]，Spring Boot 会使用它，并在必要时默认使用 VM javadoc:javax.management.MBeanServer[]。
+如果这些都失败了，则会创建一个新的 javadoc:javax.management.MBeanServer[]。
 
-NOTE: `spring.jmx.enabled` affects only the management beans provided by Spring.
-Enabling management beans provided by other libraries (for example {url-log4j2-docs}/jmx.html[Log4j2] or {url-quartz-javadoc}/constant-values.html#org.quartz.impl.StdSchedulerFactory.PROP_SCHED_JMX_EXPORT[Quartz]) is independent.
+NOTE: `spring.jmx.enabled` 仅影响 Spring 提供的管理 bean。
+启用其他库提供的管理 bean（例如 {url-log4j2-docs}/jmx.html[Log4j2] 或 {url-quartz-javadoc}/constant-values.html#org.quartz.impl.StdSchedulerFactory.PROP_SCHED_JMX_EXPORT[Quartz]）是独立的。
 
-See the {code-spring-boot-autoconfigure-src}/jmx/JmxAutoConfiguration.java[`JmxAutoConfiguration`] class for more details.
+有关更多详细信息，请参见 {code-spring-boot-autoconfigure-src}/jmx/JmxAutoConfiguration.java[`JmxAutoConfiguration`] 类。
 
-By default, Spring Boot also exposes management endpoints as JMX MBeans under the `org.springframework.boot` domain.
-To take full control over endpoint registration in the JMX domain, consider registering your own javadoc:org.springframework.boot.actuate.endpoint.jmx.EndpointObjectNameFactory[] implementation.
+默认情况下，Spring Boot 还将管理端点作为 JMX MBean 暴露在 `org.springframework.boot` 域下。
+要完全控制 JMX 域中的端点注册，请考虑注册你自己的 javadoc:org.springframework.boot.actuate.endpoint.jmx.EndpointObjectNameFactory[] 实现。
 
 
 
 [[actuator.jmx.custom-mbean-names]]
-== Customizing MBean Names
+== 自定义 MBean 名称
 
-The name of the MBean is usually generated from the `id` of the endpoint.
-For example, the `health` endpoint is exposed as `org.springframework.boot:type=Endpoint,name=Health`.
+MBean 的名称通常从端点的 `id` 生成。
+例如，`health` 端点被暴露为 `org.springframework.boot:type=Endpoint,name=Health`。
 
-If your application contains more than one Spring javadoc:org.springframework.context.ApplicationContext[], you may find that names clash.
-To solve this problem, you can set the configprop:spring.jmx.unique-names[] property to `true` so that MBean names are always unique.
+如果你的应用程序包含多个 Spring javadoc:org.springframework.context.ApplicationContext[]，你可能会发现名称冲突。
+要解决此问题，你可以将 configprop:spring.jmx.unique-names[] 属性设置为 `true`，以便 MBean 名称始终是唯一的。
 
-You can also customize the JMX domain under which endpoints are exposed.
-The following settings show an example of doing so in `application.properties`:
+你还可以自定义端点暴露的 JMX 域。
+以下设置显示了在 `application.properties` 中执行此操作的示例：
 
 [configprops,yaml]
 ----
@@ -46,9 +46,9 @@ management:
 
 
 [[actuator.jmx.disable-jmx-endpoints]]
-== Disabling JMX Endpoints
+== 禁用 JMX 端点
 
-If you do not want to expose endpoints over JMX, you can set the configprop:management.endpoints.jmx.exposure.exclude[] property to `*`, as the following example shows:
+如果你不想通过 JMX 暴露端点，可以将 configprop:management.endpoints.jmx.exposure.exclude[] 属性设置为 `*`，如下例所示：
 
 [configprops,yaml]
 ----

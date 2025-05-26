@@ -1,64 +1,64 @@
 [[howto.native-image.developing-your-first-application]]
-= Developing Your First GraalVM Native Application
+= 开发你的第一个 GraalVM Native 应用
 
-There are two main ways to build a Spring Boot native image application:
+构建 Spring Boot native image 应用有两种主要方式：
 
-* Using Spring Boot xref:reference:packaging/container-images/cloud-native-buildpacks.adoc[support for Cloud Native Buildpacks] with the https://paketo.io/docs/reference/java-native-image-reference/[Paketo Java Native Image buildpack] to generate a lightweight container containing a native executable.
-* Using GraalVM Native Build Tools to generate a native executable.
+* 使用 Spring Boot xref:reference:packaging/container-images/cloud-native-buildpacks.adoc[对 Cloud Native Buildpacks 的支持]，配合 https://paketo.io/docs/reference/java-native-image-reference/[Paketo Java Native Image buildpack] 来生成包含 native 可执行文件的轻量级容器。
+* 使用 GraalVM Native Build Tools 来生成 native 可执行文件。
 
-TIP: The easiest way to start a new native Spring Boot project is to go to https://start.spring.io[start.spring.io], add the `GraalVM Native Support` dependency and generate the project.
-The included `HELP.md` file will provide getting started hints.
+提示：开始一个新的 native Spring Boot 项目最简单的方法是访问 https://start.spring.io[start.spring.io]，添加 `GraalVM Native Support` 依赖并生成项目。
+包含的 `HELP.md` 文件将提供入门提示。
 
 
 
 [[howto.native-image.developing-your-first-application.sample-application]]
-== Sample Application
+== 示例应用
 
-We need an example application that we can use to create our native image.
-For our purposes, the simple "Hello World!" web application that's covered in the xref:tutorial:first-application/index.adoc[] section will suffice.
+我们需要一个示例应用来创建我们的 native image。
+对于我们的目的来说，xref:tutorial:first-application/index.adoc[] 部分中介绍的简单 "Hello World!" Web 应用就足够了。
 
-To recap, our main application code looks like this:
+回顾一下，我们的主应用代码如下：
 
 include-code::MyApplication[]
 
-This application uses Spring MVC and embedded Tomcat, both of which have been tested and verified to work with GraalVM native images.
+这个应用使用了 Spring MVC 和嵌入式 Tomcat，两者都经过测试并验证可以在 GraalVM native image 中工作。
 
 
 
 [[howto.native-image.developing-your-first-application.buildpacks]]
-== Building a Native Image Using Buildpacks
+== 使用 Buildpacks 构建 Native Image
 
-Spring Boot supports building Docker images containing native executables, using Cloud Native Buildpacks (CNB) integration with both Maven and Gradle and the https://paketo.io/docs/reference/java-native-image-reference/[Paketo Java Native Image buildpack].
-This means you can just type a single command and quickly get a sensible image into your locally running Docker daemon.
-The resulting image doesn't contain a JVM, instead the native image is compiled statically.
-This leads to smaller images.
+Spring Boot 支持使用 Cloud Native Buildpacks (CNB) 与 Maven 和 Gradle 的集成以及 https://paketo.io/docs/reference/java-native-image-reference/[Paketo Java Native Image buildpack] 来构建包含 native 可执行文件的 Docker 镜像。
+这意味着你只需输入一个命令就可以快速获得一个合理的镜像到本地运行的 Docker daemon 中。
+生成的镜像不包含 JVM，而是静态编译的 native image。
+这导致镜像更小。
 
-NOTE: The CNB builder used for the images is `paketobuildpacks/builder-jammy-java-tiny:latest`.
-It has a small footprint and reduced attack surface. It does not include a shell and contains a reduced set of system libraries.
-Use `paketobuildpacks/builder-jammy-base:latest` or `paketobuildpacks/builder-jammy-full:latest` to have more tools available in the image if required.
+注意：用于镜像的 CNB builder 是 `paketobuildpacks/builder-jammy-java-tiny:latest`。
+它占用空间小，攻击面减少。它不包含 shell，并且包含减少的系统库集。
+如果需要更多工具，可以使用 `paketobuildpacks/builder-jammy-base:latest` 或 `paketobuildpacks/builder-jammy-full:latest`。
 
 
 
 [[howto.native-image.developing-your-first-application.buildpacks.system-requirements]]
-=== System Requirements
+=== 系统要求
 
-Docker should be installed. See https://docs.docker.com/installation/#installation[Get Docker] for more details.
-https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[Configure it to allow non-root user] if you are on Linux.
+需要安装 Docker。有关更多详细信息，请参阅 https://docs.docker.com/installation/#installation[Get Docker]。
+如果你在 Linux 上，请 https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[配置它以允许非 root 用户]。
 
-NOTE: You can run `docker run hello-world` (without `sudo`) to check the Docker daemon is reachable as expected.
-Check the xref:maven-plugin:build-image.adoc#build-image.docker-daemon[Maven] or xref:gradle-plugin:packaging-oci-image.adoc#build-image.docker-daemon[Gradle] Spring Boot plugin documentation for more details.
+注意：你可以运行 `docker run hello-world`（不带 `sudo`）来检查 Docker daemon 是否按预期可达。
+有关更多详细信息，请查看 xref:maven-plugin:build-image.adoc#build-image.docker-daemon[Maven] 或 xref:gradle-plugin:packaging-oci-image.adoc#build-image.docker-daemon[Gradle] Spring Boot 插件文档。
 
-TIP: On macOS, it is recommended to increase the memory allocated to Docker to at least `8GB`, and potentially add more CPUs as well.
-See this https://stackoverflow.com/questions/44533319/how-to-assign-more-memory-to-docker-container/44533437#44533437[Stack Overflow answer] for more details.
-On Microsoft Windows, make sure to enable the https://docs.docker.com/docker-for-windows/wsl/[Docker WSL 2 backend] for better performance.
+提示：在 macOS 上，建议将分配给 Docker 的内存增加到至少 `8GB`，并可能添加更多 CPU。
+有关更多详细信息，请参阅此 https://stackoverflow.com/questions/44533319/how-to-assign-more-memory-to-docker-container/44533437#44533437[Stack Overflow 回答]。
+在 Microsoft Windows 上，确保启用 https://docs.docker.com/docker-for-windows/wsl/[Docker WSL 2 backend] 以获得更好的性能。
 
 
 
 [[howto.native-image.developing-your-first-application.buildpacks.maven]]
-=== Using Maven
+=== 使用 Maven
 
-To build a native image container using Maven you should ensure that your `pom.xml` file uses the `spring-boot-starter-parent` and the `org.graalvm.buildtools:native-maven-plugin`.
-You should have a `<parent>` section that looks like this:
+要使用 Maven 构建 native image 容器，你应该确保你的 `pom.xml` 文件使用 `spring-boot-starter-parent` 和 `org.graalvm.buildtools:native-maven-plugin`。
+你应该有一个看起来像这样的 `<parent>` 部分：
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -69,7 +69,7 @@ You should have a `<parent>` section that looks like this:
 </parent>
 ----
 
-You additionally should have this in the `<build> <plugins>` section:
+你还应该在 `<build> <plugins>` 部分中添加以下内容：
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -79,12 +79,12 @@ You additionally should have this in the `<build> <plugins>` section:
 </plugin>
 ----
 
-The `spring-boot-starter-parent` declares a `native` profile that configures the executions that need to run in order to create a native image.
-You can activate profiles using the `-P` flag on the command line.
+`spring-boot-starter-parent` 声明了一个 `native` profile，它配置了创建 native image 所需的执行。
+你可以使用命令行上的 `-P` 标志来激活 profiles。
 
-TIP: If you don't want to use `spring-boot-starter-parent` you'll need to configure executions for the `process-aot` goal from Spring Boot's plugin and the `add-reachability-metadata` goal from the Native Build Tools plugin.
+提示：如果你不想使用 `spring-boot-starter-parent`，你需要为 Spring Boot 插件的 `process-aot` 目标和 Native Build Tools 插件的 `add-reachability-metadata` 目标配置执行。
 
-To build the image, you can run the `spring-boot:build-image` goal with the `native` profile active:
+要构建镜像，你可以在激活 `native` profile 的情况下运行 `spring-boot:build-image` 目标：
 
 [source,shell]
 ----
@@ -94,13 +94,13 @@ $ mvn -Pnative spring-boot:build-image
 
 
 [[howto.native-image.developing-your-first-application.buildpacks.gradle]]
-=== Using Gradle
+=== 使用 Gradle
 
-The Spring Boot Gradle plugin automatically configures AOT tasks when the GraalVM Native Image plugin is applied.
-You should check that your Gradle build contains a `plugins` block that includes `org.graalvm.buildtools.native`.
+当应用 GraalVM Native Image 插件时，Spring Boot Gradle 插件会自动配置 AOT 任务。
+你应该检查你的 Gradle 构建是否包含包含 `org.graalvm.buildtools.native` 的 `plugins` 块。
 
-As long as the `org.graalvm.buildtools.native` plugin is applied, the `bootBuildImage` task will generate a native image rather than a JVM one.
-You can run the task using:
+只要应用了 `org.graalvm.buildtools.native` 插件，`bootBuildImage` 任务就会生成 native image 而不是 JVM 镜像。
+你可以使用以下命令运行任务：
 
 [source,shell]
 ----
@@ -110,17 +110,17 @@ $ gradle bootBuildImage
 
 
 [[howto.native-image.developing-your-first-application.buildpacks.running]]
-=== Running the example
+=== 运行示例
 
-Once you have run the appropriate build command, a Docker image should be available.
-You can start your application using `docker run`:
+一旦你运行了适当的构建命令，Docker 镜像应该就可用。
+你可以使用 `docker run` 启动你的应用：
 
 [source,shell]
 ----
 $ docker run --rm -p 8080:8080 docker.io/library/myproject:0.0.1-SNAPSHOT
 ----
 
-You should see output similar to the following:
+你应该看到类似于以下的输出：
 
 [source,shell]
 ----
@@ -137,41 +137,41 @@ You should see output similar to the following:
 ........ Started MyApplication in 0.08 seconds (process running for 0.095)
 ----
 
-NOTE: The startup time differs from machine to machine, but it should be much faster than a Spring Boot application running on a JVM.
+注意：启动时间因机器而异，但它应该比在 JVM 上运行的 Spring Boot 应用快得多。
 
-If you open a web browser to `http://localhost:8080`, you should see the following output:
+如果你在 Web 浏览器中打开 `http://localhost:8080`，你应该看到以下输出：
 
 [source]
 ----
 Hello World!
 ----
 
-To gracefully exit the application, press `ctrl-c`.
+要优雅地退出应用，请按 `ctrl-c`。
 
 
 
 [[howto.native-image.developing-your-first-application.native-build-tools]]
-== Building a Native Image using Native Build Tools
+== 使用 Native Build Tools 构建 Native Image
 
-If you want to generate a native executable directly without using Docker, you can use GraalVM Native Build Tools.
-Native Build Tools are plugins shipped by GraalVM for both Maven and Gradle.
-You can use them to perform a variety of GraalVM tasks, including generating a native image.
+如果你想在不使用 Docker 的情况下直接生成 native 可执行文件，你可以使用 GraalVM Native Build Tools。
+Native Build Tools 是 GraalVM 为 Maven 和 Gradle 提供的插件。
+你可以使用它们执行各种 GraalVM 任务，包括生成 native image。
 
 
 
 [[howto.native-image.developing-your-first-application.native-build-tools.prerequisites]]
-=== Prerequisites
+=== 先决条件
 
-To build a native image using the Native Build Tools, you'll need a GraalVM distribution on your machine.
-You can either download it manually on the {url-download-liberica-nik}[Liberica Native Image Kit page], or you can use a download manager like SDKMAN!.
+要使用 Native Build Tools 构建 native image，你需要在机器上安装 GraalVM 发行版。
+你可以从 {url-download-liberica-nik}[Liberica Native Image Kit 页面]手动下载，或者使用像 SDKMAN! 这样的下载管理器。
 
 
 
 [[howto.native-image.developing-your-first-application.native-build-tools.prerequisites.linux-macos]]
-==== Linux and macOS
+==== Linux 和 macOS
 
-To install the native image compiler on macOS or Linux, we recommend using SDKMAN!.
-Get SDKMAN! from https://sdkman.io and install the Liberica GraalVM distribution by using the following commands:
+要在 macOS 或 Linux 上安装 native image 编译器，我们推荐使用 SDKMAN!。
+从 https://sdkman.io 获取 SDKMAN! 并使用以下命令安装 Liberica GraalVM 发行版：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -179,7 +179,7 @@ $ sdk install java {version-graal}.r17-nik
 $ sdk use java {version-graal}.r17-nik
 ----
 
-Verify that the correct version has been configured by checking the output of `java -version`:
+通过检查 `java -version` 的输出来验证是否配置了正确的版本：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -194,46 +194,46 @@ OpenJDK 64-Bit Server VM GraalVM 22.3.0 (build 17.0.5+8-LTS, mixed mode)
 [[howto.native-image.developing-your-first-application.native-build-tools.prerequisites.windows]]
 ==== Windows
 
-On Windows, follow https://medium.com/graalvm/using-graalvm-and-native-image-on-windows-10-9954dc071311[these instructions] to install either https://www.graalvm.org/downloads/[GraalVM] or {url-download-liberica-nik}[Liberica Native Image Kit] in version {version-graal}, the Visual Studio Build Tools and the Windows SDK.
-Due to the https://docs.microsoft.com/en-US/troubleshoot/windows-client/shell-experience/command-line-string-limitation[Windows related command-line maximum length], make sure to use x64 Native Tools Command Prompt instead of the regular Windows command line to run Maven or Gradle plugins.
+在 Windows 上，按照 https://medium.com/graalvm/using-graalvm-and-native-image-on-windows-10-9954dc071311[这些说明]安装 https://www.graalvm.org/downloads/[GraalVM] 或 {url-download-liberica-nik}[Liberica Native Image Kit] 版本 {version-graal}、Visual Studio Build Tools 和 Windows SDK。
+由于 https://docs.microsoft.com/en-US/troubleshoot/windows-client/shell-experience/command-line-string-limitation[Windows 相关的命令行最大长度]，确保使用 x64 Native Tools Command Prompt 而不是常规的 Windows 命令行来运行 Maven 或 Gradle 插件。
 
 
 
 [[howto.native-image.developing-your-first-application.native-build-tools.maven]]
-=== Using Maven
+=== 使用 Maven
 
-As with the xref:native-image/developing-your-first-application.adoc#howto.native-image.developing-your-first-application.buildpacks.maven[buildpacks support], you need to make sure that you're using `spring-boot-starter-parent` in order to inherit the `native` profile and that the `org.graalvm.buildtools:native-maven-plugin` plugin is used.
+与 xref:native-image/developing-your-first-application.adoc#howto.native-image.developing-your-first-application.buildpacks.maven[buildpacks 支持]一样，你需要确保使用 `spring-boot-starter-parent` 以继承 `native` profile，并且使用 `org.graalvm.buildtools:native-maven-plugin` 插件。
 
-With the `native` profile active, you can invoke the `native:compile` goal to trigger `native-image` compilation:
+在激活 `native` profile 的情况下，你可以调用 `native:compile` 目标来触发 `native-image` 编译：
 
 [source,shell]
 ----
 $ mvn -Pnative native:compile
 ----
 
-The native image executable can be found in the `target` directory.
+native image 可执行文件可以在 `target` 目录中找到。
 
 
 
 [[howto.native-image.developing-your-first-application.native-build-tools.gradle]]
-=== Using Gradle
+=== 使用 Gradle
 
-When the Native Build Tools Gradle plugin is applied to your project, the Spring Boot Gradle plugin will automatically trigger the Spring AOT engine.
-Task dependencies are automatically configured, so you can just run the standard `nativeCompile` task to generate a native image:
+当 Native Build Tools Gradle 插件应用到你的项目时，Spring Boot Gradle 插件将自动触发 Spring AOT 引擎。
+任务依赖关系会自动配置，因此你可以直接运行标准的 `nativeCompile` 任务来生成 native image：
 
 [source,shell]
 ----
 $ gradle nativeCompile
 ----
 
-The native image executable can be found in the `build/native/nativeCompile` directory.
+native image 可执行文件可以在 `build/native/nativeCompile` 目录中找到。
 
 
 
 [[howto.native-image.developing-your-first-application.native-build-tools.running]]
-=== Running the Example
+=== 运行示例
 
-At this point, your application should work. You can now start the application by running it directly:
+此时，你的应用应该可以工作了。你现在可以直接运行它来启动应用：
 
 [tabs]
 ======
@@ -251,7 +251,7 @@ $ build/native/nativeCompile/myproject
 ----
 ======
 
-You should see output similar to the following:
+你应该看到类似于以下的输出：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -268,13 +268,13 @@ You should see output similar to the following:
 ........ Started MyApplication in 0.08 seconds (process running for 0.095)
 ----
 
-NOTE: The startup time differs from machine to machine, but it should be much faster than a Spring Boot application running on a JVM.
+注意：启动时间因机器而异，但它应该比在 JVM 上运行的 Spring Boot 应用快得多。
 
-If you open a web browser to `http://localhost:8080`, you should see the following output:
+如果你在 Web 浏览器中打开 `http://localhost:8080`，你应该看到以下输出：
 
 [source]
 ----
 Hello World!
 ----
 
-To gracefully exit the application, press `ctrl-c`.
+要优雅地退出应用，请按 `ctrl-c`。

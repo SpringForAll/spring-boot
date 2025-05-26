@@ -1,8 +1,8 @@
 [[build-tool-plugins]]
-= Build Tool Plugins
+= 构建工具插件
 
-Spring Boot provides build tool plugins for Maven and Gradle.
-The plugins offer a variety of features, including the packaging of executable jars.
-This section provides more details on both plugins as well as some help should you need to extend an unsupported build system.
-If you are just getting started, you might want to read xref:reference:using/build-systems.adoc[] from the xref:reference:using/index.adoc[] section first.
+Spring Boot 为 Maven 和 Gradle 提供了构建工具插件。
+这些插件提供了多种功能，包括打包可执行 JAR 文件。
+本节提供了关于这两个插件的更多详细信息，以及如果您需要扩展不受支持的构建系统时的一些帮助。
+如果您刚开始使用，建议您先阅读 xref:reference:using/build-systems.adoc[]，该内容位于 xref:reference:using/index.adoc[] 部分。
 

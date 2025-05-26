@@ -2,8 +2,8 @@
 [[appendix.configuration-metadata]]
 = Configuration Metadata
 
-Spring Boot jars include metadata files that provide details of all supported configuration properties.
-The files are designed to let IDE developers offer contextual help and "`code completion`" as users are working with `application.properties` or `application.yaml` files.
+Spring Boot jars 包含提供所有支持的配置属性详细信息的元数据文件。
+这些文件旨在让 IDE 开发者在用户使用 `application.properties` 或 `application.yaml` 文件时提供上下文帮助和"`代码补全`"。
 
-The majority of the metadata file is generated automatically at compile time by processing all items annotated with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation].
-However, it is possible to xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[write part of the metadata manually] for corner cases or more advanced use cases.
+元数据文件的大部分内容是在编译时通过处理所有用 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的项目自动生成的。
+但是，对于特殊情况或更高级的用例，可以 xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[手动编写部分元数据]。

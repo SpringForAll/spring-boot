@@ -1,17 +1,17 @@
 [[io.validation]]
-= Validation
+= 验证
 
-The method validation feature supported by Bean Validation 1.1 is automatically enabled as long as a JSR-303 implementation (such as Hibernate validator) is on the classpath.
-This lets bean methods be annotated with `jakarta.validation` constraints on their parameters and/or on their return value.
-Target classes with such annotated methods need to be annotated with the javadoc:org.springframework.validation.annotation.Validated[format=annotation] annotation at the type level for their methods to be searched for inline constraint annotations.
+只要类路径上有 JSR-303 实现（如 Hibernate validator），Bean Validation 1.1 支持的方法验证功能就会自动启用。
+这允许在 bean 方法的参数和/或返回值上使用 `jakarta.validation` 约束。
+具有此类注解方法的目标类需要在类型级别使用 javadoc:org.springframework.validation.annotation.Validated[format=annotation] 注解，以便搜索其方法的内联约束注解。
 
-For instance, the following service triggers the validation of the first argument, making sure its size is between 8 and 10:
+例如，以下服务触发第一个参数的验证，确保其大小在 8 到 10 之间：
 
 include-code::MyBean[]
 
-The application's javadoc:org.springframework.context.MessageSource[] is used when resolving `+{parameters}+` in constraint messages.
-This allows you to use xref:features/internationalization.adoc[your application's `messages.properties` files] for Bean Validation messages.
-Once the parameters have been resolved, message interpolation is completed using Bean Validation's default interpolator.
+应用程序的 javadoc:org.springframework.context.MessageSource[] 用于解析约束消息中的 `+{parameters}+`。
+这允许您使用 xref:features/internationalization.adoc[应用程序的 `messages.properties` 文件] 作为 Bean Validation 消息。
+一旦参数被解析，消息插值就使用 Bean Validation 的默认插值器完成。
 
-To customize the javadoc:jakarta.validation.Configuration[] used to build the javadoc:jakarta.validation.ValidatorFactory[], define a javadoc:org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer[] bean.
-When multiple customizer beans are defined, they are called in order based on their javadoc:org.springframework.core.annotation.Order[format=annotation] annotation or javadoc:org.springframework.core.Ordered[] implementation.
+要自定义用于构建 javadoc:jakarta.validation.ValidatorFactory[] 的 javadoc:jakarta.validation.Configuration[]，请定义一个 javadoc:org.springframework.boot.autoconfigure.validation.ValidationConfigurationCustomizer[] bean。
+当定义了多个自定义器 bean 时，它们会根据其 javadoc:org.springframework.core.annotation.Order[format=annotation] 注解或 javadoc:org.springframework.core.Ordered[] 实现按顺序调用。

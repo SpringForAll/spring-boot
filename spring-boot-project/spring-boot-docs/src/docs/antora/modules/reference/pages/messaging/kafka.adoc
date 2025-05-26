@@ -1,10 +1,10 @@
 [[messaging.kafka]]
-= Apache Kafka Support
+= Apache Kafka 支持
 
-https://kafka.apache.org/[Apache Kafka] is supported by providing auto-configuration of the `spring-kafka` project.
+通过提供 `spring-kafka` 项目的自动配置来支持 https://kafka.apache.org/[Apache Kafka]。
 
-Kafka configuration is controlled by external configuration properties in `spring.kafka.*`.
-For example, you might declare the following section in `application.properties`:
+Kafka 配置由 `spring.kafka.*` 中的外部配置属性控制。
+例如，你可以在 `application.properties` 中声明以下部分：
 
 [configprops,yaml]
 ----
@@ -15,82 +15,82 @@ spring:
       group-id: "myGroup"
 ----
 
-TIP: To create a topic on startup, add a bean of type javadoc:org.apache.kafka.clients.admin.NewTopic[].
-If the topic already exists, the bean is ignored.
+提示：要在启动时创建主题，添加一个类型为 javadoc:org.apache.kafka.clients.admin.NewTopic[] 的 bean。
+如果主题已存在，则忽略该 bean。
 
-See javadoc:org.springframework.boot.autoconfigure.kafka.KafkaProperties[] for more supported options.
+有关更多支持的选项，请参阅 javadoc:org.springframework.boot.autoconfigure.kafka.KafkaProperties[]。
 
 
 
 [[messaging.kafka.sending]]
-== Sending a Message
+== 发送消息
 
-Spring's javadoc:org.springframework.kafka.core.KafkaTemplate[] is auto-configured, and you can autowire it directly in your own beans, as shown in the following example:
+Spring 的 javadoc:org.springframework.kafka.core.KafkaTemplate[] 是自动配置的，你可以直接将其自动装配到你自己的 bean 中，如下例所示：
 
 include-code::MyBean[]
 
-NOTE: If the property configprop:spring.kafka.producer.transaction-id-prefix[] is defined, a javadoc:org.springframework.kafka.transaction.KafkaTransactionManager[] is automatically configured.
-Also, if a javadoc:org.springframework.kafka.support.converter.RecordMessageConverter[] bean is defined, it is automatically associated to the auto-configured javadoc:org.springframework.kafka.core.KafkaTemplate[].
+注意：如果定义了 configprop:spring.kafka.producer.transaction-id-prefix[] 属性，则会自动配置 javadoc:org.springframework.kafka.transaction.KafkaTransactionManager[]。
+此外，如果定义了 javadoc:org.springframework.kafka.support.converter.RecordMessageConverter[] bean，它会自动关联到自动配置的 javadoc:org.springframework.kafka.core.KafkaTemplate[]。
 
 
 
 [[messaging.kafka.receiving]]
-== Receiving a Message
+== 接收消息
 
-When the Apache Kafka infrastructure is present, any bean can be annotated with javadoc:org.springframework.kafka.annotation.KafkaListener[format=annotation] to create a listener endpoint.
-If no javadoc:org.springframework.kafka.config.KafkaListenerContainerFactory[] has been defined, a default one is automatically configured with keys defined in `spring.kafka.listener.*`.
+当 Apache Kafka 基础设施存在时，任何 bean 都可以用 javadoc:org.springframework.kafka.annotation.KafkaListener[format=annotation] 注解来创建监听器端点。
+如果没有定义 javadoc:org.springframework.kafka.config.KafkaListenerContainerFactory[]，则会使用 `spring.kafka.listener.*` 中定义的键自动配置一个默认的工厂。
 
-The following component creates a listener endpoint on the `someTopic` topic:
+以下组件在 `someTopic` 主题上创建监听器端点：
 
 include-code::MyBean[]
 
-If a javadoc:org.springframework.kafka.transaction.KafkaTransactionManager[] bean is defined, it is automatically associated to the container factory.
-Similarly, if a javadoc:org.springframework.kafka.listener.adapter.RecordFilterStrategy[], javadoc:org.springframework.kafka.listener.CommonErrorHandler[], javadoc:org.springframework.kafka.listener.AfterRollbackProcessor[] or javadoc:org.springframework.kafka.listener.ConsumerAwareRebalanceListener[] bean is defined, it is automatically associated to the default factory.
+如果定义了 javadoc:org.springframework.kafka.transaction.KafkaTransactionManager[] bean，它会自动关联到容器工厂。
+同样，如果定义了 javadoc:org.springframework.kafka.listener.adapter.RecordFilterStrategy[]、javadoc:org.springframework.kafka.listener.CommonErrorHandler[]、javadoc:org.springframework.kafka.listener.AfterRollbackProcessor[] 或 javadoc:org.springframework.kafka.listener.ConsumerAwareRebalanceListener[] bean，它们会自动关联到默认工厂。
 
-Depending on the listener type, a javadoc:org.springframework.kafka.support.converter.RecordMessageConverter[] or javadoc:org.springframework.kafka.support.converter.BatchMessageConverter[] bean is associated to the default factory.
-If only a javadoc:org.springframework.kafka.support.converter.RecordMessageConverter[] bean is present for a batch listener, it is wrapped in a javadoc:org.springframework.kafka.support.converter.BatchMessageConverter[].
+根据监听器类型，javadoc:org.springframework.kafka.support.converter.RecordMessageConverter[] 或 javadoc:org.springframework.kafka.support.converter.BatchMessageConverter[] bean 会关联到默认工厂。
+如果对于批处理监听器只存在 javadoc:org.springframework.kafka.support.converter.RecordMessageConverter[] bean，它会被包装在 javadoc:org.springframework.kafka.support.converter.BatchMessageConverter[] 中。
 
-TIP: A custom javadoc:org.springframework.kafka.transaction.ChainedKafkaTransactionManager[] must be marked javadoc:org.springframework.context.annotation.Primary[format=annotation] as it usually references the auto-configured javadoc:org.springframework.kafka.transaction.KafkaTransactionManager[] bean.
+提示：自定义的 javadoc:org.springframework.kafka.transaction.ChainedKafkaTransactionManager[] 必须标记为 javadoc:org.springframework.context.annotation.Primary[format=annotation]，因为它通常引用自动配置的 javadoc:org.springframework.kafka.transaction.KafkaTransactionManager[] bean。
 
 
 
 [[messaging.kafka.streams]]
 == Kafka Streams
 
-Spring for Apache Kafka provides a factory bean to create a javadoc:org.apache.kafka.streams.StreamsBuilder[] object and manage the lifecycle of its streams.
-Spring Boot auto-configures the required javadoc:org.springframework.kafka.config.KafkaStreamsConfiguration[] bean as long as `kafka-streams` is on the classpath and Kafka Streams is enabled by the javadoc:org.springframework.kafka.annotation.EnableKafkaStreams[format=annotation] annotation.
+Spring for Apache Kafka 提供了一个工厂 bean 来创建 javadoc:org.apache.kafka.streams.StreamsBuilder[] 对象并管理其流的生命周期。
+只要 `kafka-streams` 在类路径上且通过 javadoc:org.springframework.kafka.annotation.EnableKafkaStreams[format=annotation] 注解启用了 Kafka Streams，Spring Boot 就会自动配置所需的 javadoc:org.springframework.kafka.config.KafkaStreamsConfiguration[] bean。
 
-Enabling Kafka Streams means that the application id and bootstrap servers must be set.
-The former can be configured using `spring.kafka.streams.application-id`, defaulting to `spring.application.name` if not set.
-The latter can be set globally or specifically overridden only for streams.
+启用 Kafka Streams 意味着必须设置应用程序 ID 和引导服务器。
+前者可以使用 `spring.kafka.streams.application-id` 配置，如果未设置则默认为 `spring.application.name`。
+后者可以全局设置或仅针对流进行特定覆盖。
 
-Several additional properties are available using dedicated properties; other arbitrary Kafka properties can be set using the `spring.kafka.streams.properties` namespace.
-See also xref:messaging/kafka.adoc#messaging.kafka.additional-properties[] for more information.
+使用专用属性可以使用几个额外的属性；其他任意 Kafka 属性可以使用 `spring.kafka.streams.properties` 命名空间设置。
+有关更多信息，请参阅 xref:messaging/kafka.adoc#messaging.kafka.additional-properties[]。
 
-To use the factory bean, wire javadoc:org.apache.kafka.streams.StreamsBuilder[] into your javadoc:org.springframework.context.annotation.Bean[format=annotation] as shown in the following example:
+要使用工厂 bean，将 javadoc:org.apache.kafka.streams.StreamsBuilder[] 装配到你的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 中，如下例所示：
 
 include-code::MyKafkaStreamsConfiguration[]
 
-By default, the streams managed by the javadoc:org.apache.kafka.streams.StreamsBuilder[] object are started automatically.
-You can customize this behavior using the configprop:spring.kafka.streams.auto-startup[] property.
+默认情况下，javadoc:org.apache.kafka.streams.StreamsBuilder[] 对象管理的流会自动启动。
+你可以使用 configprop:spring.kafka.streams.auto-startup[] 属性来自定义此行为。
 
 
 
 [[messaging.kafka.additional-properties]]
-== Additional Kafka Properties
+== 额外的 Kafka 属性
 
-The properties supported by auto configuration are shown in the xref:appendix:application-properties/index.adoc#appendix.application-properties.integration[Integration Properties] section of the Appendix.
-Note that, for the most part, these properties (hyphenated or camelCase) map directly to the Apache Kafka dotted properties.
-See the Apache Kafka documentation for details.
+自动配置支持的属性显示在附录的 xref:appendix:application-properties/index.adoc#appendix.application-properties.integration[集成属性] 部分。
+请注意，在大多数情况下，这些属性（连字符或驼峰式）直接映射到 Apache Kafka 的点分隔属性。
+有关详细信息，请参阅 Apache Kafka 文档。
 
-Properties that don't include a client type (`producer`, `consumer`, `admin`, or `streams`) in their name are considered to be common and apply to all clients.
-Most of these common properties can be overridden for one or more of the client types, if needed.
+名称中不包含客户端类型（`producer`、`consumer`、`admin` 或 `streams`）的属性被视为通用属性，适用于所有客户端。
+如果需要，这些通用属性中的大多数都可以为一个或多个客户端类型覆盖。
 
-Apache Kafka designates properties with an importance of HIGH, MEDIUM, or LOW.
-Spring Boot auto-configuration supports all HIGH importance properties, some selected MEDIUM and LOW properties, and any properties that do not have a default value.
+Apache Kafka 将属性的重要性指定为 HIGH、MEDIUM 或 LOW。
+Spring Boot 自动配置支持所有 HIGH 重要性属性、一些选定的 MEDIUM 和 LOW 属性，以及任何没有默认值的属性。
 
-Only a subset of the properties supported by Kafka are available directly through the javadoc:org.springframework.boot.autoconfigure.kafka.KafkaProperties[] class.
-If you wish to configure the individual client types with additional properties that are not directly supported, use the following properties:
+只有 Kafka 支持的属性的一部分可以通过 javadoc:org.springframework.boot.autoconfigure.kafka.KafkaProperties[] 类直接使用。
+如果你希望使用不直接支持的额外属性来配置各个客户端类型，请使用以下属性：
 
 [configprops,yaml]
 ----
@@ -112,9 +112,9 @@ spring:
         "[prop.five]": "fifth"
 ----
 
-This sets the common `prop.one` Kafka property to `first` (applies to producers, consumers, admins, and streams), the `prop.two` admin property to `second`, the `prop.three` consumer property to `third`, the `prop.four` producer property to `fourth` and the `prop.five` streams property to `fifth`.
+这将通用 Kafka 属性 `prop.one` 设置为 `first`（适用于生产者、消费者、管理员和流），将管理员属性 `prop.two` 设置为 `second`，将消费者属性 `prop.three` 设置为 `third`，将生产者属性 `prop.four` 设置为 `fourth`，将流属性 `prop.five` 设置为 `fifth`。
 
-You can also configure the Spring Kafka javadoc:org.springframework.kafka.support.serializer.JsonDeserializer[] as follows:
+你还可以按如下方式配置 Spring Kafka javadoc:org.springframework.kafka.support.serializer.JsonDeserializer[]：
 
 [configprops,yaml]
 ----
@@ -127,7 +127,7 @@ spring:
         "[spring.json.trusted.packages]": "com.example.main,com.example.another"
 ----
 
-Similarly, you can disable the javadoc:org.springframework.kafka.support.serializer.JsonSerializer[] default behavior of sending type information in headers:
+同样，你可以禁用 javadoc:org.springframework.kafka.support.serializer.JsonSerializer[] 在头中发送类型信息的默认行为：
 
 [configprops,yaml]
 ----
@@ -139,29 +139,29 @@ spring:
         "[spring.json.add.type.headers]": false
 ----
 
-IMPORTANT: Properties set in this way override any configuration item that Spring Boot explicitly supports.
+重要：以这种方式设置的属性会覆盖 Spring Boot 明确支持的任何配置项。
 
 
 
 [[messaging.kafka.embedded]]
-== Testing with Embedded Kafka
+== 使用嵌入式 Kafka 进行测试
 
-Spring for Apache Kafka provides a convenient way to test projects with an embedded Apache Kafka broker.
-To use this feature, annotate a test class with javadoc:org.springframework.kafka.test.context.EmbeddedKafka[format=annotation] from the `spring-kafka-test` module.
-For more information, please see the Spring for Apache Kafka {url-spring-kafka-docs}/testing.html#ekb[reference manual].
+Spring for Apache Kafka 提供了一种使用嵌入式 Apache Kafka broker 测试项目的便捷方法。
+要使用此功能，请使用 `spring-kafka-test` 模块中的 javadoc:org.springframework.kafka.test.context.EmbeddedKafka[format=annotation] 注解测试类。
+有关更多信息，请参阅 Spring for Apache Kafka {url-spring-kafka-docs}/testing.html#ekb[参考手册]。
 
-To make Spring Boot auto-configuration work with the aforementioned embedded Apache Kafka broker, you need to remap a system property for embedded broker addresses (populated by the javadoc:org.springframework.kafka.test.EmbeddedKafkaBroker[]) into the Spring Boot configuration property for Apache Kafka.
-There are several ways to do that:
+要使 Spring Boot 自动配置与上述嵌入式 Apache Kafka broker 一起工作，你需要将嵌入式 broker 地址的系统属性（由 javadoc:org.springframework.kafka.test.EmbeddedKafkaBroker[] 填充）重新映射到 Apache Kafka 的 Spring Boot 配置属性。
+有几种方法可以做到这一点：
 
-* Provide a system property to map embedded broker addresses into configprop:spring.kafka.bootstrap-servers[] in the test class:
+* 在测试类中提供系统属性，将嵌入式 broker 地址映射到 configprop:spring.kafka.bootstrap-servers[]：
 
 include-code::property/MyTest[tag=*]
 
-* Configure a property name on the javadoc:org.springframework.kafka.test.context.EmbeddedKafka[format=annotation] annotation:
+* 在 javadoc:org.springframework.kafka.test.context.EmbeddedKafka[format=annotation] 注解上配置属性名称：
 
 include-code::annotation/MyTest[]
 
-* Use a placeholder in configuration properties:
+* 在配置属性中使用占位符：
 
 [configprops,yaml]
 ----

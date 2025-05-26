@@ -1,4 +1,4 @@
-* xref:build-tool-plugin:index.adoc[]
+* xref:build-tool-plugin:index.adoc[构建工具插件]
 +
 --
 include::maven-plugin:partial$nav-maven-plugin.adoc[]
@@ -7,5 +7,5 @@ include::maven-plugin:partial$nav-maven-plugin.adoc[]
 --
 include::gradle-plugin:partial$nav-gradle-plugin.adoc[]
 --
-** xref:build-tool-plugin:antlib.adoc[]
-** xref:build-tool-plugin:other-build-systems.adoc[]
+** xref:build-tool-plugin:antlib.adoc[Spring Boot AntLib 模块]
+** xref:build-tool-plugin:other-build-systems.adoc[支持其他构建系统]

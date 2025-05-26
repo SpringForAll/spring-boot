@@ -1,5 +1,4 @@
 [[cli]]
 = Spring Boot CLI
 
-The Spring Boot CLI is a command line tool that you can use to bootstrap a new project from https://start.spring.io or encode a password.
-
+Spring Boot CLI 是一个命令行工具，您可以使用它从 https://start.spring.io 快速启动新项目或对密码进行编码。

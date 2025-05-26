@@ -1,14 +1,14 @@
 [[features.internationalization]]
-= Internationalization
+= 国际化
 
-Spring Boot supports localized messages so that your application can cater to users of different language preferences.
-By default, Spring Boot looks for the presence of a `messages` resource bundle at the root of the classpath.
+Spring Boot 支持本地化消息，以便您的应用程序可以满足不同语言偏好的用户需求。
+默认情况下，Spring Boot 会在类路径的根目录下查找 `messages` 资源包。
 
-NOTE: The auto-configuration applies when the default properties file for the configured resource bundle is available (`messages.properties` by default).
-If your resource bundle contains only language-specific properties files, you are required to add the default.
-If no properties file is found that matches any of the configured base names, there will be no auto-configured javadoc:org.springframework.context.MessageSource[].
+注意：当配置的资源包的默认属性文件可用时（默认为 `messages.properties`），自动配置才会生效。
+如果您的资源包仅包含特定语言的属性文件，您需要添加默认文件。
+如果找不到与任何配置的基本名称匹配的属性文件，将不会自动配置 javadoc:org.springframework.context.MessageSource[]。
 
-The basename of the resource bundle as well as several other attributes can be configured using the `spring.messages` namespace, as shown in the following example:
+资源包的基本名称以及其他几个属性可以使用 `spring.messages` 命名空间进行配置，如下例所示：
 
 [configprops,yaml]
 ----
@@ -19,7 +19,7 @@ spring:
     fallback-to-system-locale: false
 ----
 
-TIP: The configprop:spring.messages.basename[] property supports a list of locations, either a package qualifier or a resource resolved from the classpath root.
-The configprop:spring.messages.common-messages[] property supports a list of property file resources.
+提示：configprop:spring.messages.basename[] 属性支持位置列表，可以是包限定符或从类路径根解析的资源。
+configprop:spring.messages.common-messages[] 属性支持属性文件资源列表。
 
-See javadoc:org.springframework.boot.autoconfigure.context.MessageSourceProperties[] for more supported options.
+有关更多支持的选项，请参阅 javadoc:org.springframework.boot.autoconfigure.context.MessageSourceProperties[]。

@@ -1,18 +1,18 @@
 [[features.ssl]]
 = SSL
 
-Spring Boot provides the ability to configure SSL trust material that can be applied to several types of connections in order to support secure communications.
-Configuration properties with the prefix `spring.ssl.bundle` can be used to specify named sets of trust material and associated information.
+Spring Boot 提供了配置 SSL 信任材料的能力，可应用于多种类型的连接，以支持安全通信。
+以 `spring.ssl.bundle` 为前缀的配置属性可用于指定命名的信任材料集合及相关信息。
 
 
 
 [[features.ssl.jks]]
-== Configuring SSL With Java KeyStore Files
+== 使用 Java KeyStore 文件配置 SSL
 
-Configuration properties with the prefix `spring.ssl.bundle.jks` can be used to configure bundles of trust material created with the Java `keytool` utility and stored in Java KeyStore files in the JKS or PKCS12 format.
-Each bundle has a user-provided name that can be used to reference the bundle.
+以 `spring.ssl.bundle.jks` 为前缀的配置属性可用于配置使用 Java `keytool` 工具创建并存储在 JKS 或 PKCS12 格式 Java KeyStore 文件中的信任材料集合。
+每个集合都有一个用户自定义的名称，可用于引用该集合。
 
-When used to secure an embedded web server, a `keystore` is typically configured with a Java KeyStore containing a certificate and private key as shown in this example:
+用于保护嵌入式 Web 服务器时，通常会配置一个包含证书和私钥的 Java KeyStore，如下例所示：
 
 [configprops,yaml]
 ----
@@ -29,7 +29,7 @@ When used to secure an embedded web server, a `keystore` is typically configured
                 type: "PKCS12"
 ----
 
-When used to secure a client-side connection, a `truststore` is typically configured with a Java KeyStore containing the server certificate as shown in this example:
+用于保护客户端连接时，通常会配置一个包含服务器证书的 Java KeyStore 作为 `truststore`，如下例所示：
 
 [configprops,yaml]
 ----
@@ -45,23 +45,23 @@ When used to secure a client-side connection, a `truststore` is typically config
 
 [TIP]
 ====
-Rather than the location to a file, its xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.conversion.base64[Base64 encoded content] can be provided.
-If you chose this option, the value of the property should start with `base64:`.
+除了文件位置外，也可以提供其 xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.conversion.base64[Base64 编码内容]。
+如果选择此选项，属性值应以 `base64:` 开头。
 ====
 
-See javadoc:org.springframework.boot.autoconfigure.ssl.JksSslBundleProperties[] for the full set of supported properties.
+详见 javadoc:org.springframework.boot.autoconfigure.ssl.JksSslBundleProperties[] 支持的全部属性。
 
-NOTE: If you're using environment variables to configure the bundle, the name of the bundle is xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding.maps-from-environment-variables[always converted to lowercase].
+注意：如果你使用环境变量配置集合，集合名称会被 xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding.maps-from-environment-variables[始终转换为小写]。
 
 
 
 [[features.ssl.pem]]
-== Configuring SSL With PEM-encoded Certificates
+== 使用 PEM 编码证书配置 SSL
 
-Configuration properties with the prefix `spring.ssl.bundle.pem` can be used to configure bundles of trust material in the form of PEM-encoded text.
-Each bundle has a user-provided name that can be used to reference the bundle.
+以 `spring.ssl.bundle.pem` 为前缀的配置属性可用于配置 PEM 编码文本形式的信任材料集合。
+每个集合都有一个用户自定义的名称，可用于引用该集合。
 
-When used to secure an embedded web server, a `keystore` is typically configured with a certificate and private key as shown in this example:
+用于保护嵌入式 Web 服务器时，通常会配置一个包含证书和私钥的 `keystore`，如下例所示：
 
 [configprops,yaml]
 ----
@@ -75,7 +75,7 @@ When used to secure an embedded web server, a `keystore` is typically configured
                 private-key: "classpath:application.key"
 ----
 
-When used to secure a client-side connection, a `truststore` is typically configured with the server certificate as shown in this example:
+用于保护客户端连接时，通常会配置一个包含服务器证书的 `truststore`，如下例所示：
 
 [configprops,yaml]
 ----
@@ -90,13 +90,13 @@ When used to secure a client-side connection, a `truststore` is typically config
 
 [TIP]
 ====
-Rather than the location to a file, its xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.conversion.base64[Base64 encoded content] can be provided.
-If you chose this option, the value of the property should start with `base64:`.
+除了文件位置外，也可以提供其 xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.conversion.base64[Base64 编码内容]。
+如果选择此选项，属性值应以 `base64:` 开头。
 
-PEM content can also be used directly for both the `certificate` and `private-key` properties.
-If the property values contain `BEGIN` and `END` markers then they will be treated as PEM content rather than a resource location.
+PEM 内容也可直接用于 `certificate` 和 `private-key` 属性。
+如果属性值包含 `BEGIN` 和 `END` 标记，则会被视为 PEM 内容而不是资源位置。
 
-The following example shows how a truststore certificate can be defined:
+以下示例展示了如何定义 truststore 证书：
 
 [configprops,yaml]
 ----
@@ -118,51 +118,51 @@ The following example shows how a truststore certificate can be defined:
 ----
 ====
 
-See javadoc:org.springframework.boot.autoconfigure.ssl.PemSslBundleProperties[] for the full set of supported properties.
+详见 javadoc:org.springframework.boot.autoconfigure.ssl.PemSslBundleProperties[] 支持的全部属性。
 
-NOTE: If you're using environment variables to configure the bundle, the name of the bundle is xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding.maps-from-environment-variables[always converted to lowercase].
+注意：如果你使用环境变量配置集合，集合名称会被 xref:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding.maps-from-environment-variables[始终转换为小写]。
 
 
 
 [[features.ssl.applying]]
-== Applying SSL Bundles
+== 应用 SSL 集合
 
-Once configured using properties, SSL bundles can be referred to by name in configuration properties for various types of connections that are auto-configured by Spring Boot.
-See the sections on xref:how-to:webserver.adoc#howto.webserver.configure-ssl[embedded web servers], xref:data/index.adoc[data technologies], and xref:io/rest-client.adoc[REST clients] for further information.
+通过属性配置后，可以在 Spring Boot 自动配置的多种连接类型的配置属性中通过名称引用 SSL 集合。
+更多信息请参见 xref:how-to:webserver.adoc#howto.webserver.configure-ssl[嵌入式 Web 服务器]、xref:data/index.adoc[数据技术] 和 xref:io/rest-client.adoc[REST 客户端] 相关章节。
 
 
 
 [[features.ssl.bundles]]
-== Using SSL Bundles
+== 使用 SSL 集合
 
-Spring Boot auto-configures a bean of type javadoc:org.springframework.boot.ssl.SslBundles[] that provides access to each of the named bundles configured using the `spring.ssl.bundle` properties.
+Spring Boot 会自动配置一个类型为 javadoc:org.springframework.boot.ssl.SslBundles[] 的 bean，用于访问通过 `spring.ssl.bundle` 属性配置的每个命名集合。
 
-An javadoc:org.springframework.boot.ssl.SslBundle[] can be retrieved from the auto-configured javadoc:org.springframework.boot.ssl.SslBundles[] bean and used to create objects that are used to configure SSL connectivity in client libraries.
-The javadoc:org.springframework.boot.ssl.SslBundle[] provides a layered approach of obtaining these SSL objects:
+可以从自动配置的 javadoc:org.springframework.boot.ssl.SslBundles[] bean 获取 javadoc:org.springframework.boot.ssl.SslBundle[]，并用于创建配置客户端库 SSL 连接的对象。
+javadoc:org.springframework.boot.ssl.SslBundle[] 提供了分层方式获取这些 SSL 对象：
 
-- `getStores()` provides access to the key store and trust store javadoc:java.security.KeyStore[] instances as well as any required key store password.
-- `getManagers()` provides access to the javadoc:javax.net.ssl.KeyManagerFactory[] and javadoc:javax.net.ssl.TrustManagerFactory[] instances as well as the javadoc:javax.net.ssl.KeyManager[] and javadoc:javax.net.ssl.TrustManager[] arrays that they create.
-- `createSslContext()` provides a convenient way to obtain a new javadoc:javax.net.ssl.SSLContext[] instance.
+- `getStores()` 可访问密钥库和信任库的 javadoc:java.security.KeyStore[] 实例及所需密钥库密码。
+- `getManagers()` 可访问 javadoc:javax.net.ssl.KeyManagerFactory[] 和 javadoc:javax.net.ssl.TrustManagerFactory[] 实例，以及它们创建的 javadoc:javax.net.ssl.KeyManager[] 和 javadoc:javax.net.ssl.TrustManager[] 数组。
+- `createSslContext()` 提供了获取新 javadoc:javax.net.ssl.SSLContext[] 实例的便捷方式。
 
-In addition, the javadoc:org.springframework.boot.ssl.SslBundle[] provides details about the key being used, the protocol to use and any option that should be applied to the SSL engine.
+此外，javadoc:org.springframework.boot.ssl.SslBundle[] 还提供了关于所用密钥、协议及应应用于 SSL 引擎的选项的详细信息。
 
-The following example shows retrieving an javadoc:org.springframework.boot.ssl.SslBundle[] and using it to create an javadoc:javax.net.ssl.SSLContext[]:
+以下示例展示了如何获取 javadoc:org.springframework.boot.ssl.SslBundle[] 并用其创建 javadoc:javax.net.ssl.SSLContext[]：
 
 include-code::MyComponent[]
 
 
 
 [[features.ssl.reloading]]
-== Reloading SSL bundles
+== 重新加载 SSL 集合
 
-SSL bundles can be reloaded when the key material changes.
-The component consuming the bundle has to be compatible with reloadable SSL bundles.
-Currently the following components are compatible:
+当密钥材料发生变化时，SSL 集合可以被重新加载。
+消费该集合的组件必须兼容可重载的 SSL 集合。
+目前以下组件是兼容的：
 
-* Tomcat web server
-* Netty web server
+* Tomcat Web 服务器
+* Netty Web 服务器
 
-To enable reloading, you need to opt-in via a configuration property as shown in this example:
+要启用重新加载，需要通过配置属性进行设置，如下例所示：
 
 [configprops,yaml]
 ----
@@ -177,7 +177,7 @@ To enable reloading, you need to opt-in via a configuration property as shown in
                 private-key: "file:/some/directory/application.key"
 ----
 
-A file watcher is then watching the files and if they change, the SSL bundle will be reloaded.
-This in turn triggers a reload in the consuming component, e.g. Tomcat rotates the certificates in the SSL enabled connectors.
+此时会有文件监视器监控这些文件，如果发生变化，SSL 集合会被重新加载。
+这会进一步触发消费组件的重新加载，例如 Tomcat 会在启用 SSL 的连接器中轮换证书。
 
-You can configure the quiet period (to make sure that there are no more changes) of the file watcher with the configprop:spring.ssl.bundle.watch.file.quiet-period[] property.
+你可以通过 configprop:spring.ssl.bundle.watch.file.quiet-period[] 属性配置文件监视器的静默期（以确保没有更多变更）。

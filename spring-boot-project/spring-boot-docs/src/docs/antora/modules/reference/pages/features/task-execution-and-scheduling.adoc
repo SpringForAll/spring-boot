@@ -1,34 +1,33 @@
 [[features.task-execution-and-scheduling]]
-= Task Execution and Scheduling
+= 任务执行与调度
 
-In the absence of an javadoc:java.util.concurrent.Executor[] bean in the context, Spring Boot auto-configures an javadoc:org.springframework.core.task.AsyncTaskExecutor[].
-When virtual threads are enabled (using Java 21+ and configprop:spring.threads.virtual.enabled[] set to `true`) this will be a javadoc:org.springframework.core.task.SimpleAsyncTaskExecutor[] that uses virtual threads.
-Otherwise, it will be a javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor[] with sensible defaults.
-In either case, the auto-configured executor will be automatically used for:
+如果上下文中没有 javadoc:java.util.concurrent.Executor[] bean，Spring Boot 会自动配置一个 javadoc:org.springframework.core.task.AsyncTaskExecutor[]。
+当启用虚拟线程（使用 Java 21+ 且 configprop:spring.threads.virtual.enabled[] 设置为 `true`）时，这将是一个使用虚拟线程的 javadoc:org.springframework.core.task.SimpleAsyncTaskExecutor[]。
+否则，它将是一个带有合理默认值的 javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor[]。
+无论哪种情况，自动配置的执行器都会自动用于：
 
-- asynchronous task execution (`@EnableAsync`)
-- Spring for GraphQL's asynchronous handling of javadoc:java.util.concurrent.Callable[] return values from controller methods
-- Spring MVC's asynchronous request processing
-- Spring WebFlux's blocking execution support
+- 异步任务执行（`@EnableAsync`）
+- Spring for GraphQL 控制器方法返回 javadoc:java.util.concurrent.Callable[] 时的异步处理
+- Spring MVC 的异步请求处理
+- Spring WebFlux 的阻塞执行支持
 
 [TIP]
 ====
-If you have defined a custom javadoc:java.util.concurrent.Executor[] in the context, both regular task execution (that is javadoc:org.springframework.scheduling.annotation.EnableAsync[format=annotation]) and Spring for GraphQL will use it.
-However, the Spring MVC and Spring WebFlux support will only use it if it is an javadoc:org.springframework.core.task.AsyncTaskExecutor[] implementation (named `applicationTaskExecutor`).
-Depending on your target arrangement, you could change your javadoc:java.util.concurrent.Executor[] into an javadoc:org.springframework.core.task.AsyncTaskExecutor[] or define both an javadoc:org.springframework.core.task.AsyncTaskExecutor[] and an javadoc:org.springframework.scheduling.annotation.AsyncConfigurer[] wrapping your custom javadoc:java.util.concurrent.Executor[].
+如果您在上下文中定义了自定义的 javadoc:java.util.concurrent.Executor[]，常规任务执行（即 javadoc:org.springframework.scheduling.annotation.EnableAsync[format=annotation]）和 Spring for GraphQL 都会使用它。
+但 Spring MVC 和 Spring WebFlux 仅在其为名为 `applicationTaskExecutor` 的 javadoc:org.springframework.core.task.AsyncTaskExecutor[] 实现时才会使用。
+根据您的目标安排，您可以将 javadoc:java.util.concurrent.Executor[] 更改为 javadoc:org.springframework.core.task.AsyncTaskExecutor[]，或同时定义一个 javadoc:org.springframework.core.task.AsyncTaskExecutor[] 和一个包装自定义 javadoc:java.util.concurrent.Executor[] 的 javadoc:org.springframework.scheduling.annotation.AsyncConfigurer[]。
 
-The auto-configured javadoc:org.springframework.boot.task.ThreadPoolTaskExecutorBuilder[] allows you to easily create instances that reproduce what the auto-configuration does by default.
+自动配置的 javadoc:org.springframework.boot.task.ThreadPoolTaskExecutorBuilder[] 允许您轻松创建与自动配置默认行为一致的实例。
 ====
 
 [NOTE]
 ====
-If multiple javadoc:java.util.concurrent.Executor[] beans are defined, regular task execution fallbacks to a bean named `taskExecutor`.
-GraphQL, Spring MVC and Spring WebFlux support fallback to a bean named `applicationTaskExecutor`.
+如果定义了多个 javadoc:java.util.concurrent.Executor[] bean，常规任务执行会回退到名为 `taskExecutor` 的 bean。
+GraphQL、Spring MVC 和 Spring WebFlux 支持会回退到名为 `applicationTaskExecutor` 的 bean。
 ====
 
-
-When a javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor[] is auto-configured, the thread pool uses 8 core threads that can grow and shrink according to the load.
-Those default settings can be fine-tuned using the `spring.task.execution` namespace, as shown in the following example:
+当自动配置 javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor[] 时，线程池默认使用 8 个核心线程，并可根据负载增长和收缩。
+这些默认设置可以通过 `spring.task.execution` 命名空间进行微调，如下例所示：
 
 [configprops,yaml]
 ----
@@ -41,16 +40,16 @@ spring:
         keep-alive: "10s"
 ----
 
-This changes the thread pool to use a bounded queue so that when the queue is full (100 tasks), the thread pool increases to maximum 16 threads.
-Shrinking of the pool is more aggressive as threads are reclaimed when they are idle for 10 seconds (rather than 60 seconds by default).
+这会将线程池更改为使用有界队列，因此当队列已满（100 个任务）时，线程池会增加到最多 16 个线程。
+线程池的收缩也更为积极，当线程空闲 10 秒（默认是 60 秒）时会被回收。
 
-A scheduler can also be auto-configured if it needs to be associated with scheduled task execution (using javadoc:org.springframework.scheduling.annotation.EnableScheduling[format=annotation] for instance).
+如果需要与定时任务执行相关联，也可以自动配置调度器（例如使用 javadoc:org.springframework.scheduling.annotation.EnableScheduling[format=annotation]）。
 
-If virtual threads are enabled (using Java 21+ and configprop:spring.threads.virtual.enabled[] set to `true`) this will be a javadoc:org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler[] that uses virtual threads.
-This javadoc:org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler[] will ignore any pooling related properties.
+如果启用虚拟线程（使用 Java 21+ 且 configprop:spring.threads.virtual.enabled[] 设置为 `true`），这将是一个使用虚拟线程的 javadoc:org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler[]。
+此 javadoc:org.springframework.scheduling.concurrent.SimpleAsyncTaskScheduler[] 会忽略所有与池相关的属性。
 
-If virtual threads are not enabled, it will be a javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler[] with sensible defaults.
-The javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler[] uses one thread by default and its settings can be fine-tuned using the `spring.task.scheduling` namespace, as shown in the following example:
+如果未启用虚拟线程，则会是一个带有合理默认值的 javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler[]。
+javadoc:org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler[] 默认使用一个线程，其设置可通过 `spring.task.scheduling` 命名空间进行微调，如下例所示：
 
 [configprops,yaml]
 ----
@@ -62,5 +61,5 @@ spring:
         size: 2
 ----
 
-A javadoc:org.springframework.boot.task.ThreadPoolTaskExecutorBuilder[] bean, a javadoc:org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder[] bean, a javadoc:org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder[] bean and a javadoc:org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder[] are made available in the context if a custom executor or scheduler needs to be created.
-The javadoc:org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder[] and javadoc:org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder[] beans are auto-configured to use virtual threads if they are enabled (using Java 21+ and configprop:spring.threads.virtual.enabled[] set to `true`).
+如果需要创建自定义执行器或调度器，javadoc:org.springframework.boot.task.ThreadPoolTaskExecutorBuilder[]、javadoc:org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder[]、javadoc:org.springframework.boot.task.ThreadPoolTaskSchedulerBuilder[] 和 javadoc:org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder[] bean 都会在上下文中可用。
+javadoc:org.springframework.boot.task.SimpleAsyncTaskExecutorBuilder[] 和 javadoc:org.springframework.boot.task.SimpleAsyncTaskSchedulerBuilder[] bean 会在启用虚拟线程时自动配置为使用虚拟线程（使用 Java 21+ 且 configprop:spring.threads.virtual.enabled[] 设置为 `true`）。

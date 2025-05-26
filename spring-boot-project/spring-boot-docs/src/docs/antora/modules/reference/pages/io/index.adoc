@@ -1,8 +1,8 @@
 [[io]]
 = IO
 
-Most applications will need to deal with input and output concerns at some point.
-Spring Boot provides utilities and integrations with a range of technologies to help when you need IO capabilities.
-This section covers standard IO features such as caching and validation as well as more advanced topics such as scheduling and distributed transactions.
-We will also cover calling remote REST or SOAP services and sending email.
+大多数应用程序在某个时候都需要处理输入和输出相关的问题。
+Spring Boot 提供了各种工具和与多种技术的集成，以帮助您实现 IO 功能。
+本节涵盖了标准 IO 功能，如缓存和验证，以及更高级的主题，如调度和分布式事务。
+我们还将介绍如何调用远程 REST 或 SOAP 服务以及发送电子邮件。
 

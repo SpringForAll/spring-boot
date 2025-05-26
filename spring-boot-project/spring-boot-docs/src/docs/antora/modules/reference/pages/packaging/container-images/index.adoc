@@ -1,4 +1,4 @@
 [[packaging.container-images]]
-= Container Images
+= 容器镜像
 
-Spring Boot applications can be containerized xref:packaging/container-images/dockerfiles.adoc[using Dockerfiles], or by xref:packaging/container-images/cloud-native-buildpacks.adoc[using Cloud Native Buildpacks] to create optimized docker compatible container images that you can run anywhere.
+Spring Boot 应用程序可以通过 xref:packaging/container-images/dockerfiles.adoc[使用 Dockerfiles] 或 xref:packaging/container-images/cloud-native-buildpacks.adoc[使用 Cloud Native Buildpacks] 来容器化，以创建优化的 docker 兼容容器镜像，您可以在任何地方运行这些镜像。

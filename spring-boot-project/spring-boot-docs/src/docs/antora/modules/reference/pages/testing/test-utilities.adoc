@@ -1,29 +1,29 @@
 [[testing.utilities]]
-= Test Utilities
+= 测试工具
 
-A few test utility classes that are generally useful when testing your application are packaged as part of `spring-boot`.
+一些在测试应用程序时通常有用的测试工具类被打包为 `spring-boot` 的一部分。
 
 
 
 [[testing.utilities.config-data-application-context-initializer]]
 == ConfigDataApplicationContextInitializer
 
-javadoc:org.springframework.boot.test.context.ConfigDataApplicationContextInitializer[] is an javadoc:org.springframework.context.ApplicationContextInitializer[] that you can apply to your tests to load Spring Boot `application.properties` files.
-You can use it when you do not need the full set of features provided by javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation], as shown in the following example:
+javadoc:org.springframework.boot.test.context.ConfigDataApplicationContextInitializer[] 是一个 javadoc:org.springframework.context.ApplicationContextInitializer[]，您可以将其应用于测试以加载Spring Boot的 `application.properties` 文件。
+当您不需要 javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation] 提供的完整功能集时，可以使用它，如下例所示：
 
 include-code::MyConfigFileTests[]
 
-NOTE: Using javadoc:org.springframework.boot.test.context.ConfigDataApplicationContextInitializer[] alone does not provide support for `@Value("${...}")` injection.
-Its only job is to ensure that `application.properties` files are loaded into Spring's javadoc:org.springframework.core.env.Environment[].
-For javadoc:org.springframework.beans.factory.annotation.Value[format=annotation] support, you need to either additionally configure a javadoc:org.springframework.context.support.PropertySourcesPlaceholderConfigurer[] or use javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation], which auto-configures one for you.
+注意：单独使用 javadoc:org.springframework.boot.test.context.ConfigDataApplicationContextInitializer[] 不提供对 `@Value("${...}")` 注入的支持。
+它的唯一工作是确保 `application.properties` 文件被加载到Spring的 javadoc:org.springframework.core.env.Environment[] 中。
+对于 javadoc:org.springframework.beans.factory.annotation.Value[format=annotation] 支持，您需要额外配置 javadoc:org.springframework.context.support.PropertySourcesPlaceholderConfigurer[] 或使用 javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation]，它会自动为您配置一个。
 
 
 
 [[testing.utilities.test-property-values]]
 == TestPropertyValues
 
-javadoc:org.springframework.boot.test.util.TestPropertyValues[] lets you quickly add properties to a javadoc:org.springframework.core.env.ConfigurableEnvironment[] or javadoc:org.springframework.context.ConfigurableApplicationContext[].
-You can call it with `key=value` strings, as follows:
+javadoc:org.springframework.boot.test.util.TestPropertyValues[] 允许您快速向 javadoc:org.springframework.core.env.ConfigurableEnvironment[] 或 javadoc:org.springframework.context.ConfigurableApplicationContext[] 添加属性。
+您可以使用 `key=value` 字符串调用它，如下所示：
 
 include-code::MyEnvironmentTests[]
 
@@ -32,8 +32,8 @@ include-code::MyEnvironmentTests[]
 [[testing.utilities.output-capture]]
 == OutputCaptureExtension
 
-javadoc:org.springframework.boot.test.system.OutputCaptureExtension[] is a JUnit javadoc:org.junit.jupiter.api.extension.Extension[] that you can use to capture javadoc:java.lang.System#out[] and javadoc:java.lang.System#err[] output.
-To use it, add `@ExtendWith(OutputCaptureExtension.class)` and inject javadoc:org.springframework.boot.test.system.CapturedOutput[] as an argument to your test class constructor or test method as follows:
+javadoc:org.springframework.boot.test.system.OutputCaptureExtension[] 是一个JUnit javadoc:org.junit.jupiter.api.extension.Extension[]，您可以用它来捕获 javadoc:java.lang.System#out[] 和 javadoc:java.lang.System#err[] 输出。
+要使用它，添加 `@ExtendWith(OutputCaptureExtension.class)` 并将 javadoc:org.springframework.boot.test.system.CapturedOutput[] 作为参数注入到测试类构造函数或测试方法中，如下所示：
 
 include-code::MyOutputCaptureTests[]
 
@@ -42,28 +42,28 @@ include-code::MyOutputCaptureTests[]
 [[testing.utilities.test-rest-template]]
 == TestRestTemplate
 
-javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] is a convenience alternative to Spring's javadoc:org.springframework.web.client.RestTemplate[] that is useful in integration tests.
-You can get a vanilla template or one that sends Basic HTTP authentication (with a username and password).
-In either case, the template is fault tolerant.
-This means that it behaves in a test-friendly way by not throwing exceptions on 4xx and 5xx errors.
-Instead, such errors can be detected through the returned javadoc:org.springframework.http.ResponseEntity[] and its status code.
+javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] 是Spring的 javadoc:org.springframework.web.client.RestTemplate[] 的一个便捷替代品，在集成测试中很有用。
+您可以获取一个普通模板或一个发送Basic HTTP认证（带用户名和密码）的模板。
+在这两种情况下，模板都是容错的。
+这意味着它以测试友好的方式运行，不会在4xx和5xx错误时抛出异常。
+相反，可以通过返回的 javadoc:org.springframework.http.ResponseEntity[] 及其状态码来检测此类错误。
 
-TIP: Spring Framework 5.0 provides a new javadoc:org.springframework.test.web.reactive.server.WebTestClient[] that works for xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.spring-webflux-tests[WebFlux integration tests] and both xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.with-running-server[WebFlux and MVC end-to-end testing].
-It provides a fluent API for assertions, unlike javadoc:org.springframework.boot.test.web.client.TestRestTemplate[].
+提示：Spring Framework 5.0提供了一个新的 javadoc:org.springframework.test.web.reactive.server.WebTestClient[]，它适用于 xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.spring-webflux-tests[WebFlux集成测试]和 xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.with-running-server[WebFlux和MVC端到端测试]。
+与 javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] 不同，它提供了用于断言的流式API。
 
-It is recommended, but not mandatory, to use the Apache HTTP Client (version 5.1 or better).
-If you have that on your classpath, the javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] responds by configuring the client appropriately.
-If you do use Apache's HTTP client, some additional test-friendly features are enabled:
+建议（但不是强制）使用Apache HTTP Client（5.1或更高版本）。
+如果您的类路径上有它，javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] 会通过适当配置客户端来响应。
+如果您确实使用Apache的HTTP客户端，则会启用一些额外的测试友好功能：
 
-* Redirects are not followed (so you can assert the response location).
-* Cookies are ignored (so the template is stateless).
+* 不跟踪重定向（因此您可以断言响应位置）。
+* 忽略Cookie（因此模板是无状态的）。
 
-javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] can be instantiated directly in your integration tests, as shown in the following example:
+javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] 可以直接在集成测试中实例化，如下例所示：
 
 include-code::MyTests[]
 
-Alternatively, if you use the javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation] annotation with `WebEnvironment.RANDOM_PORT` or `WebEnvironment.DEFINED_PORT`, you can inject a fully configured javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] and start using it.
-If necessary, additional customizations can be applied through the javadoc:org.springframework.boot.web.client.RestTemplateBuilder[] bean.
-Any URLs that do not specify a host and port automatically connect to the embedded server, as shown in the following example:
+或者，如果您使用带有 `WebEnvironment.RANDOM_PORT` 或 `WebEnvironment.DEFINED_PORT` 的 javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation] 注解，您可以注入一个完全配置的 javadoc:org.springframework.boot.test.web.client.TestRestTemplate[] 并开始使用它。
+如有必要，可以通过 javadoc:org.springframework.boot.web.client.RestTemplateBuilder[] bean应用其他自定义。
+任何未指定主机和端口的URL都会自动连接到嵌入式服务器，如下例所示：
 
 include-code::MySpringBootTests[]

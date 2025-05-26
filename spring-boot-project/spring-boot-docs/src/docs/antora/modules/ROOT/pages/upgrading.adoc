@@ -1,54 +1,54 @@
 [[upgrading]]
-= Upgrading Spring Boot
+= 升级 Spring Boot
 
-Instructions for how to upgrade from earlier versions of Spring Boot are provided on the project {url-github-wiki}[wiki].
-Follow the links in the {url-github-wiki}#release-notes[release notes] section to find the version that you want to upgrade to.
+有关如何从早期版本的 Spring Boot 升级的说明，请参阅项目 {url-github-wiki}[wiki]。
+请按照 {url-github-wiki}#release-notes[发行说明] 部分的链接，找到您想要升级到的版本。
 
-Upgrading instructions are always the first item in the release notes.
-If you are more than one release behind, please make sure that you also review the release notes of the versions that you jumped.
+升级说明始终是发行说明中的第一项。
+如果您落后了多个版本，请确保您也查看了您跳过的版本的发行说明。
 
 
 
 [[upgrading.from-1x]]
-== Upgrading From 1.x
+== 从 1.x 升级
 
-If you are upgrading from the `1.x` release of Spring Boot, check the {url-github-wiki}/Spring-Boot-2.0-Migration-Guide[migration guide] on the project wiki that provides detailed upgrade instructions to upgrade to Spring Boot 2.x.
-Check also the {url-github-wiki}[release notes] for a list of "`new and noteworthy`" features for each release.
+如果您从 Spring Boot 的 `1.x` 版本升级，请查看项目 wiki 上的 {url-github-wiki}/Spring-Boot-2.0-Migration-Guide[迁移指南]，其中提供了升级到 Spring Boot 2.x 的详细说明。
+同时查看 {url-github-wiki}[发行说明]，以获取每个版本的“新功能和值得注意的特性”列表。
 
 
 
 [[upgrading.from-2x]]
-== Upgrading From 2.x
+== 从 2.x 升级
 
-If you are upgrading from the `2.x` release of Spring Boot, check the {url-github-wiki}/Spring-Boot-3.0-Migration-Guide[migration guide] on the project wiki that provides detailed upgrade instructions.
-Check also the {url-github-wiki}[release notes] for a list of "`new and noteworthy`" features for each release.
+如果您从 Spring Boot 的 `2.x` 版本升级，请查看项目 wiki 上的 {url-github-wiki}/Spring-Boot-3.0-Migration-Guide[迁移指南]，其中提供了详细的升级说明。
+同时查看 {url-github-wiki}[发行说明]，以获取每个版本的“新功能和值得注意的特性”列表。
 
 
 
 [[upgrading.to-feature]]
-== Upgrading to a New Feature Release
+== 升级到新功能版本
 
-When upgrading to a new feature release, some properties may have been renamed or removed.
-Spring Boot provides a way to analyze your application's environment and print diagnostics at startup, but also temporarily migrate properties at runtime for you.
-To enable that feature, add the following dependency to your project:
+升级到新功能版本时，某些属性可能会被重命名或移除。
+Spring Boot 提供了一种方法来分析应用程序的环境并在启动时打印诊断信息，同时还可以在运行时为您临时迁移属性。
+要启用此功能，请将以下依赖项添加到您的项目中：
 
 [source,xml]
 ----
 <dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-properties-migrator</artifactId>
-	<scope>runtime</scope>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-properties-migrator</artifactId>
+    <scope>runtime</scope>
 </dependency>
 ----
 
-WARNING: Properties that are added late to the environment, such as when using javadoc:org.springframework.context.annotation.PropertySource[format=annotation], will not be taken into account.
+WARNING: 延迟添加到环境中的属性，例如使用 javadoc:org.springframework.context.annotation.PropertySource[format=annotation] 时，将不会被考虑。
 
-NOTE: Once you finish the migration, please make sure to remove this module from your project's dependencies.
+NOTE: 完成迁移后，请确保从项目的依赖项中移除此模块。
 
 
 
 [[upgrading.cli]]
-== Upgrading the Spring Boot CLI
+== 升级 Spring Boot CLI
 
-To upgrade an existing CLI installation, use the appropriate package manager command (for example, `brew upgrade`).
-If you manually installed the CLI, follow the xref:installing.adoc#getting-started.installing.cli.manual-installation[standard instructions], remembering to update your `PATH` environment variable to remove any older references.
+要升级现有的 CLI 安装，请使用适当的包管理器命令（例如，`brew upgrade`）。
+如果您手动安装了 CLI，请按照 xref:installing.adoc#getting-started.installing.cli.manual-installation[标准说明] 进行操作，并记得更新您的 `PATH` 环境变量以移除任何旧的引用。

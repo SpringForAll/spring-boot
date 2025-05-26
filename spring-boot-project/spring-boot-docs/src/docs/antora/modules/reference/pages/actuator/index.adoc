@@ -1,8 +1,7 @@
-
 [[actuator]]
-= Production-ready Features
+= 生产就绪特性
 
-Spring Boot includes a number of additional features to help you monitor and manage your application when you push it to production.
-You can choose to manage and monitor your application by using HTTP endpoints or with JMX.
-Auditing, health, and metrics gathering can also be automatically applied to your application.
+Spring Boot 包含了许多额外的功能，可以帮助你在将应用程序推送到生产环境时进行监控和管理。
+你可以选择使用 HTTP 端点或 JMX 来管理和监控你的应用程序。
+审计、健康检查和指标收集也可以自动应用于你的应用程序。
 

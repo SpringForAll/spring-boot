@@ -1,15 +1,15 @@
 [[io.email]]
-= Sending Email
+= 发送电子邮件
 
-The Spring Framework provides an abstraction for sending email by using the javadoc:org.springframework.mail.javamail.JavaMailSender[] interface, and Spring Boot provides auto-configuration for it as well as a starter module.
+Spring Framework 通过使用 javadoc:org.springframework.mail.javamail.JavaMailSender[] 接口提供了发送电子邮件的抽象，Spring Boot 也为其提供了自动配置以及一个 starter 模块。
 
-TIP: See the {url-spring-framework-docs}/integration/email.html[reference documentation] for a detailed explanation of how you can use javadoc:org.springframework.mail.javamail.JavaMailSender[].
+TIP: 有关如何使用 javadoc:org.springframework.mail.javamail.JavaMailSender[] 的详细说明，请参阅 {url-spring-framework-docs}/integration/email.html[参考文档]。
 
-If `spring.mail.host` and the relevant libraries (as defined by `spring-boot-starter-mail`) are available, a default javadoc:org.springframework.mail.javamail.JavaMailSender[] is created if none exists.
-The sender can be further customized by configuration items from the `spring.mail` namespace.
-See javadoc:org.springframework.boot.autoconfigure.mail.MailProperties[] for more details.
+如果 `spring.mail.host` 和相关的库（由 `spring-boot-starter-mail` 定义）可用，并且不存在默认的 javadoc:org.springframework.mail.javamail.JavaMailSender[]，则会创建一个默认的发送器。
+可以通过 `spring.mail` 命名空间中的配置项进一步自定义发送器。
+有关更多详细信息，请参阅 javadoc:org.springframework.boot.autoconfigure.mail.MailProperties[]。
 
-In particular, certain default timeout values are infinite, and you may want to change that to avoid having a thread blocked by an unresponsive mail server, as shown in the following example:
+特别是，某些默认超时值是无限的，您可能想要更改这些值以避免线程被无响应的邮件服务器阻塞，如下例所示：
 
 [configprops,yaml]
 ----
@@ -21,7 +21,7 @@ spring:
       "[mail.smtp.writetimeout]": 5000
 ----
 
-It is also possible to configure a javadoc:org.springframework.mail.javamail.JavaMailSender[] with an existing javadoc:jakarta.mail.Session[] from JNDI:
+也可以通过 JNDI 使用现有的 javadoc:jakarta.mail.Session[] 来配置 javadoc:org.springframework.mail.javamail.JavaMailSender[]：
 
 [configprops,yaml]
 ----
@@ -30,4 +30,4 @@ spring:
     jndi-name: "mail/Session"
 ----
 
-When a `jndi-name` is set, it takes precedence over all other Session-related settings.
+当设置了 `jndi-name` 时，它会优先于所有其他 Session 相关的设置。

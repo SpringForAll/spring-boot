@@ -1,79 +1,79 @@
 [[howto.data-initialization]]
-= Database Initialization
+= 数据库初始化
 
-An SQL database can be initialized in different ways depending on what your stack is.
-Of course, you can also do it manually, provided the database is a separate process.
-It is recommended to use a single mechanism for schema generation.
+SQL 数据库可以根据您的技术栈以不同的方式初始化。
+当然，如果数据库是单独的进程，您也可以手动进行初始化。
+建议使用单一机制进行模式生成。
 
 
 
 [[howto.data-initialization.using-hibernate]]
-== Initialize a Database Using Hibernate
+== 使用 Hibernate 初始化数据库
 
-You can set configprop:spring.jpa.hibernate.ddl-auto[] to control Hibernate's database initialization.
-Supported values are `none`, `validate`, `update`, `create`, and `create-drop`.
-Spring Boot chooses a default value for you based on whether you are using an embedded database.
-An embedded database is identified by looking at the javadoc:java.sql.Connection[] type and JDBC url.
-`hsqldb`, `h2`, or `derby` are embedded databases and others are not.
-If an embedded database is identified and no schema manager (Flyway or Liquibase) has been detected, `ddl-auto` defaults to `create-drop`.
-In all other cases, it defaults to `none`.
+您可以设置 configprop:spring.jpa.hibernate.ddl-auto[] 来控制 Hibernate 的数据库初始化。
+支持的值是 `none`、`validate`、`update`、`create` 和 `create-drop`。
+Spring Boot 根据您是否使用嵌入式数据库为您选择一个默认值。
+通过查看 javadoc:java.sql.Connection[] 类型和 JDBC url 来识别嵌入式数据库。
+`hsqldb`、`h2` 或 `derby` 是嵌入式数据库，其他则不是。
+如果识别到嵌入式数据库且未检测到模式管理器（Flyway 或 Liquibase），则 `ddl-auto` 默认为 `create-drop`。
+在所有其他情况下，它默认为 `none`。
 
-Be careful when switching from in-memory to a '`real`' database that you do not make assumptions about the existence of the tables and data in the new platform.
-You either have to set `ddl-auto` explicitly or use one of the other mechanisms to initialize the database.
+在从内存数据库切换到"真实"数据库时要小心，不要对新平台中表和数据的存在做出假设。
+您必须显式设置 `ddl-auto` 或使用其他机制之一来初始化数据库。
 
-NOTE: You can output the schema creation by enabling the `org.hibernate.SQL` logger.
-This is done for you automatically if you enable the xref:reference:features/logging.adoc#features.logging.console-output[debug mode].
+注意：您可以通过启用 `org.hibernate.SQL` 记录器来输出模式创建。
+如果您启用 xref:reference:features/logging.adoc#features.logging.console-output[调试模式]，这将自动为您完成。
 
-In addition, a file named `import.sql` in the root of the classpath is executed on startup if Hibernate creates the schema from scratch (that is, if the `ddl-auto` property is set to `create` or `create-drop`).
-This can be useful for demos and for testing if you are careful but is probably not something you want to be on the classpath in production.
-It is a Hibernate feature (and has nothing to do with Spring).
+此外，如果 Hibernate 从头创建模式（即，如果 `ddl-auto` 属性设置为 `create` 或 `create-drop`），则在类路径根目录中名为 `import.sql` 的文件将在启动时执行。
+这对于演示和测试很有用，如果您小心的话，但这可能不是您希望在生产环境的类路径上的内容。
+这是 Hibernate 的功能（与 Spring 无关）。
 
 
 
 [[howto.data-initialization.using-basic-sql-scripts]]
-== Initialize a Database Using Basic SQL Scripts
+== 使用基本 SQL 脚本初始化数据库
 
-Spring Boot can automatically create the schema (DDL scripts) of your JDBC javadoc:javax.sql.DataSource[] or R2DBC javadoc:io.r2dbc.spi.ConnectionFactory[] and initialize its data (DML scripts).
+Spring Boot 可以自动创建 JDBC javadoc:javax.sql.DataSource[] 或 R2DBC javadoc:io.r2dbc.spi.ConnectionFactory[] 的模式（DDL 脚本）并初始化其数据（DML 脚本）。
 
-By default, it loads schema scripts from `optional:classpath*:schema.sql` and data scripts from `optional:classpath*:data.sql`.
-The locations of these schema and data scripts can be customized using configprop:spring.sql.init.schema-locations[] and configprop:spring.sql.init.data-locations[] respectively.
-The `optional:` prefix means that the application will start even when the files do not exist.
-To have the application fail to start when the files are absent, remove the `optional:` prefix.
+默认情况下，它从 `optional:classpath*:schema.sql` 加载模式脚本，从 `optional:classpath*:data.sql` 加载数据脚本。
+可以使用 configprop:spring.sql.init.schema-locations[] 和 configprop:spring.sql.init.data-locations[] 分别自定义这些模式和数据脚本的位置。
+`optional:` 前缀意味着即使文件不存在，应用程序也会启动。
+要使应用程序在文件不存在时启动失败，请删除 `optional:` 前缀。
 
-In addition, Spring Boot processes the `optional:classpath*:schema-$\{platform}.sql` and `optional:classpath*:data-$\{platform}.sql` files (if present), where `$\{platform}` is the value of configprop:spring.sql.init.platform[].
-This allows you to switch to database-specific scripts if necessary.
-For example, you might choose to set it to the vendor name of the database (`hsqldb`, `h2`, `oracle`, `mysql`, `postgresql`, and so on).
+此外，Spring Boot 处理 `optional:classpath*:schema-$\{platform}.sql` 和 `optional:classpath*:data-$\{platform}.sql` 文件（如果存在），其中 `$\{platform}` 是 configprop:spring.sql.init.platform[] 的值。
+这允许您在必要时切换到特定于数据库的脚本。
+例如，您可能选择将其设置为数据库的供应商名称（`hsqldb`、`h2`、`oracle`、`mysql`、`postgresql` 等）。
 
-By default, SQL database initialization is only performed when using an embedded in-memory database.
-To always initialize an SQL database, irrespective of its type, set configprop:spring.sql.init.mode[] to `always`.
-Similarly, to disable initialization, set configprop:spring.sql.init.mode[] to `never`.
-By default, Spring Boot enables the fail-fast feature of its script-based database initializer.
-This means that, if the scripts cause exceptions, the application fails to start.
-You can tune that behavior by setting configprop:spring.sql.init.continue-on-error[].
+默认情况下，仅在使用嵌入式内存数据库时执行 SQL 数据库初始化。
+要始终初始化 SQL 数据库，无论其类型如何，请将 configprop:spring.sql.init.mode[] 设置为 `always`。
+同样，要禁用初始化，请将 configprop:spring.sql.init.mode[] 设置为 `never`。
+默认情况下，Spring Boot 启用其基于脚本的数据库初始化器的快速失败功能。
+这意味着，如果脚本导致异常，应用程序将启动失败。
+您可以通过设置 configprop:spring.sql.init.continue-on-error[] 来调整该行为。
 
-Script-based javadoc:javax.sql.DataSource[] initialization is performed, by default, before any JPA javadoc:jakarta.persistence.EntityManagerFactory[] beans are created.
-`schema.sql` can be used to create the schema for JPA-managed entities and `data.sql` can be used to populate it.
-While we do not recommend using multiple data source initialization technologies, if you want script-based javadoc:javax.sql.DataSource[] initialization to be able to build upon the schema creation performed by Hibernate, set configprop:spring.jpa.defer-datasource-initialization[] to `true`.
-This will defer data source initialization until after any javadoc:jakarta.persistence.EntityManagerFactory[] beans have been created and initialized.
-`schema.sql` can then be used to make additions to any schema creation performed by Hibernate and `data.sql` can be used to populate it.
+默认情况下，在创建任何 JPA javadoc:jakarta.persistence.EntityManagerFactory[] bean 之前执行基于脚本的 javadoc:javax.sql.DataSource[] 初始化。
+`schema.sql` 可用于创建 JPA 管理的实体的模式，`data.sql` 可用于填充它。
+虽然我们不建议使用多种数据源初始化技术，但如果您希望基于脚本的 javadoc:javax.sql.DataSource[] 初始化能够基于 Hibernate 执行的模式创建，请将 configprop:spring.jpa.defer-datasource-initialization[] 设置为 `true`。
+这将延迟数据源初始化，直到创建并初始化任何 javadoc:jakarta.persistence.EntityManagerFactory[] bean 之后。
+`schema.sql` 然后可用于对 Hibernate 执行的任何模式创建进行补充，`data.sql` 可用于填充它。
 
-NOTE: The initialization scripts support `--` for single line comments and `/++*++ ++*++/` for block comments.
-Other comment formats are not supported.
+注意：初始化脚本支持 `--` 用于单行注释和 `/++*++ ++*++/` 用于块注释。
+不支持其他注释格式。
 
-If you are using a xref:data-initialization.adoc#howto.data-initialization.migration-tool[higher-level database migration tool], like Flyway or Liquibase, you should use them alone to create and initialize the schema.
-Using the basic `schema.sql` and `data.sql` scripts alongside Flyway or Liquibase is not recommended and support will be removed in a future release.
+如果您使用 xref:data-initialization.adoc#howto.data-initialization.migration-tool[更高级别的数据库迁移工具]，如 Flyway 或 Liquibase，您应该单独使用它们来创建和初始化模式。
+不建议将基本的 `schema.sql` 和 `data.sql` 脚本与 Flyway 或 Liquibase 一起使用，并且将在未来版本中移除支持。
 
-If you need to initialize test data using a higher-level database migration tool, please see the sections about xref:data-initialization.adoc#howto.data-initialization.migration-tool.flyway-tests[Flyway] and xref:data-initialization.adoc#howto.data-initialization.migration-tool.liquibase-tests[Liquibase].
+如果您需要使用更高级别的数据库迁移工具初始化测试数据，请参阅有关 xref:data-initialization.adoc#howto.data-initialization.migration-tool.flyway-tests[Flyway] 和 xref:data-initialization.adoc#howto.data-initialization.migration-tool.liquibase-tests[Liquibase] 的部分。
 
 
 
 [[howto.data-initialization.batch]]
-== Initialize a Spring Batch Database
+== 初始化 Spring Batch 数据库
 
-If you use Spring Batch, it comes pre-packaged with SQL initialization scripts for most popular database platforms.
-Spring Boot can detect your database type and execute those scripts on startup.
-If you use an embedded database, this happens by default.
-You can also enable it for any database type, as shown in the following example:
+如果您使用 Spring Batch，它预装了适用于大多数流行数据库平台的 SQL 初始化脚本。
+Spring Boot 可以检测您的数据库类型并在启动时执行这些脚本。
+如果您使用嵌入式数据库，这是默认行为。
+您也可以为任何数据库类型启用它，如下例所示：
 
 [configprops,yaml]
 ----
@@ -83,30 +83,30 @@ spring:
       initialize-schema: "always"
 ----
 
-You can also switch off the initialization explicitly by setting `spring.batch.jdbc.initialize-schema` to `never`.
+您也可以通过将 `spring.batch.jdbc.initialize-schema` 设置为 `never` 来显式关闭初始化。
 
 
 
 [[howto.data-initialization.migration-tool]]
-== Use a Higher-level Database Migration Tool
+== 使用更高级别的数据库迁移工具
 
-Spring Boot supports two higher-level migration tools: https://flywaydb.org/[Flyway] and https://www.liquibase.org/[Liquibase].
+Spring Boot 支持两个更高级别的迁移工具：https://flywaydb.org/[Flyway] 和 https://www.liquibase.org/[Liquibase]。
 
 
 
 [[howto.data-initialization.migration-tool.flyway]]
-=== Execute Flyway Database Migrations on Startup
+=== 在启动时执行 Flyway 数据库迁移
 
-To automatically run Flyway database migrations on startup, add the appropriate Flyway module to your classpath.
-In-memory and file-based databases are supported by `org.flywaydb:flyway-core`.
-Otherwise, a database-specific module is required.
-For example, use `org.flywaydb:flyway-database-postgresql` with PostgreSQL and `org.flywaydb:flyway-mysql` with MySQL.
-See https://documentation.red-gate.com/flyway/flyway-cli-and-api/supported-databases[the Flyway Documentation] for further details.
+要在启动时自动运行 Flyway 数据库迁移，请将适当的 Flyway 模块添加到您的类路径。
+`org.flywaydb:flyway-core` 支持内存和基于文件的数据库。
+否则，需要特定于数据库的模块。
+例如，对 PostgreSQL 使用 `org.flywaydb:flyway-database-postgresql`，对 MySQL 使用 `org.flywaydb:flyway-mysql`。
+有关更多详细信息，请参阅 https://documentation.red-gate.com/flyway/flyway-cli-and-api/supported-databases[Flyway 文档]。
 
-Typically, migrations are scripts in the form `V<VERSION>__<NAME>.sql` (with `<VERSION>` an underscore-separated version, such as '`1`' or '`2_1`').
-By default, they are in a directory called `classpath:db/migration`, but you can modify that location by setting `spring.flyway.locations`.
-This is a comma-separated list of one or more `classpath:` or `filesystem:` locations.
-For example, the following configuration would search for scripts in both the default classpath location and the `/opt/migration` directory:
+通常，迁移是形式为 `V<VERSION>__<NAME>.sql` 的脚本（其中 `<VERSION>` 是下划线分隔的版本，如 '`1`' 或 '`2_1`'）。
+默认情况下，它们位于名为 `classpath:db/migration` 的目录中，但您可以通过设置 `spring.flyway.locations` 来修改该位置。
+这是一个或多个 `classpath:` 或 `filesystem:` 位置的逗号分隔列表。
+例如，以下配置将在默认类路径位置和 `/opt/migration` 目录中搜索脚本：
 
 [configprops,yaml]
 ----
@@ -115,8 +115,8 @@ spring:
     locations: "classpath:db/migration,filesystem:/opt/migration"
 ----
 
-You can also add a special `\{vendor}` placeholder to use vendor-specific scripts.
-Assume the following:
+您还可以添加特殊的 `\{vendor}` 占位符来使用特定于供应商的脚本。
+假设如下：
 
 [configprops,yaml]
 ----
@@ -125,35 +125,35 @@ spring:
     locations: "classpath:db/migration/{vendor}"
 ----
 
-Rather than using `db/migration`, the preceding configuration sets the directory to use according to the type of the database (such as `db/migration/mysql` for MySQL).
-The list of supported databases is available in javadoc:org.springframework.boot.jdbc.DatabaseDriver[].
+前面的配置不是使用 `db/migration`，而是根据数据库类型设置要使用的目录（例如，对于 MySQL 使用 `db/migration/mysql`）。
+支持的数据库列表可在 javadoc:org.springframework.boot.jdbc.DatabaseDriver[] 中找到。
 
-Migrations can also be written in Java.
-Flyway will be auto-configured with any beans that implement javadoc:org.flywaydb.core.api.migration.JavaMigration[].
+迁移也可以用 Java 编写。
+Flyway 将自动配置任何实现 javadoc:org.flywaydb.core.api.migration.JavaMigration[] 的 bean。
 
-javadoc:org.springframework.boot.autoconfigure.flyway.FlywayProperties[] provides most of Flyway's settings and a small set of additional properties that can be used to disable the migrations or switch off the location checking.
-If you need more control over the configuration, consider registering a javadoc:org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer[] bean.
+javadoc:org.springframework.boot.autoconfigure.flyway.FlywayProperties[] 提供了大多数 Flyway 的设置和一小部分可用于禁用迁移或关闭位置检查的附加属性。
+如果您需要对配置进行更多控制，请考虑注册一个 javadoc:org.springframework.boot.autoconfigure.flyway.FlywayConfigurationCustomizer[] bean。
 
-Spring Boot calls `Flyway.migrate()` to perform the database migration.
-If you would like more control, provide a javadoc:org.springframework.context.annotation.Bean[format=annotation] that implements javadoc:org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy[].
+Spring Boot 调用 `Flyway.migrate()` 来执行数据库迁移。
+如果您希望进行更多控制，请提供一个实现 javadoc:org.springframework.boot.autoconfigure.flyway.FlywayMigrationStrategy[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
 
-Flyway supports SQL and Java https://documentation.red-gate.com/fd/callback-concept-184127466.html[callbacks].
-To use SQL-based callbacks, place the callback scripts in the `classpath:db/migration` directory.
-To use Java-based callbacks, create one or more beans that implement javadoc:org.flywaydb.core.api.callback.Callback[].
-Any such beans are automatically registered with javadoc:org.flywaydb.core.Flyway[].
-They can be ordered by using javadoc:org.springframework.core.annotation.Order[format=annotation] or by implementing javadoc:org.springframework.core.Ordered[].
+Flyway 支持 SQL 和 Java https://documentation.red-gate.com/fd/callback-concept-184127466.html[回调]。
+要使用基于 SQL 的回调，请将回调脚本放在 `classpath:db/migration` 目录中。
+要使用基于 Java 的回调，请创建一个或多个实现 javadoc:org.flywaydb.core.api.callback.Callback[] 的 bean。
+任何此类 bean 都会自动注册到 javadoc:org.flywaydb.core.Flyway[]。
+它们可以通过使用 javadoc:org.springframework.core.annotation.Order[format=annotation] 或实现 javadoc:org.springframework.core.Ordered[] 来排序。
 
-By default, Flyway autowires the (`@Primary`) javadoc:javax.sql.DataSource[] in your context and uses that for migrations.
-If you like to use a different javadoc:javax.sql.DataSource[], you can create one and mark its javadoc:org.springframework.context.annotation.Bean[format=annotation] as javadoc:org.springframework.boot.autoconfigure.flyway.FlywayDataSource[format=annotation].
-If you do so and want two data sources (for example by retaining the main auto-configured javadoc:javax.sql.DataSource[]), remember to set the `defaultCandidate` attribute of the javadoc:org.springframework.context.annotation.Bean[format=annotation] annotation to `false`.
-Alternatively, you can use Flyway's native javadoc:javax.sql.DataSource[] by setting `spring.flyway.[url,user,password]` in external properties.
-Setting either `spring.flyway.url` or `spring.flyway.user` is sufficient to cause Flyway to use its own javadoc:javax.sql.DataSource[].
-If any of the three properties has not been set, the value of its equivalent `spring.datasource` property will be used.
+默认情况下，Flyway 自动装配上下文中的（`@Primary`）javadoc:javax.sql.DataSource[] 并将其用于迁移。
+如果您想使用不同的 javadoc:javax.sql.DataSource[]，您可以创建一个并将其 javadoc:org.springframework.context.annotation.Bean[format=annotation] 标记为 javadoc:org.springframework.boot.autoconfigure.flyway.FlywayDataSource[format=annotation]。
+如果您这样做并想要两个数据源（例如，通过保留主要的自动配置 javadoc:javax.sql.DataSource[]），请记住将 javadoc:org.springframework.context.annotation.Bean[format=annotation] 注释的 `defaultCandidate` 属性设置为 `false`。
+或者，您可以通过在外部属性中设置 `spring.flyway.[url,user,password]` 来使用 Flyway 的原生 javadoc:javax.sql.DataSource[]。
+设置 `spring.flyway.url` 或 `spring.flyway.user` 中的任何一个都足以使 Flyway 使用其自己的 javadoc:javax.sql.DataSource[]。
+如果三个属性中的任何一个未设置，将使用其等效的 `spring.datasource` 属性的值。
 
-You can also use Flyway to provide data for specific scenarios.
-For example, you can place test-specific migrations in `src/test/resources` and they are run only when your application starts for testing.
-Also, you can use profile-specific configuration to customize `spring.flyway.locations` so that certain migrations run only when a particular profile is active.
-For example, in `application-dev.properties`, you might specify the following setting:
+您还可以使用 Flyway 为特定场景提供数据。
+例如，您可以将测试特定的迁移放在 `src/test/resources` 中，它们仅在您的应用程序为测试启动时运行。
+此外，您可以使用特定于配置文件的配置来自定义 `spring.flyway.locations`，以便仅在特定配置文件处于活动状态时运行某些迁移。
+例如，在 `application-dev.properties` 中，您可能指定以下设置：
 
 [configprops,yaml]
 ----
@@ -162,56 +162,56 @@ spring:
     locations: "classpath:/db/migration,classpath:/dev/db/migration"
 ----
 
-With that setup, migrations in `dev/db/migration` run only when the `dev` profile is active.
+使用该设置，仅当 `dev` 配置文件处于活动状态时，才会运行 `dev/db/migration` 中的迁移。
 
 
 
 [[howto.data-initialization.migration-tool.liquibase]]
-=== Execute Liquibase Database Migrations on Startup
+=== 在启动时执行 Liquibase 数据库迁移
 
-To automatically run Liquibase database migrations on startup, add the `org.liquibase:liquibase-core` to your classpath.
+要在启动时自动运行 Liquibase 数据库迁移，请将 `org.liquibase:liquibase-core` 添加到您的类路径。
 
-[NOTE]
+[注意]
 ====
-When you add the `org.liquibase:liquibase-core` to your classpath, database migrations run by default for both during application startup and before your tests run.
-This behavior can be customized by using the configprop:spring.liquibase.enabled[] property, setting different values in the `main` and `test` configurations.
-It is not possible to use two different ways to initialize the database (for example Liquibase for application startup, JPA for test runs).
+当您将 `org.liquibase:liquibase-core` 添加到类路径时，数据库迁移默认在应用程序启动期间和测试运行之前运行。
+可以通过使用 configprop:spring.liquibase.enabled[] 属性在 `main` 和 `test` 配置中设置不同的值来自定义此行为。
+不可能使用两种不同的方式来初始化数据库（例如，在应用程序启动时使用 Liquibase，在测试运行时使用 JPA）。
 ====
 
-By default, the master change log is read from `db/changelog/db.changelog-master.yaml`, but you can change the location by setting `spring.liquibase.change-log`.
-In addition to YAML, Liquibase also supports JSON, XML, and SQL change log formats.
+默认情况下，主变更日志从 `db/changelog/db.changelog-master.yaml` 读取，但您可以通过设置 `spring.liquibase.change-log` 来更改位置。
+除了 YAML，Liquibase 还支持 JSON、XML 和 SQL 变更日志格式。
 
-By default, Liquibase autowires the (`@Primary`) javadoc:javax.sql.DataSource[] in your context and uses that for migrations.
-If you need to use a different javadoc:javax.sql.DataSource[], you can create one and mark its javadoc:org.springframework.context.annotation.Bean[format=annotation] as javadoc:org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource[format=annotation].
-If you do so and want two data sources (for example by retaining the main auto-configured javadoc:javax.sql.DataSource[]), remember to set the `defaultCandidate` attribute of the javadoc:org.springframework.context.annotation.Bean[format=annotation] annotation to `false`.
-Alternatively, you can use Liquibase's native javadoc:javax.sql.DataSource[] by setting `spring.liquibase.[driver-class-name,url,user,password]` in external properties.
-Setting either `spring.liquibase.url` or `spring.liquibase.user` is sufficient to cause Liquibase to use its own javadoc:javax.sql.DataSource[].
-If any of the three properties has not been set, the value of its equivalent `spring.datasource` property will be used.
+默认情况下，Liquibase 自动装配上下文中的（`@Primary`）javadoc:javax.sql.DataSource[] 并将其用于迁移。
+如果您需要使用不同的 javadoc:javax.sql.DataSource[]，您可以创建一个并将其 javadoc:org.springframework.context.annotation.Bean[format=annotation] 标记为 javadoc:org.springframework.boot.autoconfigure.liquibase.LiquibaseDataSource[format=annotation]。
+如果您这样做并想要两个数据源（例如，通过保留主要的自动配置 javadoc:javax.sql.DataSource[]），请记住将 javadoc:org.springframework.context.annotation.Bean[format=annotation] 注释的 `defaultCandidate` 属性设置为 `false`。
+或者，您可以通过在外部属性中设置 `spring.liquibase.[driver-class-name,url,user,password]` 来使用 Liquibase 的原生 javadoc:javax.sql.DataSource[]。
+设置 `spring.liquibase.url` 或 `spring.liquibase.user` 中的任何一个都足以使 Liquibase 使用其自己的 javadoc:javax.sql.DataSource[]。
+如果三个属性中的任何一个未设置，将使用其等效的 `spring.datasource` 属性的值。
 
-See javadoc:org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties[] for details about available settings such as contexts, the default schema, and others.
+有关可用设置的详细信息，如上下文、默认模式等，请参阅 javadoc:org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties[]。
 
-You can also use a `Customizer<Liquibase>` bean if you want to customize the javadoc:{url-liquibase-javadoc}/liquibase.Liquibase[] instance before it is being used.
+如果您想在使用 javadoc:{url-liquibase-javadoc}/liquibase.Liquibase[] 实例之前自定义它，您也可以使用 `Customizer<Liquibase>` bean。
 
 
 
 [[howto.data-initialization.migration-tool.flyway-tests]]
-=== Use Flyway for Test-only Migrations
+=== 使用 Flyway 进行仅测试迁移
 
-If you want to create Flyway migrations which populate your test database, place them in `src/test/resources/db/migration`.
-A file named, for example, `src/test/resources/db/migration/V9999__test-data.sql` will be executed after your production migrations and only if you're running the tests.
-You can use this file to create the needed test data.
-This file will not be packaged in your uber jar or your container.
+如果您想创建填充测试数据库的 Flyway 迁移，请将它们放在 `src/test/resources/db/migration` 中。
+例如，名为 `src/test/resources/db/migration/V9999__test-data.sql` 的文件将在您的生产迁移之后执行，并且仅在您运行测试时执行。
+您可以使用此文件创建所需的测试数据。
+此文件不会打包在您的 uber jar 或容器中。
 
 
 
 [[howto.data-initialization.migration-tool.liquibase-tests]]
-=== Use Liquibase for Test-only Migrations
+=== 使用 Liquibase 进行仅测试迁移
 
-If you want to create Liquibase migrations which populate your test database, you have to create a test changelog which also includes the production changelog.
+如果您想创建填充测试数据库的 Liquibase 迁移，您必须创建一个也包含生产变更日志的测试变更日志。
 
-First, you need to configure Liquibase to use a different changelog when running the tests.
-One way to do this is to create a Spring Boot `test` profile and put the Liquibase properties in there.
-For that, create a file named `src/test/resources/application-test.properties` and put the following property in there:
+首先，您需要配置 Liquibase 在运行测试时使用不同的变更日志。
+一种方法是创建 Spring Boot `test` 配置文件并在其中放置 Liquibase 属性。
+为此，创建一个名为 `src/test/resources/application-test.properties` 的文件，并在其中放置以下属性：
 
 [configprops,yaml]
 ----
@@ -220,9 +220,9 @@ For that, create a file named `src/test/resources/application-test.properties` a
       change-log: "classpath:/db/changelog/db.changelog-test.yaml"
 ----
 
-This configures Liquibase to use a different changelog when running in the `test` profile.
+这配置 Liquibase 在 `test` 配置文件中运行时使用不同的变更日志。
 
-Now create the changelog file at `src/test/resources/db/changelog/db.changelog-test.yaml`:
+现在在 `src/test/resources/db/changelog/db.changelog-test.yaml` 创建变更日志文件：
 
 [source,yaml]
 ----
@@ -236,29 +236,29 @@ databaseChangeLog:
         # Insert your changes here
 ----
 
-This changelog will be used when the tests are run and it will not be packaged in your uber jar or your container.
-It includes the production changelog and then declares a new changeset, whose `runOrder: last` setting specifies that it runs after all the production changesets have been run.
-You can now use for example the https://docs.liquibase.com/change-types/insert.html[insert changeset] to insert data or the https://docs.liquibase.com/change-types/sql.html[sql changeset] to execute SQL directly.
+此变更日志将在运行测试时使用，并且不会打包在您的 uber jar 或容器中。
+它包括生产变更日志，然后声明一个新的变更集，其 `runOrder: last` 设置指定它在所有生产变更集运行后运行。
+您现在可以使用例如 https://docs.liquibase.com/change-types/insert.html[insert 变更集] 来插入数据或 https://docs.liquibase.com/change-types/sql.html[sql 变更集] 来直接执行 SQL。
 
-The last thing to do is to configure Spring Boot to activate the `test` profile when running tests.
-To do this, you can add the `@ActiveProfiles("test")` annotation to your javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation] annotated test classes.
+最后要做的是配置 Spring Boot 在运行测试时激活 `test` 配置文件。
+为此，您可以在 javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation] 注释的测试类上添加 `@ActiveProfiles("test")` 注释。
 
 
 
 [[howto.data-initialization.dependencies]]
-== Depend Upon an Initialized Database
+== 依赖于初始化的数据库
 
-Database initialization is performed while the application is starting up as part of application context refresh.
-To allow an initialized database to be accessed during startup, beans that act as database initializers and beans that require that database to have been initialized are detected automatically.
-Beans whose initialization depends upon the database having been initialized are configured to depend upon those that initialize it.
-If, during startup, your application tries to access the database and it has not been initialized, you can configure additional detection of beans that initialize the database and require the database to have been initialized.
+数据库初始化在应用程序启动期间作为应用程序上下文刷新的一部分执行。
+要允许在启动期间访问已初始化的数据库，会自动检测作为数据库初始化器的 bean 和需要该数据库已初始化的 bean。
+需要数据库已初始化的 bean 被配置为依赖于初始化它的那些 bean。
+如果在启动期间，您的应用程序尝试访问数据库但它尚未初始化，您可以配置额外检测初始化数据库和需要数据库已初始化的 bean。
 
 
 
 [[howto.data-initialization.dependencies.initializer-detection]]
-=== Detect a Database Initializer
+=== 检测数据库初始化器
 
-Spring Boot will automatically detect beans of the following types that initialize an SQL database:
+Spring Boot 将自动检测以下类型的初始化 SQL 数据库的 bean：
 
 - javadoc:org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer[]
 - javadoc:jakarta.persistence.EntityManagerFactory[]
@@ -267,23 +267,23 @@ Spring Boot will automatically detect beans of the following types that initiali
 - javadoc:org.springframework.boot.r2dbc.init.R2dbcScriptDatabaseInitializer[]
 - javadoc:liquibase.integration.spring.SpringLiquibase[]
 
-If you are using a third-party starter for a database initialization library, it may provide a detector such that beans of other types are also detected automatically.
-To have other beans be detected, register an implementation of javadoc:org.springframework.boot.sql.init.dependency.DatabaseInitializerDetector[] in `META-INF/spring.factories`.
+如果您使用数据库初始化库的第三方 starter，它可能提供检测器，以便其他类型的 bean 也会被自动检测。
+要使其他 bean 被检测，请在 `META-INF/spring.factories` 中注册 javadoc:org.springframework.boot.sql.init.dependency.DatabaseInitializerDetector[] 的实现。
 
 
 
 [[howto.data-initialization.dependencies.depends-on-initialization-detection]]
-=== Detect a Bean That Depends On Database Initialization
+=== 检测依赖于数据库初始化的 Bean
 
-Spring Boot will automatically detect beans of the following types that depends upon database initialization:
+Spring Boot 将自动检测以下类型的依赖于数据库初始化的 bean：
 
-- javadoc:org.springframework.orm.jpa.AbstractEntityManagerFactoryBean[] (unless configprop:spring.jpa.defer-datasource-initialization[] is set to `true`)
-- javadoc:org.jooq.DSLContext[] (jOOQ)
-- javadoc:jakarta.persistence.EntityManagerFactory[] (unless configprop:spring.jpa.defer-datasource-initialization[] is set to `true`)
+- javadoc:org.springframework.orm.jpa.AbstractEntityManagerFactoryBean[]（除非 configprop:spring.jpa.defer-datasource-initialization[] 设置为 `true`）
+- javadoc:org.jooq.DSLContext[]（jOOQ）
+- javadoc:jakarta.persistence.EntityManagerFactory[]（除非 configprop:spring.jpa.defer-datasource-initialization[] 设置为 `true`）
 - javadoc:org.springframework.jdbc.core.simple.JdbcClient[]
 - javadoc:org.springframework.jdbc.core.JdbcOperations[]
 - javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations[]
 
-If you are using a third-party starter data access library, it may provide a detector such that beans of other types are also detected automatically.
-To have other beans be detected, register an implementation of javadoc:org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitializationDetector[] in `META-INF/spring.factories`.
-Alternatively, annotate the bean's class or its javadoc:org.springframework.context.annotation.Bean[format=annotation] method with javadoc:org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization[format=annotation].
+如果您使用第三方 starter 数据访问库，它可能提供检测器，以便其他类型的 bean 也会被自动检测。
+要使其他 bean 被检测，请在 `META-INF/spring.factories` 中注册 javadoc:org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitializationDetector[] 的实现。
+或者，使用 javadoc:org.springframework.boot.sql.init.dependency.DependsOnDatabaseInitialization[format=annotation] 注释 bean 的类或其 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法。

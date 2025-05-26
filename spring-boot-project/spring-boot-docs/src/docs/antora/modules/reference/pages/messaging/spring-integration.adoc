@@ -1,16 +1,16 @@
 [[messaging.spring-integration]]
 = Spring Integration
 
-Spring Boot offers several conveniences for working with {url-spring-integration-site}[Spring Integration], including the `spring-boot-starter-integration` starter.
-Spring Integration provides abstractions over messaging and also other transports such as HTTP, TCP, and others.
-If Spring Integration is available on your classpath, it is initialized through the javadoc:org.springframework.integration.config.EnableIntegration[format=annotation] annotation.
+Spring Boot 为使用 {url-spring-integration-site}[Spring Integration] 提供了多种便利，包括 `spring-boot-starter-integration` 启动器。
+Spring Integration 提供了消息传递的抽象，以及其他传输方式，如 HTTP、TCP 等。
+如果 Spring Integration 在您的 classpath 上可用，它将通过 javadoc:org.springframework.integration.config.EnableIntegration[format=annotation] 注解进行初始化。
 
-Spring Integration polling logic relies xref:features/task-execution-and-scheduling.adoc[on the auto-configured javadoc:org.springframework.scheduling.TaskScheduler[]].
-The default javadoc:org.springframework.integration.scheduling.PollerMetadata[] (poll unbounded number of messages every second) can be customized with `spring.integration.poller.*` configuration properties.
+Spring Integration 的轮询逻辑依赖于 xref:features/task-execution-and-scheduling.adoc[自动配置的 javadoc:org.springframework.scheduling.TaskScheduler[]]。
+默认的 javadoc:org.springframework.integration.scheduling.PollerMetadata[]（每秒轮询无限数量的消息）可以通过 `spring.integration.poller.*` 配置属性进行自定义。
 
-Spring Boot also configures some features that are triggered by the presence of additional Spring Integration modules.
-If `spring-integration-jmx` is also on the classpath, message processing statistics are published over JMX.
-If `spring-integration-jdbc` is available, the default database schema can be created on startup, as shown in the following line:
+Spring Boot 还配置了一些由额外的 Spring Integration 模块的存在触发的功能。
+如果 `spring-integration-jmx` 也在 classpath 上，消息处理统计信息将通过 JMX 发布。
+如果 `spring-integration-jdbc` 可用，可以在启动时创建默认的数据库模式，如下所示：
 
 [configprops,yaml]
 ----
@@ -20,14 +20,14 @@ spring:
       initialize-schema: "always"
 ----
 
-If `spring-integration-rsocket` is available, developers can configure an RSocket server using `spring.rsocket.server.*` properties and let it use javadoc:org.springframework.integration.rsocket.IntegrationRSocketEndpoint[] or javadoc:org.springframework.integration.rsocket.outbound.RSocketOutboundGateway[] components to handle incoming RSocket messages.
-This infrastructure can handle Spring Integration RSocket channel adapters and javadoc:org.springframework.messaging.handler.annotation.MessageMapping[format=annotation] handlers (given `spring.integration.rsocket.server.message-mapping-enabled` is configured).
+如果 `spring-integration-rsocket` 可用，开发人员可以使用 `spring.rsocket.server.*` 属性配置 RSocket 服务器，并让它使用 javadoc:org.springframework.integration.rsocket.IntegrationRSocketEndpoint[] 或 javadoc:org.springframework.integration.rsocket.outbound.RSocketOutboundGateway[] 组件来处理传入的 RSocket 消息。
+此基础设施可以处理 Spring Integration RSocket 通道适配器和 javadoc:org.springframework.messaging.handler.annotation.MessageMapping[format=annotation] 处理器（假设配置了 `spring.integration.rsocket.server.message-mapping-enabled`）。
 
-Spring Boot can also auto-configure an javadoc:org.springframework.integration.rsocket.ClientRSocketConnector[] using configuration properties:
+Spring Boot 还可以使用配置属性自动配置 javadoc:org.springframework.integration.rsocket.ClientRSocketConnector[]：
 
 [configprops,yaml]
 ----
-# Connecting to a RSocket server over TCP
+# 通过 TCP 连接到 RSocket 服务器
 spring:
   integration:
     rsocket:
@@ -38,7 +38,7 @@ spring:
 
 [configprops,yaml]
 ----
-# Connecting to a RSocket Server over WebSocket
+# 通过 WebSocket 连接到 RSocket 服务器
 spring:
   integration:
     rsocket:
@@ -46,4 +46,4 @@ spring:
         uri: "ws://example.org"
 ----
 
-See the {code-spring-boot-autoconfigure-src}/integration/IntegrationAutoConfiguration.java[`IntegrationAutoConfiguration`] and javadoc:org.springframework.boot.autoconfigure.integration.IntegrationProperties[] classes for more details.
+有关更多详细信息，请参阅 {code-spring-boot-autoconfigure-src}/integration/IntegrationAutoConfiguration.java[`IntegrationAutoConfiguration`] 和 javadoc:org.springframework.boot.autoconfigure.integration.IntegrationProperties[] 类。

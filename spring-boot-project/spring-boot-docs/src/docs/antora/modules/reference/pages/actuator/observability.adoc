@@ -1,43 +1,44 @@
 [[actuator.observability]]
-= Observability
+= 可观测性
 
-Observability is the ability to observe the internal state of a running system from the outside.
-It consists of the three pillars: logging, metrics and traces.
+可观测性是从外部观察运行系统内部状态的能力。
+它由三个支柱组成：日志记录、指标和追踪。
 
-For metrics and traces, Spring Boot uses {url-micrometer-docs}/observation[Micrometer Observation].
-To create your own observations (which will lead to metrics and traces), you can inject an javadoc:io.micrometer.observation.ObservationRegistry[].
+对于指标和追踪，Spring Boot 使用 {url-micrometer-docs}/observation[Micrometer Observation]。
+要创建你自己的观测（这将产生指标和追踪），你可以注入一个 javadoc:io.micrometer.observation.ObservationRegistry[]。
 
 include-code::MyCustomObservation[]
 
-NOTE: Low cardinality tags will be added to metrics and traces, while high cardinality tags will only be added to traces.
+NOTE: 低基数标签将被添加到指标和追踪中，而高基数标签只会被添加到追踪中。
 
-Beans of type javadoc:io.micrometer.observation.ObservationPredicate[], javadoc:io.micrometer.observation.GlobalObservationConvention[], javadoc:io.micrometer.observation.ObservationFilter[] and javadoc:io.micrometer.observation.ObservationHandler[] will be automatically registered on the javadoc:io.micrometer.observation.ObservationRegistry[].
-You can additionally register any number of javadoc:org.springframework.boot.actuate.autoconfigure.observation.ObservationRegistryCustomizer[] beans to further configure the registry.
+类型为 javadoc:io.micrometer.observation.ObservationPredicate[]、javadoc:io.micrometer.observation.GlobalObservationConvention[]、javadoc:io.micrometer.observation.ObservationFilter[] 和 javadoc:io.micrometer.observation.ObservationHandler[] 的 Bean 将自动注册到 javadoc:io.micrometer.observation.ObservationRegistry[] 上。
+你还可以注册任意数量的 javadoc:org.springframework.boot.actuate.autoconfigure.observation.ObservationRegistryCustomizer[] Bean 来进一步配置注册表。
 
-TIP: Observability for JDBC can be configured using a separate project.
-The https://github.com/jdbc-observations/datasource-micrometer[Datasource Micrometer project] provides a Spring Boot starter which automatically creates observations when JDBC operations are invoked.
-Read more about it https://jdbc-observations.github.io/datasource-micrometer/docs/current/docs/html/[in the reference documentation].
+TIP: JDBC 的可观测性可以使用单独的项目进行配置。
+https://github.com/jdbc-observations/datasource-micrometer[Datasource Micrometer 项目]提供了一个 Spring Boot starter，它会在调用 JDBC 操作时自动创建观测。
+在 https://jdbc-observations.github.io/datasource-micrometer/docs/current/docs/html/[参考文档]中了解更多信息。
 
-TIP: Observability for R2DBC is built into Spring Boot.
-To enable it, add the `io.r2dbc:r2dbc-proxy` dependency to your project.
+TIP: R2DBC 的可观测性已内置到 Spring Boot 中。
+要启用它，请将 `io.r2dbc:r2dbc-proxy` 依赖项添加到你的项目中。
 
 
 
 [[actuator.observability.context-propagation]]
-== Context Propagation
-Observability support relies on the https://github.com/micrometer-metrics/context-propagation[Context Propagation library] for forwarding the current observation across threads and reactive pipelines.
-By default, javadoc:java.lang.ThreadLocal[] values are not automatically reinstated in reactive operators.
-This behavior is controlled with the configprop:spring.reactor.context-propagation[] property, which can be set to `auto` to enable automatic propagation.
+== 上下文传播
 
-For more details about observations please see the {url-micrometer-docs}/observation[Micrometer Observation documentation].
+可观测性支持依赖于 https://github.com/micrometer-metrics/context-propagation[Context Propagation 库]来在线程和响应式管道之间转发当前观测。
+默认情况下，javadoc:java.lang.ThreadLocal[] 值不会在响应式操作符中自动恢复。
+这种行为由 configprop:spring.reactor.context-propagation[] 属性控制，可以设置为 `auto` 以启用自动传播。
+
+有关观测的更多详细信息，请参阅 {url-micrometer-docs}/observation[Micrometer Observation 文档]。
 
 
 
 [[actuator.observability.common-tags]]
-== Common Tags
+== 通用标签
 
-Common tags are generally used for dimensional drill-down on the operating environment, such as host, instance, region, stack, and others.
-Common tags are applied to all observations as low cardinality tags and can be configured, as the following example shows:
+通用标签通常用于对操作环境进行维度钻取，例如主机、实例、区域、堆栈等。
+通用标签作为低基数标签应用于所有观测，可以按如下示例进行配置：
 
 [configprops,yaml]
 ----
@@ -48,14 +49,14 @@ management:
       stack: "prod"
 ----
 
-The preceding example adds `region` and `stack` tags to all observations with a value of `us-east-1` and `prod`, respectively.
+前面的示例为所有观测添加了 `region` 和 `stack` 标签，值分别为 `us-east-1` 和 `prod`。
 
 
 
 [[actuator.observability.preventing-observations]]
-== Preventing Observations
+== 防止观测
 
-If you'd like to prevent some observations from being reported, you can use the configprop:management.observations.enable[] properties:
+如果你想阻止某些观测被报告，可以使用 configprop:management.observations.enable[] 属性：
 
 [configprops,yaml]
 ----
@@ -69,48 +70,48 @@ management:
           prefix: false
 ----
 
-The preceding example will prevent all observations with a name starting with `denied.prefix` or `another.denied.prefix`.
+前面的示例将阻止所有名称以 `denied.prefix` 或 `another.denied.prefix` 开头的观测。
 
-TIP: If you want to prevent Spring Security from reporting observations, set the property configprop:management.observations.enable.spring.security[] to `false`.
+TIP: 如果你想阻止 Spring Security 报告观测，请将 configprop:management.observations.enable.spring.security[] 属性设置为 `false`。
 
-If you need greater control over the prevention of observations, you can register beans of type javadoc:io.micrometer.observation.ObservationPredicate[].
-Observations are only reported if all the javadoc:io.micrometer.observation.ObservationPredicate[] beans return `true` for that observation.
+如果你需要对防止观测进行更精细的控制，可以注册类型为 javadoc:io.micrometer.observation.ObservationPredicate[] 的 Bean。
+只有当所有 javadoc:io.micrometer.observation.ObservationPredicate[] Bean 对该观测返回 `true` 时，才会报告观测。
 
 include-code::MyObservationPredicate[]
 
-The preceding example will prevent all observations whose name contains "denied".
+前面的示例将阻止所有名称包含 "denied" 的观测。
 
 
 
 [[actuator.observability.opentelemetry]]
-== OpenTelemetry Support
+== OpenTelemetry 支持
 
-NOTE: There are several ways to support https://opentelemetry.io/[OpenTelemetry] in your application.
-You can use the https://opentelemetry.io/docs/zero-code/java/agent/[OpenTelemetry Java Agent] or the https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/[OpenTelemetry Spring Boot Starter],
-which are supported by the OTel community; the metrics and traces use the semantic conventions defined by OTel libraries.
-This documentation describes OpenTelemetry as officially supported by the Spring team, using Micrometer and the OTLP exporter;
-the metrics and traces use the semantic conventions described in the Spring projects documentation, such as {url-spring-framework-docs}/integration/observability.html[Spring Framework].
+NOTE: 有几种方法可以在你的应用程序中支持 https://opentelemetry.io/[OpenTelemetry]。
+你可以使用 https://opentelemetry.io/docs/zero-code/java/agent/[OpenTelemetry Java Agent] 或 https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/[OpenTelemetry Spring Boot Starter]，
+它们由 OTel 社区支持；指标和追踪使用由 OTel 库定义的语义约定。
+本文档描述了由 Spring 团队官方支持的 OpenTelemetry，使用 Micrometer 和 OTLP 导出器；
+指标和追踪使用在 Spring 项目文档中描述的语义约定，例如 {url-spring-framework-docs}/integration/observability.html[Spring Framework]。
 
-Spring Boot's actuator module includes basic support for OpenTelemetry.
+Spring Boot 的 actuator 模块包含对 OpenTelemetry 的基本支持。
 
-It provides a bean of type javadoc:io.opentelemetry.api.OpenTelemetry[], and if there are beans of type javadoc:io.opentelemetry.sdk.trace.SdkTracerProvider[], javadoc:io.opentelemetry.context.propagation.ContextPropagators[], javadoc:io.opentelemetry.sdk.logs.SdkLoggerProvider[] or javadoc:io.opentelemetry.sdk.metrics.SdkMeterProvider[] in the application context, they automatically get registered.
-Additionally, it provides a javadoc:io.opentelemetry.sdk.resources.Resource[] bean.
-The attributes of the auto-configured javadoc:io.opentelemetry.sdk.resources.Resource[] can be configured via the configprop:management.opentelemetry.resource-attributes[] configuration property.
-If you have defined your own javadoc:io.opentelemetry.sdk.resources.Resource[] bean, this will no longer be the case.
+它提供了一个类型为 javadoc:io.opentelemetry.api.OpenTelemetry[] 的 Bean，如果应用程序上下文中存在类型为 javadoc:io.opentelemetry.sdk.trace.SdkTracerProvider[]、javadoc:io.opentelemetry.context.propagation.ContextPropagators[]、javadoc:io.opentelemetry.sdk.logs.SdkLoggerProvider[] 或 javadoc:io.opentelemetry.sdk.metrics.SdkMeterProvider[] 的 Bean，它们会自动注册。
+此外，它还提供了一个 javadoc:io.opentelemetry.sdk.resources.Resource[] Bean。
+自动配置的 javadoc:io.opentelemetry.sdk.resources.Resource[] 的属性可以通过 configprop:management.opentelemetry.resource-attributes[] 配置属性进行配置。
+如果你定义了自己的 javadoc:io.opentelemetry.sdk.resources.Resource[] Bean，则不再如此。
 
-NOTE: Spring Boot does not provide auto-configuration for OpenTelemetry metrics or logging.
-OpenTelemetry tracing is only auto-configured when used together with xref:actuator/tracing.adoc[Micrometer Tracing].
+NOTE: Spring Boot 不提供 OpenTelemetry 指标或日志记录的自动配置。
+OpenTelemetry 追踪仅在与 xref:actuator/tracing.adoc[Micrometer Tracing] 一起使用时才会自动配置。
 
-The next sections will provide more details about logging, metrics and traces.
+接下来的章节将提供有关日志记录、指标和追踪的更多详细信息。
 
 
 
 [[actuator.observability.annotations]]
-== Micrometer Observation Annotations support
+== Micrometer Observation 注解支持
 
-To enable scanning of observability annotations like javadoc:io.micrometer.observation.annotation.Observed[format=annotation], javadoc:io.micrometer.core.annotation.Timed[format=annotation], javadoc:io.micrometer.core.annotation.Counted[format=annotation], javadoc:io.micrometer.core.aop.MeterTag[format=annotation] and javadoc:io.micrometer.tracing.annotation.NewSpan[format=annotation], you need to set the configprop:management.observations.annotations.enabled[] property to `true`.
-This feature is supported by Micrometer directly.
-Please refer to the {url-micrometer-docs-concepts}/timers.html#_the_timed_annotation[Micrometer], {url-micrometer-docs-observation}/components.html#micrometer-observation-annotations[Micrometer Observation] and {url-micrometer-tracing-docs}/api.html#_aspect_oriented_programming[Micrometer Tracing] reference docs.
+要启用对可观测性注解的扫描，如 javadoc:io.micrometer.observation.annotation.Observed[format=annotation]、javadoc:io.micrometer.core.annotation.Timed[format=annotation]、javadoc:io.micrometer.core.annotation.Counted[format=annotation]、javadoc:io.micrometer.core.aop.MeterTag[format=annotation] 和 javadoc:io.micrometer.tracing.annotation.NewSpan[format=annotation]，你需要将 configprop:management.observations.annotations.enabled[] 属性设置为 `true`。
+此功能由 Micrometer 直接支持。
+请参阅 {url-micrometer-docs-concepts}/timers.html#_the_timed_annotation[Micrometer]、{url-micrometer-docs-observation}/components.html#micrometer-observation-annotations[Micrometer Observation] 和 {url-micrometer-tracing-docs}/api.html#_aspect_oriented_programming[Micrometer Tracing] 参考文档。
 
-NOTE: When you annotate methods or classes which are already instrumented (for example, xref:reference:actuator/metrics.adoc#actuator.metrics.supported.spring-data-repository[Spring Data repositories] or xref:reference:actuator/metrics.adoc#actuator.metrics.supported.spring-mvc[Spring MVC controllers]), you will get duplicate observations.
-In that case you can either disable the automatic instrumentation using xref:reference:actuator/observability.adoc#actuator.observability.preventing-observations[properties] or an javadoc:io.micrometer.observation.ObservationPredicate[] and rely on your annotations, or you can remove your annotations.
+NOTE: 当你注解已经经过检测的方法或类时（例如，xref:reference:actuator/metrics.adoc#actuator.metrics.supported.spring-data-repository[Spring Data repositories] 或 xref:reference:actuator/metrics.adoc#actuator.metrics.supported.spring-mvc[Spring MVC controllers]），你将获得重复的观测。
+在这种情况下，你可以使用 xref:reference:actuator/observability.adoc#actuator.observability.preventing-observations[属性] 或 javadoc:io.micrometer.observation.ObservationPredicate[] 禁用自动检测并依赖你的注解，或者你可以删除你的注解。

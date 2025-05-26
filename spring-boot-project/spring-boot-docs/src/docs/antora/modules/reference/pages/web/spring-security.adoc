@@ -1,13 +1,13 @@
 [[web.security]]
 = Spring Security
 
-If {url-spring-security-site}[Spring Security] is on the classpath, then web applications are secured by default.
-Spring Boot relies on Spring Security’s content-negotiation strategy to determine whether to use `httpBasic` or `formLogin`.
-To add method-level security to a web application, you can also add javadoc:org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity[format=annotation] with your desired settings.
-Additional information can be found in the {url-spring-security-docs}/servlet/authorization/method-security.html[Spring Security Reference Guide].
+如果类路径上有 {url-spring-security-site}[Spring Security]，则 Web 应用程序默认是安全的。
+Spring Boot 依赖 Spring Security 的内容协商策略来确定是使用 `httpBasic` 还是 `formLogin`。
+要向 Web 应用程序添加方法级安全性，你还可以添加 javadoc:org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity[format=annotation] 及其所需的设置。
+更多信息可以在 {url-spring-security-docs}/servlet/authorization/method-security.html[Spring Security 参考指南] 中找到。
 
-The default javadoc:org.springframework.security.core.userdetails.UserDetailsService[] has a single user.
-The user name is `user`, and the password is random and is printed at WARN level when the application starts, as shown in the following example:
+默认的 javadoc:org.springframework.security.core.userdetails.UserDetailsService[] 有一个用户。
+用户名为 `user`，密码是随机的，在应用程序启动时以 WARN 级别打印，如下例所示：
 
 [source]
 ----
@@ -16,70 +16,70 @@ Using generated security password: 78fa095d-3f4c-48b1-ad50-e24c31d5cf35
 This generated password is for development use only. Your security configuration must be updated before running your application in production.
 ----
 
-NOTE: If you fine-tune your logging configuration, ensure that the `org.springframework.boot.autoconfigure.security` category is set to log `WARN`-level messages.
-Otherwise, the default password is not printed.
+注意：如果你微调日志配置，请确保 `org.springframework.boot.autoconfigure.security` 类别设置为记录 `WARN` 级别的消息。
+否则，默认密码将不会打印。
 
-You can change the username and password by providing a `spring.security.user.name` and `spring.security.user.password`.
+你可以通过提供 `spring.security.user.name` 和 `spring.security.user.password` 来更改用户名和密码。
 
-The basic features you get by default in a web application are:
+Web 应用程序中默认获得的基本功能包括：
 
-* A javadoc:org.springframework.security.core.userdetails.UserDetailsService[] (or javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] in case of a WebFlux application) bean with in-memory store and a single user with a generated password (see javadoc:org.springframework.boot.autoconfigure.security.SecurityProperties$User[] for the properties of the user).
-* Form-based login or HTTP Basic security (depending on the `Accept` header in the request) for the entire application (including actuator endpoints if actuator is on the classpath).
-* A javadoc:org.springframework.security.authentication.DefaultAuthenticationEventPublisher[] for publishing authentication events.
+* 一个 javadoc:org.springframework.security.core.userdetails.UserDetailsService[]（或在 WebFlux 应用程序的情况下为 javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[]）bean，具有内存存储和具有生成密码的单个用户（有关用户的属性，请参见 javadoc:org.springframework.boot.autoconfigure.security.SecurityProperties$User[]）。
+* 整个应用程序的表单登录或 HTTP Basic 安全性（取决于请求中的 `Accept` 头）（如果类路径上有 actuator，则包括 actuator 端点）。
+* 一个用于发布身份验证事件的 javadoc:org.springframework.security.authentication.DefaultAuthenticationEventPublisher[]。
 
-You can provide a different javadoc:org.springframework.security.authentication.AuthenticationEventPublisher[] by adding a bean for it.
+你可以通过添加一个 bean 来提供不同的 javadoc:org.springframework.security.authentication.AuthenticationEventPublisher[]。
 
 
 
 [[web.security.spring-mvc]]
 == MVC Security
 
-The default security configuration is implemented in javadoc:org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration[] and javadoc:org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration[].
-javadoc:org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration[] imports `SpringBootWebSecurityConfiguration` for web security and javadoc:org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration[] for authentication.
+默认的安全配置在 javadoc:org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration[] 和 javadoc:org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration[] 中实现。
+javadoc:org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration[] 导入 `SpringBootWebSecurityConfiguration` 用于 Web 安全性，javadoc:org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration[] 用于身份验证。
 
-To completely switch off the default web application security configuration, including Actuator security, or to combine multiple Spring Security components such as OAuth2 Client and Resource Server, add a bean of type javadoc:org.springframework.security.web.SecurityFilterChain[] (doing so does not disable the javadoc:org.springframework.security.core.userdetails.UserDetailsService[] configuration).
-To also switch off the javadoc:org.springframework.security.core.userdetails.UserDetailsService[] configuration, add a bean of type javadoc:org.springframework.security.core.userdetails.UserDetailsService[], javadoc:org.springframework.security.authentication.AuthenticationProvider[], or javadoc:org.springframework.security.authentication.AuthenticationManager[].
+要完全关闭默认的 Web 应用程序安全配置，包括 Actuator 安全性，或组合多个 Spring Security 组件（如 OAuth2 Client 和 Resource Server），添加一个类型为 javadoc:org.springframework.security.web.SecurityFilterChain[] 的 bean（这样做不会禁用 javadoc:org.springframework.security.core.userdetails.UserDetailsService[] 配置）。
+要同时关闭 javadoc:org.springframework.security.core.userdetails.UserDetailsService[] 配置，添加一个类型为 javadoc:org.springframework.security.core.userdetails.UserDetailsService[]、javadoc:org.springframework.security.authentication.AuthenticationProvider[] 或 javadoc:org.springframework.security.authentication.AuthenticationManager[] 的 bean。
 
-The auto-configuration of a javadoc:org.springframework.security.core.userdetails.UserDetailsService[] will also back off when any of the following Spring Security modules is on the classpath:
+当类路径上有以下任何 Spring Security 模块时，javadoc:org.springframework.security.core.userdetails.UserDetailsService[] 的自动配置也会退出：
 
 - `spring-security-oauth2-client`
 - `spring-security-oauth2-resource-server`
 - `spring-security-saml2-service-provider`
 
-To use javadoc:org.springframework.security.core.userdetails.UserDetailsService[] in addition to one or more of these dependencies, define your own javadoc:org.springframework.security.provisioning.InMemoryUserDetailsManager[] bean.
+要在这些依赖项中的一个或多个之外使用 javadoc:org.springframework.security.core.userdetails.UserDetailsService[]，请定义你自己的 javadoc:org.springframework.security.provisioning.InMemoryUserDetailsManager[] bean。
 
-Access rules can be overridden by adding a custom javadoc:org.springframework.security.web.SecurityFilterChain[] bean.
-Spring Boot provides convenience methods that can be used to override access rules for actuator endpoints and static resources.
-javadoc:org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest[] can be used to create a javadoc:org.springframework.security.web.util.matcher.RequestMatcher[] that is based on the configprop:management.endpoints.web.base-path[] property.
-javadoc:org.springframework.boot.autoconfigure.security.servlet.PathRequest[] can be used to create a javadoc:org.springframework.security.web.util.matcher.RequestMatcher[] for resources in commonly used locations.
+可以通过添加自定义的 javadoc:org.springframework.security.web.SecurityFilterChain[] bean 来覆盖访问规则。
+Spring Boot 提供了便捷方法，可用于覆盖 actuator 端点和静态资源的访问规则。
+javadoc:org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest[] 可用于创建基于 configprop:management.endpoints.web.base-path[] 属性的 javadoc:org.springframework.security.web.util.matcher.RequestMatcher[]。
+javadoc:org.springframework.boot.autoconfigure.security.servlet.PathRequest[] 可用于为常用位置中的资源创建 javadoc:org.springframework.security.web.util.matcher.RequestMatcher[]。
 
 
 
 [[web.security.spring-webflux]]
 == WebFlux Security
 
-Similar to Spring MVC applications, you can secure your WebFlux applications by adding the `spring-boot-starter-security` dependency.
-The default security configuration is implemented in javadoc:org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration[] and javadoc:org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration[].
-javadoc:org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration[] imports `WebFluxSecurityConfiguration` for web security and javadoc:org.springframework.boot.autoconfigure.security.reactive.UserDetailsServiceAutoConfiguration[] for authentication.
-In addition to reactive web applications, the latter is also auto-configured when RSocket is in use.
+与 Spring MVC 应用程序类似，你可以通过添加 `spring-boot-starter-security` 依赖项来保护你的 WebFlux 应用程序。
+默认的安全配置在 javadoc:org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration[] 和 javadoc:org.springframework.boot.autoconfigure.security.reactive.ReactiveUserDetailsServiceAutoConfiguration[] 中实现。
+javadoc:org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration[] 导入 `WebFluxSecurityConfiguration` 用于 Web 安全性，javadoc:org.springframework.boot.autoconfigure.security.reactive.UserDetailsServiceAutoConfiguration[] 用于身份验证。
+除了响应式 Web 应用程序外，当使用 RSocket 时，后者也会自动配置。
 
-To completely switch off the default web application security configuration, including Actuator security, add a bean of type javadoc:org.springframework.security.web.server.WebFilterChainProxy[] (doing so does not disable the javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] configuration).
-To also switch off the javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] configuration, add a bean of type javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] or javadoc:org.springframework.security.authentication.ReactiveAuthenticationManager[].
+要完全关闭默认的 Web 应用程序安全配置，包括 Actuator 安全性，添加一个类型为 javadoc:org.springframework.security.web.server.WebFilterChainProxy[] 的 bean（这样做不会禁用 javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] 配置）。
+要同时关闭 javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] 配置，添加一个类型为 javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] 或 javadoc:org.springframework.security.authentication.ReactiveAuthenticationManager[] 的 bean。
 
-The auto-configuration will also back off when any of the following Spring Security modules is on the classpath:
+当类路径上有以下任何 Spring Security 模块时，自动配置也会退出：
 
 - `spring-security-oauth2-client`
 - `spring-security-oauth2-resource-server`
 
-To use javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[] in addition to one or more of these dependencies, define your own javadoc:org.springframework.security.core.userdetails.MapReactiveUserDetailsService[] bean.
+要在这些依赖项中的一个或多个之外使用 javadoc:org.springframework.security.core.userdetails.ReactiveUserDetailsService[]，请定义你自己的 javadoc:org.springframework.security.core.userdetails.MapReactiveUserDetailsService[] bean。
 
-Access rules and the use of multiple Spring Security components such as OAuth 2 Client and Resource Server can be configured by adding a custom javadoc:org.springframework.security.web.server.SecurityWebFilterChain[] bean.
-Spring Boot provides convenience methods that can be used to override access rules for actuator endpoints and static resources.
-javadoc:org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest[] can be used to create a javadoc:org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher[] that is based on the configprop:management.endpoints.web.base-path[] property.
+可以通过添加自定义的 javadoc:org.springframework.security.web.server.SecurityWebFilterChain[] bean 来配置访问规则和使用多个 Spring Security 组件（如 OAuth 2 Client 和 Resource Server）。
+Spring Boot 提供了便捷方法，可用于覆盖 actuator 端点和静态资源的访问规则。
+javadoc:org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest[] 可用于创建基于 configprop:management.endpoints.web.base-path[] 属性的 javadoc:org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher[]。
 
-javadoc:org.springframework.boot.autoconfigure.security.reactive.PathRequest[] can be used to create a javadoc:org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher[] for resources in commonly used locations.
+javadoc:org.springframework.boot.autoconfigure.security.reactive.PathRequest[] 可用于为常用位置中的资源创建 javadoc:org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher[]。
 
-For example, you can customize your security configuration by adding something like:
+例如，你可以通过添加类似以下内容来自定义安全配置：
 
 include-code::MyWebFluxSecurityConfiguration[]
 
@@ -88,18 +88,18 @@ include-code::MyWebFluxSecurityConfiguration[]
 [[web.security.oauth2]]
 == OAuth2
 
-https://oauth.net/2/[OAuth2] is a widely used authorization framework that is supported by Spring.
+https://oauth.net/2/[OAuth2] 是一个广泛使用的授权框架，Spring 支持它。
 
 
 
 [[web.security.oauth2.client]]
 === Client
 
-If you have `spring-security-oauth2-client` on your classpath, you can take advantage of some auto-configuration to set up OAuth2/Open ID Connect clients.
-This configuration makes use of the properties under javadoc:org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties[].
-The same properties are applicable to both servlet and reactive applications.
+如果你的类路径上有 `spring-security-oauth2-client`，你可以利用一些自动配置来设置 OAuth2/Open ID Connect 客户端。
+此配置使用 javadoc:org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties[] 下的属性。
+相同的属性适用于 servlet 和响应式应用程序。
 
-You can register multiple OAuth2 clients and providers under the `spring.security.oauth2.client` prefix, as shown in the following example:
+你可以在 `spring.security.oauth2.client` 前缀下注册多个 OAuth2 客户端和提供者，如下例所示：
 
 [configprops,yaml]
 ----
@@ -148,11 +148,11 @@ spring:
             user-name-attribute: "name"
 ----
 
-For OpenID Connect providers that support https://openid.net/specs/openid-connect-discovery-1_0.html[OpenID Connect discovery], the configuration can be further simplified.
-The provider needs to be configured with an `issuer-uri` which is the URI that it asserts as its Issuer Identifier.
-For example, if the `issuer-uri` provided is "https://example.com", then an "OpenID Provider Configuration Request" will be made to "https://example.com/.well-known/openid-configuration".
-The result is expected to be an "OpenID Provider Configuration Response".
-The following example shows how an OpenID Connect Provider can be configured with the `issuer-uri`:
+对于支持 https://openid.net/specs/openid-connect-discovery-1_0.html[OpenID Connect discovery] 的 OpenID Connect 提供者，配置可以进一步简化。
+提供者需要使用 `issuer-uri` 进行配置，这是它声明的 Issuer Identifier URI。
+例如，如果提供的 `issuer-uri` 是 "https://example.com"，则将向 "https://example.com/.well-known/openid-configuration" 发出 "OpenID Provider Configuration Request"。
+预期结果是 "OpenID Provider Configuration Response"。
+以下示例显示了如何使用 `issuer-uri` 配置 OpenID Connect Provider：
 
 [configprops,yaml]
 ----
@@ -165,27 +165,27 @@ spring:
             issuer-uri: "https://dev-123456.oktapreview.com/oauth2/default/"
 ----
 
-By default, Spring Security's javadoc:org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter[] only processes URLs matching `/login/oauth2/code/*`.
-If you want to customize the `redirect-uri` to use a different pattern, you need to provide configuration to process that custom pattern.
-For example, for servlet applications, you can add your own javadoc:org.springframework.security.web.SecurityFilterChain[] that resembles the following:
+默认情况下，Spring Security 的 javadoc:org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter[] 仅处理匹配 `/login/oauth2/code/*` 的 URL。
+如果你想自定义 `redirect-uri` 以使用不同的模式，你需要提供配置来处理该自定义模式。
+例如，对于 servlet 应用程序，你可以添加自己的 javadoc:org.springframework.security.web.SecurityFilterChain[]，类似于以下内容：
 
 include-code::MyOAuthClientConfiguration[]
 
-TIP: Spring Boot auto-configures an javadoc:org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService[] which is used by Spring Security for the management of client registrations.
-The javadoc:org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService[] has limited capabilities and we recommend using it only for development environments.
-For production environments, consider using a javadoc:org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService[] or creating your own implementation of javadoc:org.springframework.security.oauth2.client.OAuth2AuthorizedClientService[].
+提示：Spring Boot 自动配置一个 javadoc:org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService[]，Spring Security 使用它来管理客户端注册。
+javadoc:org.springframework.security.oauth2.client.InMemoryOAuth2AuthorizedClientService[] 功能有限，我们建议仅在开发环境中使用它。
+对于生产环境，考虑使用 javadoc:org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService[] 或创建你自己的 javadoc:org.springframework.security.oauth2.client.OAuth2AuthorizedClientService[] 实现。
 
 
 
 [[web.security.oauth2.client.common-providers]]
 ==== OAuth2 Client Registration for Common Providers
 
-For common OAuth2 and OpenID providers, including Google, Github, Facebook, and Okta, we provide a set of provider defaults (`google`, `github`, `facebook`, and `okta`, respectively).
+对于常见的 OAuth2 和 OpenID 提供者，包括 Google、Github、Facebook 和 Okta，我们提供了一组提供者默认值（分别为 `google`、`github`、`facebook` 和 `okta`）。
 
-If you do not need to customize these providers, you can set the `provider` attribute to the one for which you need to infer defaults.
-Also, if the key for the client registration matches a default supported provider, Spring Boot infers that as well.
+如果你不需要自定义这些提供者，你可以将 `provider` 属性设置为需要推断默认值的提供者。
+此外，如果客户端注册的键与默认支持的提供者匹配，Spring Boot 也会推断它。
 
-In other words, the two configurations in the following example use the Google provider:
+换句话说，以下示例中的两个配置使用 Google 提供者：
 
 [configprops,yaml]
 ----
@@ -208,8 +208,8 @@ spring:
 [[web.security.oauth2.server]]
 === Resource Server
 
-If you have `spring-security-oauth2-resource-server` on your classpath, Spring Boot can set up an OAuth2 Resource Server.
-For JWT configuration, a JWK Set URI or OIDC Issuer URI needs to be specified, as shown in the following examples:
+如果你的类路径上有 `spring-security-oauth2-resource-server`，Spring Boot 可以设置 OAuth2 Resource Server。
+对于 JWT 配置，需要指定 JWK Set URI 或 OIDC Issuer URI，如下例所示：
 
 [configprops,yaml]
 ----
@@ -231,11 +231,11 @@ spring:
           issuer-uri: "https://dev-123456.oktapreview.com/oauth2/default/"
 ----
 
-NOTE: If the authorization server does not support a JWK Set URI, you can configure the resource server with the Public Key used for verifying the signature of the JWT.
-This can be done using the configprop:spring.security.oauth2.resourceserver.jwt.public-key-location[] property, where the value needs to point to a file containing the public key in the PEM-encoded x509 format.
+注意：如果授权服务器不支持 JWK Set URI，你可以使用用于验证 JWT 签名的公钥配置资源服务器。
+这可以使用 configprop:spring.security.oauth2.resourceserver.jwt.public-key-location[] 属性完成，其中值需要指向包含 PEM 编码的 x509 格式公钥的文件。
 
-The configprop:spring.security.oauth2.resourceserver.jwt.audiences[] property can be used to specify the expected values of the aud claim in JWTs.
-For example, to require JWTs to contain an aud claim with the value `my-audience`:
+configprop:spring.security.oauth2.resourceserver.jwt.audiences[] 属性可用于指定 JWT 中 aud 声明的预期值。
+例如，要求 JWT 包含值为 `my-audience` 的 aud 声明：
 
 [configprops,yaml]
 ----
@@ -248,10 +248,10 @@ spring:
             - "my-audience"
 ----
 
-The same properties are applicable for both servlet and reactive applications.
-Alternatively, you can define your own javadoc:org.springframework.security.oauth2.jwt.JwtDecoder[] bean for servlet applications or a javadoc:org.springframework.security.oauth2.jwt.ReactiveJwtDecoder[] for reactive applications.
+相同的属性适用于 servlet 和响应式应用程序。
+或者，你可以为 servlet 应用程序定义自己的 javadoc:org.springframework.security.oauth2.jwt.JwtDecoder[] bean，或为响应式应用程序定义 javadoc:org.springframework.security.oauth2.jwt.ReactiveJwtDecoder[]。
 
-In cases where opaque tokens are used instead of JWTs, you can configure the following properties to validate tokens through introspection:
+在使用不透明令牌而不是 JWT 的情况下，你可以配置以下属性以通过内省验证令牌：
 
 [configprops,yaml]
 ----
@@ -265,17 +265,17 @@ spring:
           client-secret: "my-client-secret"
 ----
 
-Again, the same properties are applicable for both servlet and reactive applications.
-Alternatively, you can define your own javadoc:org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector[] bean for servlet applications or a javadoc:org.springframework.security.oauth2.server.resource.introspection.ReactiveOpaqueTokenIntrospector[] for reactive applications.
+同样，相同的属性适用于 servlet 和响应式应用程序。
+或者，你可以为 servlet 应用程序定义自己的 javadoc:org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector[] bean，或为响应式应用程序定义 javadoc:org.springframework.security.oauth2.server.resource.introspection.ReactiveOpaqueTokenIntrospector[]。
 
 
 
 [[web.security.oauth2.authorization-server]]
 === Authorization Server
 
-If you have `spring-security-oauth2-authorization-server` on your classpath, you can take advantage of some auto-configuration to set up a Servlet-based OAuth2 Authorization Server.
+如果你的类路径上有 `spring-security-oauth2-authorization-server`，你可以利用一些自动配置来设置基于 Servlet 的 OAuth2 Authorization Server。
 
-You can register multiple OAuth2 clients under the `spring.security.oauth2.authorizationserver.client` prefix, as shown in the following example:
+你可以在 `spring.security.oauth2.authorizationserver.client` 前缀下注册多个 OAuth2 客户端，如下例所示：
 
 [configprops,yaml]
 ----
@@ -324,13 +324,13 @@ spring:
 	        token-endpoint-authentication-signing-algorithm: "RS256"
 ----
 
-NOTE: The `client-secret` property must be in a format that can be matched by the configured javadoc:org.springframework.security.crypto.password.PasswordEncoder[].
-The default instance of javadoc:org.springframework.security.crypto.password.PasswordEncoder[] is created via `PasswordEncoderFactories.createDelegatingPasswordEncoder()`.
+注意：`client-secret` 属性必须采用可由配置的 javadoc:org.springframework.security.crypto.password.PasswordEncoder[] 匹配的格式。
+javadoc:org.springframework.security.crypto.password.PasswordEncoder[] 的默认实例是通过 `PasswordEncoderFactories.createDelegatingPasswordEncoder()` 创建的。
 
-The auto-configuration Spring Boot provides for Spring Authorization Server is designed for getting started quickly.
-Most applications will require customization and will want to define several beans to override auto-configuration.
+Spring Boot 为 Spring Authorization Server 提供的自动配置旨在快速入门。
+大多数应用程序都需要自定义，并希望定义几个 bean 来覆盖自动配置。
 
-The following components can be defined as beans to override auto-configuration specific to Spring Authorization Server:
+以下组件可以定义为 bean 来覆盖特定于 Spring Authorization Server 的自动配置：
 
 * javadoc:org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository[]
 * javadoc:org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings[]
@@ -338,11 +338,11 @@ The following components can be defined as beans to override auto-configuration 
 * `com.nimbusds.jose.jwk.source.JWKSource<com.nimbusds.jose.proc.SecurityContext>`
 * javadoc:org.springframework.security.oauth2.jwt.JwtDecoder[]
 
-TIP: Spring Boot auto-configures an javadoc:org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository[] which is used by Spring Authorization Server for the management of registered clients.
-The javadoc:org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository[] has limited capabilities and we recommend using it only for development environments.
-For production environments, consider using a javadoc:org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository[] or creating your own implementation of javadoc:org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository[].
+提示：Spring Boot 自动配置一个 javadoc:org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository[]，Spring Authorization Server 使用它来管理注册的客户端。
+javadoc:org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository[] 功能有限，我们建议仅在开发环境中使用它。
+对于生产环境，考虑使用 javadoc:org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository[] 或创建你自己的 javadoc:org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository[] 实现。
 
-Additional information can be found in the {url-spring-authorization-server-docs}/getting-started.html[Getting Started] chapter of the {url-spring-authorization-server-docs}[Spring Authorization Server Reference Guide].
+更多信息可以在 {url-spring-authorization-server-docs}/getting-started.html[入门] 章节中找到，该章节位于 {url-spring-authorization-server-docs}[Spring Authorization Server 参考指南] 中。
 
 
 
@@ -354,11 +354,11 @@ Additional information can be found in the {url-spring-authorization-server-docs
 [[web.security.saml2.relying-party]]
 === Relying Party
 
-If you have `spring-security-saml2-service-provider` on your classpath, you can take advantage of some auto-configuration to set up a SAML 2.0 Relying Party.
-This configuration makes use of the properties under javadoc:org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties[].
+如果你的类路径上有 `spring-security-saml2-service-provider`，你可以利用一些自动配置来设置 SAML 2.0 Relying Party。
+此配置使用 javadoc:org.springframework.boot.autoconfigure.security.saml2.Saml2RelyingPartyProperties[] 下的属性。
 
-A relying party registration represents a paired configuration between an Identity Provider, IDP, and a Service Provider, SP.
-You can register multiple relying parties under the `spring.security.saml2.relyingparty` prefix, as shown in the following example:
+一个依赖方注册表示身份提供者（IDP）和服务提供者（SP）之间的配对配置。
+你可以在 `spring.security.saml2.relyingparty` 前缀下注册多个依赖方，如下例所示：
 
 [configprops,yaml]
 ----
@@ -408,8 +408,8 @@ spring:
                 binding: "POST"
 ----
 
-For SAML2 logout, by default, Spring Security's javadoc:org.springframework.security.saml2.provider.service.web.authentication.logout.Saml2LogoutRequestFilter[] and javadoc:org.springframework.security.saml2.provider.service.web.authentication.logout.Saml2LogoutResponseFilter[] only process URLs matching `/logout/saml2/slo`.
-If you want to customize the `url` to which AP-initiated logout requests get sent to or the `response-url` to which an AP sends logout responses to, to use a different pattern, you need to provide configuration to process that custom pattern.
-For example, for servlet applications, you can add your own javadoc:org.springframework.security.web.SecurityFilterChain[] that resembles the following:
+对于 SAML2 注销，默认情况下，Spring Security 的 javadoc:org.springframework.security.saml2.provider.service.web.authentication.logout.Saml2LogoutRequestFilter[] 和 javadoc:org.springframework.security.saml2.provider.service.web.authentication.logout.Saml2LogoutResponseFilter[] 仅处理匹配 `/logout/saml2/slo` 的 URL。
+如果你想自定义 `url`（AP 发起的注销请求发送到的位置）或 `response-url`（AP 发送注销响应的位置）以使用不同的模式，你需要提供配置来处理该自定义模式。
+例如，对于 servlet 应用程序，你可以添加自己的 javadoc:org.springframework.security.web.SecurityFilterChain[]，类似于以下内容：
 
 include-code::MySamlRelyingPartyConfiguration[]
