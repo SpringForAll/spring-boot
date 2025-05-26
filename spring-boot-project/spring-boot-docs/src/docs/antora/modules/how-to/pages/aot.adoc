@@ -1,5 +1,5 @@
 [[howto.aot]]
-= Ahead-of-Time 处理
+= Ahead-of-Time(AOT)处理
 
 当用户使用 Spring Boot 应用程序的提前（Ahead-of-Time，简称 AOT）处理时，常常会有一些疑问。
 本节将解答这些问题。
