@@ -1,5 +1,5 @@
 [[packaging.aot]]
-= Ahead-of-Time Processing With the JVM
+= JVM 的预编译处理
 
 使用 AOT 生成的初始化代码运行应用程序对启动时间是有益的。
 首先，您需要确保构建的 jar 包含 AOT 生成的代码。

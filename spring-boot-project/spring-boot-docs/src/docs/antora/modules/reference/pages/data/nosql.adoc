@@ -1,5 +1,5 @@
 [[data.nosql]]
-= Working with NoSQL Technologies
+= 使用NoSQL技术
 
 Spring Data 提供了额外的项目，帮助您访问各种 NoSQL 技术，包括：
 

@@ -1,5 +1,5 @@
 [[data.sql]]
-= SQL Databases
+= SQL数据库
 
 {url-spring-framework-site}[Spring Framework] 提供了广泛的支持来使用 SQL 数据库，从使用 javadoc:org.springframework.jdbc.core.simple.JdbcClient[] 或 javadoc:org.springframework.jdbc.core.JdbcTemplate[] 的直接 JDBC 访问，到完整的"对象关系映射"技术如 Hibernate。
 {url-spring-data-site}[Spring Data] 提供了额外的功能层：直接从接口创建 javadoc:org.springframework.data.repository.Repository[] 实现，并使用约定从方法名生成查询。

@@ -1,5 +1,5 @@
 [[packaging.checkpoint-restore]]
-= Checkpoint and Restore With the JVM
+= JVM 的检查点和恢复
 
 https://wiki.openjdk.org/display/crac/Main[Coordinated Restore at Checkpoint] (CRaC) 是一个 OpenJDK 项目，它定义了一个新的 Java API，允许您在 HotSpot JVM 上对应用程序进行检查点和恢复。
 它基于 https://github.com/checkpoint-restore/criu[CRIU]，这是一个在 Linux 上实现检查点/恢复功能的项目。

@@ -1,5 +1,5 @@
 [[packaging]]
-= Packaging Spring Boot Applications
+= 打包 Spring Boot 应用程序
 
 Spring Boot 支持多种技术来优化应用程序的部署，包括 xref:packaging/native-image/index.adoc[GraalVM native images]、xref:packaging/class-data-sharing.adoc[Class Data Sharing] 和 xref:packaging/checkpoint-restore.adoc[Checkpoint and Restore]。
 
