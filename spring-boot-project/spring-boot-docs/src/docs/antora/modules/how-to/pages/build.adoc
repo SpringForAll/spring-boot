@@ -1,19 +1,19 @@
 [[howto.build]]
-= Build
+= 构建
 
-Spring Boot includes build plugins for Maven and Gradle.
-This section answers common questions about these plugins.
+Spring Boot 包含用于 Maven 和 Gradle 的构建插件。
+本节回答了有关这些插件的常见问题。
 
 
 
 [[howto.build.generate-info]]
-== Generate Build Information
+== 生成构建信息
 
-Both the Maven plugin and the Gradle plugin allow generating build information containing the coordinates, name, and version of the project.
-The plugins can also be configured to add additional properties through configuration.
-When such a file is present, Spring Boot auto-configures a javadoc:org.springframework.boot.info.BuildProperties[] bean.
+Maven 插件和 Gradle 插件都允许生成包含项目坐标、名称和版本的构建信息。
+还可以通过配置来添加其他属性。
+当存在这样的文件时，Spring Boot 会自动配置一个 javadoc:org.springframework.boot.info.BuildProperties[] bean。
 
-To generate build information with Maven, add an execution for the `build-info` goal, as shown in the following example:
+要使用 Maven 生成构建信息，请为 `build-info` 目标添加一个执行，如下例所示：
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -35,9 +35,9 @@ To generate build information with Maven, add an execution for the `build-info` 
 </build>
 ----
 
-TIP: See the xref:maven-plugin:build-info.adoc[Spring Boot Maven Plugin documentation] for more details.
+TIP: 有关更多详细信息，请参阅 xref:maven-plugin:build-info.adoc[Spring Boot Maven 插件文档]。
 
-The following example does the same with Gradle:
+以下示例使用 Gradle 实现相同功能：
 
 [source,gradle]
 ----
@@ -46,17 +46,17 @@ springBoot {
 }
 ----
 
-TIP: See the xref:gradle-plugin:integrating-with-actuator.adoc[Spring Boot Gradle Plugin documentation] for more details.
+TIP: 有关更多详细信息，请参阅 xref:gradle-plugin:integrating-with-actuator.adoc[Spring Boot Gradle 插件文档]。
 
 
 
 [[howto.build.generate-git-info]]
-== Generate Git Information
+== 生成 Git 信息
 
-Both Maven and Gradle allow generating a `git.properties` file containing information about the state of your `git` source code repository when the project was built.
+Maven 和 Gradle 都允许生成一个 `git.properties` 文件，其中包含项目构建时 `git` 源代码库的状态信息。
 
-For Maven users, the `spring-boot-starter-parent` POM includes a pre-configured plugin to generate a `git.properties` file.
-To use it, add the following declaration for the https://github.com/git-commit-id/git-commit-id-maven-plugin[`Git Commit Id Plugin`] to your POM:
+对于 Maven 用户，`spring-boot-starter-parent` POM 包含一个预配置的插件，用于生成 `git.properties` 文件。
+要使用它，请在 POM 中添加以下声明：
 
 [source,xml]
 ----
@@ -70,7 +70,7 @@ To use it, add the following declaration for the https://github.com/git-commit-i
 </build>
 ----
 
-Gradle users can achieve the same result by using the https://plugins.gradle.org/plugin/com.gorylenko.gradle-git-properties[`gradle-git-properties`] plugin, as shown in the following example:
+Gradle 用户可以使用 https://plugins.gradle.org/plugin/com.gorylenko.gradle-git-properties[`gradle-git-properties`] 插件实现相同的结果，如下例所示：
 
 [source,gradle]
 ----
@@ -79,21 +79,21 @@ plugins {
 }
 ----
 
-Both the Maven and Gradle plugins allow the properties that are included in `git.properties` to be configured.
+Maven 和 Gradle 插件都允许配置 `git.properties` 中包含的属性。
 
-TIP: The commit time in `git.properties` is expected to match the following format: `yyyy-MM-dd'T'HH:mm:ssZ`.
-This is the default format for both plugins listed above.
-Using this format lets the time be parsed into a javadoc:java.util.Date[] and its format, when serialized to JSON, to be controlled by Jackson's date serialization configuration settings.
+TIP: `git.properties` 中的提交时间应符合以下格式：`yyyy-MM-dd'T'HH:mm:ssZ`。
+这是上述两个插件的默认格式。
+使用此格式可以将时间解析为 javadoc:java.util.Date[]，并在序列化为 JSON 时由 Jackson 的日期序列化配置设置控制其格式。
 
 
 
 [[howto.build.generate-cyclonedx-sbom]]
-== Generate a CycloneDX SBOM
+== 生成 CycloneDX SBOM
 
-Both Maven and Gradle allow generating a CycloneDX SBOM at project build time.
+Maven 和 Gradle 都允许在项目构建时生成 CycloneDX SBOM。
 
-For Maven users, the `spring-boot-starter-parent` POM includes a pre-configured plugin to generate the SBOM.
-To use it, add the following declaration for the {url-cyclonedx-docs-maven-plugin}[`cyclonedx-maven-plugin`] to your POM:
+对于 Maven 用户，`spring-boot-starter-parent` POM 包含一个预配置的插件，用于生成 SBOM。
+要使用它，请在 POM 中添加以下声明：
 
 [source,xml]
 ----
@@ -107,7 +107,7 @@ To use it, add the following declaration for the {url-cyclonedx-docs-maven-plugi
 </build>
 ----
 
-Gradle users can achieve the same result by using the {url-cyclonedx-docs-gradle-plugin}[`cyclonedx-gradle-plugin`] plugin, as shown in the following example:
+Gradle 用户可以使用 {url-cyclonedx-docs-gradle-plugin}[`cyclonedx-gradle-plugin`] 插件实现相同的结果，如下例所示：
 
 [source,gradle]
 ----
@@ -119,25 +119,25 @@ plugins {
 
 
 [[howto.build.customize-dependency-versions]]
-== Customize Dependency Versions
+== 自定义依赖版本
 
-The `spring-boot-dependencies` POM manages the versions of common dependencies.
-The Spring Boot plugins for Maven and Gradle allow these managed dependency versions to be customized using build properties.
+`spring-boot-dependencies` POM 管理常见依赖的版本。
+Spring Boot 的 Maven 和 Gradle 插件允许使用构建属性自定义这些管理的依赖版本。
 
-WARNING: Each Spring Boot release is designed and tested against this specific set of third-party dependencies.
-Overriding versions may cause compatibility issues.
+WARNING: 每个 Spring Boot 版本都是针对这一特定的第三方依赖集进行设计和测试的。
+覆盖版本可能会导致兼容性问题。
 
-To override dependency versions with Maven, see xref:maven-plugin:using.adoc[] in the Maven plugin's documentation.
+要使用 Maven 覆盖依赖版本，请参阅 Maven 插件文档中的 xref:maven-plugin:using.adoc[]。
 
-To override dependency versions in Gradle, see xref:gradle-plugin:managing-dependencies.adoc#managing-dependencies.dependency-management-plugin.customizing[] in the Gradle plugin's documentation.
+要在 Gradle 中覆盖依赖版本，请参阅 Gradle 插件文档中的 xref:gradle-plugin:managing-dependencies.adoc#managing-dependencies.dependency-management-plugin.customizing[]。
 
 
 
 [[howto.build.create-an-executable-jar-with-maven]]
-== Create an Executable JAR with Maven
+== 使用 Maven 创建可执行 JAR
 
-The `spring-boot-maven-plugin` can be used to create an executable "`fat`" JAR.
-If you use the `spring-boot-starter-parent` POM, you can declare the plugin and your jars are repackaged as follows:
+`spring-boot-maven-plugin` 可用于创建可执行的 "`fat`" JAR。
+如果您使用 `spring-boot-starter-parent` POM，您可以声明插件并重新打包您的 jar，如下所示：
 
 [source,xml]
 ----
@@ -151,8 +151,8 @@ If you use the `spring-boot-starter-parent` POM, you can declare the plugin and 
 </build>
 ----
 
-If you do not use the parent POM, you can still use the plugin.
-However, you must additionally add an `<executions>` section, as follows:
+如果您不使用父 POM，您仍然可以使用该插件。
+但是，您必须另外添加一个 `<executions>` 部分，如下所示：
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -174,25 +174,25 @@ However, you must additionally add an `<executions>` section, as follows:
 </build>
 ----
 
-See the xref:maven-plugin:packaging.adoc#packaging.repackage-goal[plugin documentation] for full usage details.
+有关完整的使用详情，请参阅 xref:maven-plugin:packaging.adoc#packaging.repackage-goal[插件文档]。
 
 
 
 [[howto.build.use-a-spring-boot-application-as-dependency]]
-== Use a Spring Boot Application as a Dependency
+== 将 Spring Boot 应用程序用作依赖
 
-Like a war file, a Spring Boot application is not intended to be used as a dependency.
-If your application contains classes that you want to share with other projects, the recommended approach is to move that code into a separate module.
-The separate module can then be depended upon by your application and other projects.
+像 war 文件一样，Spring Boot 应用程序不打算用作依赖。
+如果您的应用程序包含您希望与其他项目共享的类，推荐的方法是将该代码移到一个单独的模块中。
+然后，您的应用程序和其他项目可以依赖于该单独的模块。
 
-If you cannot rearrange your code as recommended above, Spring Boot's Maven and Gradle plugins must be configured to produce a separate artifact that is suitable for use as a dependency.
-The executable archive cannot be used as a dependency as the xref:specification:executable-jar/nested-jars.adoc#appendix.executable-jar.nested-jars.jar-structure[executable jar format] packages application classes in `BOOT-INF/classes`.
-This means that they cannot be found when the executable jar is used as a dependency.
+如果您无法按照上述建议重新安排代码，Spring Boot 的 Maven 和 Gradle 插件必须配置为生成一个适合用作依赖的单独工件。
+可执行存档不能用作依赖，因为 xref:specification:executable-jar/nested-jars.adoc#appendix.executable-jar.nested-jars.jar-structure[可执行 jar 格式] 将应用程序类打包在 `BOOT-INF/classes` 中。
+这意味着当可执行 jar 用作依赖时，它们无法被找到。
 
-To produce the two artifacts, one that can be used as a dependency and one that is executable, a classifier must be specified.
-This classifier is applied to the name of the executable archive, leaving the default archive for use as a dependency.
+要生成两个工件，一个可用作依赖，一个可执行，必须指定一个分类器。
+此分类器应用于可执行存档的名称，保留默认存档以用作依赖。
 
-To configure a classifier of `exec` in Maven, you can use the following configuration:
+要在 Maven 中配置 `exec` 分类器，您可以使用以下配置：
 
 [source,xml]
 ----
@@ -212,18 +212,18 @@ To configure a classifier of `exec` in Maven, you can use the following configur
 
 
 [[howto.build.extract-specific-libraries-when-an-executable-jar-runs]]
-== Extract Specific Libraries When an Executable Jar Runs
+== 在可执行 Jar 运行时提取特定库
 
-Most nested libraries in an executable jar do not need to be unpacked in order to run.
-However, certain libraries can have problems.
-For example, JRuby includes its own nested jar support, which assumes that the `jruby-complete.jar` is always directly available as a file in its own right.
+大多数嵌套库在可执行 jar 中不需要解压即可运行。
+然而，某些库可能会出现问题。
+例如，JRuby 包含其自己的嵌套 jar 支持，假设 `jruby-complete.jar` 始终作为一个独立文件直接可用。
 
-To deal with any problematic libraries, you can flag that specific nested jars should be automatically unpacked when the executable jar first runs.
-Such nested jars are written beneath the temporary directory identified by the `java.io.tmpdir` system property.
+为了解决任何有问题的库，您可以标记特定的嵌套 jar，以便在可执行 jar 首次运行时自动解压。
+这些嵌套 jar 被写入由 `java.io.tmpdir` 系统属性标识的临时目录下。
 
-WARNING: Care should be taken to ensure that your operating system is configured so that it will not delete the jars that have been unpacked to the temporary directory while the application is still running.
+WARNING: 应注意确保您的操作系统配置不会在应用程序仍在运行时删除已解压到临时目录的 jar。
 
-For example, to indicate that JRuby should be flagged for unpacking by using the Maven Plugin, you would add the following configuration:
+例如，要使用 Maven 插件标记 JRuby 以进行解压，您可以添加以下配置：
 
 [source,xml]
 ----
@@ -248,12 +248,12 @@ For example, to indicate that JRuby should be flagged for unpacking by using the
 
 
 [[howto.build.create-a-nonexecutable-jar]]
-== Create a Non-executable JAR with Exclusions
+== 创建具有排除项的非可执行 JAR
 
-Often, if you have an executable and a non-executable jar as two separate build products, the executable version has additional configuration files that are not needed in a library jar.
-For example, the `application.yaml` configuration file might be excluded from the non-executable JAR.
+通常，如果您有一个可执行和一个非可执行 jar 作为两个单独的构建产品，可执行版本具有在库 jar 中不需要的额外配置文件。
+例如，`application.yaml` 配置文件可能会从非可执行 JAR 中排除。
 
-In Maven, the executable jar must be the main artifact and you can add a classified jar for the library, as follows:
+在 Maven 中，可执行 jar 必须是主要工件，您可以为库添加一个分类 jar，如下所示：
 
 [source,xml]
 ----
@@ -288,30 +288,30 @@ In Maven, the executable jar must be the main artifact and you can add a classif
 
 
 [[howto.build.remote-debug-maven]]
-== Remote Debug a Spring Boot Application Started with Maven
+== 远程调试使用 Maven 启动的 Spring Boot 应用程序
 
-To attach a remote debugger to a Spring Boot application that was started with Maven, you can use the `jvmArguments` property of the xref:maven-plugin:index.adoc[maven plugin].
+要附加远程调试器到使用 Maven 启动的 Spring Boot 应用程序，您可以使用 xref:maven-plugin:index.adoc[maven 插件] 的 `jvmArguments` 属性。
 
-See xref:maven-plugin:run.adoc#run.examples.debug[this example] for more details.
+有关更多详细信息，请参阅 xref:maven-plugin:run.adoc#run.examples.debug[此示例]。
 
 
 
 [[howto.build.build-an-executable-archive-with-ant-without-using-spring-boot-antlib]]
-== Build an Executable Archive From Ant without Using spring-boot-antlib
+== 使用 Ant 构建可执行存档而不使用 spring-boot-antlib
 
-To build with Ant, you need to grab dependencies, compile, and then create a jar or war archive.
-To make it executable, you can either use the `spring-boot-antlib` module or you can follow these instructions:
+要使用 Ant 构建，您需要获取依赖项、编译，然后创建一个 jar 或 war 存档。
+要使其可执行，您可以使用 `spring-boot-antlib` 模块，也可以按照以下说明进行操作：
 
-. If you are building a jar, package the application's classes and resources in a nested `BOOT-INF/classes` directory.
-  If you are building a war, package the application's classes in a nested `WEB-INF/classes` directory as usual.
-. Add the runtime dependencies in a nested `BOOT-INF/lib` directory for a jar or `WEB-INF/lib` for a war.
-  Remember *not* to compress the entries in the archive.
-. Add the `provided` (embedded container) dependencies in a nested `BOOT-INF/lib` directory for a jar or `WEB-INF/lib-provided` for a war.
-  Remember *not* to compress the entries in the archive.
-. Add the `spring-boot-loader` classes at the root of the archive (so that the `Main-Class` is available).
-. Use the appropriate launcher (such as javadoc:org.springframework.boot.loader.launch.JarLauncher[] for a jar file) as a `Main-Class` attribute in the manifest and specify the other properties it needs as manifest entries -- principally, by setting a `Start-Class` property.
+. 如果您正在构建 jar，请将应用程序的类和资源打包在嵌套的 `BOOT-INF/classes` 目录中。
+  如果您正在构建 war，请像往常一样将应用程序的类打包在嵌套的 `WEB-INF/classes` 目录中。
+. 将运行时依赖项添加到 jar 的嵌套 `BOOT-INF/lib` 目录或 war 的 `WEB-INF/lib` 中。
+  请记住*不要*压缩存档中的条目。
+. 将 `provided`（嵌入式容器）依赖项添加到 jar 的嵌套 `BOOT-INF/lib` 目录或 war 的 `WEB-INF/lib-provided` 中。
+  请记住*不要*压缩存档中的条目。
+. 将 `spring-boot-loader` 类添加到存档的根目录（以便 `Main-Class` 可用）。
+. 使用适当的启动器（例如 javadoc:org.springframework.boot.loader.launch.JarLauncher[] 用于 jar 文件）作为清单中的 `Main-Class` 属性，并指定它需要的其他属性作为清单条目 -- 主要是通过设置 `Start-Class` 属性。
 
-The following example shows how to build an executable archive with Ant:
+以下示例显示了如何使用 Ant 构建可执行存档：
 
 [source,xml]
 ----

@@ -1,5 +1,5 @@
 [appendix]
 [[appendix.dependency-versions]]
-= Dependency Versions
+= 依赖版本
 
-This appendix provides details of the dependencies that are managed by Spring Boot.
+本附录提供了Spring Boot管理的依赖项的详细信息。

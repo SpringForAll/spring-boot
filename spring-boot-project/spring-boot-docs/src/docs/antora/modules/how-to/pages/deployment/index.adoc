@@ -1,8 +1,26 @@
 [[howto.deployment]]
-= Deploying Spring Boot Applications
+= 部署选项
 
-Spring Boot's flexible packaging options provide a great deal of choice when it comes to deploying your application.
-You can deploy Spring Boot applications to a variety of cloud platforms, to virtual/real machines, or make them fully executable for Unix systems.
+Spring Boot 应用程序可以部署到各种环境中，包括云平台、物理机/虚拟机和可执行的 Unix 系统。
 
-This section covers some of the more common deployment scenarios.
+[[howto.deployment.cloud]]
+== 云平台
+
+Spring Boot 的可执行 jar 已经为大多数流行的云 PaaS（平台即服务）提供商准备好了。这些提供商通常要求您“自带容器”。他们管理应用程序进程（而不是特定的 Java 应用程序），因此他们需要一个中间层来将您的应用程序适配为云的运行进程概念。
+
+两个流行的云提供商，Heroku 和 Cloud Foundry，采用“构建包”方法。构建包将您的已部署代码包装在启动应用程序所需的任何内容中。它可能是一个 JDK 和一个对 `java` 的调用，一个嵌入式 Web 服务器，或者一个完整的应用程序服务器。构建包是可插拔的，但理想情况下，您应该尽量减少对其的自定义。这减少了不在您控制范围内的功能的占用空间。它最小化了开发和生产环境之间的差异。
+
+理想情况下，您的应用程序（如 Spring Boot 可执行 jar）已包含运行所需的一切。
+
+在本节中，我们将探讨在“入门”部分开发的应用程序在云中运行所需的条件。
+
+[[howto.deployment.physical]]
+== 物理机/虚拟机
+
+Spring Boot 应用程序可以作为传统的 Java 应用程序运行在物理机或虚拟机上。您可以使用 `java -jar` 命令启动应用程序，或者将其作为 `systemd` 或 `init.d` 服务运行。
+
+[[howto.deployment.unix]]
+== 可执行 Unix 系统
+
+Spring Boot 应用程序可以打包为可执行的 Unix 系统文件。您可以使用 `mvn package` 命令创建一个可执行的 jar 文件，然后使用 `chmod +x` 命令使其可执行。
 
