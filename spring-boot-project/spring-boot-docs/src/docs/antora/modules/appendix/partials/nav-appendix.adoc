@@ -1,4 +1,4 @@
-* Appendix
+* 附录
 
 ** xref:appendix:application-properties/index.adoc[]
 ** xref:appendix:auto-configuration-classes/index.adoc[]
