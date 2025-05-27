@@ -1,8 +1,8 @@
 [[cli.using-the-cli]]
-= Using the CLI
+= 使用CLI
 
-Once you have installed the CLI, you can run it by typing `spring` and pressing Enter at the command line.
-If you run `spring` without any arguments, a help screen is displayed, as follows:
+安装好 CLI 后，你可以在命令行输入 `spring` 并回车来运行它。
+如果你不带参数运行 `spring`，会显示如下帮助界面：
 
 [source,shell]
 ----
@@ -10,83 +10,72 @@ $ spring
 usage: spring [--help] [--version]
        <command> [<args>]
 
-Available commands are:
+可用命令有：
 
   init [options] [location]
-    Initialize a new project using Spring Initializr (start.spring.io)
+    使用 Spring Initializr (start.spring.io) 初始化新项目
 
   encodepassword [options] <password to encode>
-    Encode a password for use with Spring Security
+    为 Spring Security 编码密码
 
   shell
-    Start a nested shell
+    启动嵌套 shell
 
-Common options:
+通用选项：
 
   --debug Verbose mode
-    Print additional status information for the command you are running
+    输出你正在运行命令的额外状态信息
 
 
-See 'spring help <command>' for more information on a specific command.
+查看某个具体命令的详细信息，请使用 'spring help <command>'。
 ----
 
-You can type `spring help` to get more details about any of the supported commands, as shown in the following example:
+你可以输入 `spring help` 获取任意支持命令的更多细节，例如：
 
 [source,shell]
 ----
 $ spring help init
-spring init - Initialize a new project using Spring Initializr (start.spring.io)
+spring init - 使用 Spring Initializr (start.spring.io) 初始化新项目
 
 usage: spring init [options] [location]
 
 Option                       Description
 ------                       -----------
--a, --artifact-id <String>   Project coordinates; infer archive name (for
-                               example 'test')
--b, --boot-version <String>  Spring Boot version (for example '1.2.0.RELEASE')
---build <String>             Build system to use (for example 'maven' or
-                               'gradle') (default: maven)
--d, --dependencies <String>  Comma-separated list of dependency identifiers to
-                               include in the generated project
---description <String>       Project description
--f, --force                  Force overwrite of existing files
---format <String>            Format of the generated content (for example
-                               'build' for a build file, 'project' for a
-                               project archive) (default: project)
--g, --group-id <String>      Project coordinates (for example 'org.test')
--j, --java-version <String>  Language level (for example '1.8')
--l, --language <String>      Programming language  (for example 'java')
---list                       List the capabilities of the service. Use it to
-                               discover the dependencies and the types that are
-                               available
--n, --name <String>          Project name; infer application name
--p, --packaging <String>     Project packaging (for example 'jar')
---package-name <String>      Package name
--t, --type <String>          Project type. Not normally needed if you use --
-                               build and/or --format. Check the capabilities of
-                               the service (--list) for more details
---target <String>            URL of the service to use (default: https://start.
-                               spring.io)
--v, --version <String>       Project version (for example '0.0.1-SNAPSHOT')
--x, --extract                Extract the project archive. Inferred if a
-                               location is specified without an extension
+-a, --artifact-id <String>   项目坐标；推断归档名（如 'test'）
+-b, --boot-version <String>  Spring Boot 版本（如 '1.2.0.RELEASE'）
+--build <String>             构建系统（如 'maven' 或 'gradle'）（默认：maven）
+-d, --dependencies <String>  以逗号分隔的依赖标识符列表，包含在生成的项目中
+--description <String>       项目描述
+-f, --force                  强制覆盖已存在文件
+--format <String>            生成内容的格式（如 'build' 表示构建文件，'project' 表示项目归档）（默认：project）
+-g, --group-id <String>      项目坐标（如 'org.test'）
+-j, --java-version <String>  语言级别（如 '1.8'）
+-l, --language <String>      编程语言（如 'java'）
+--list                       列出服务的能力。用于发现可用的依赖和类型
+-n, --name <String>          项目名称；推断应用名
+-p, --packaging <String>     项目打包方式（如 'jar'）
+--package-name <String>      包名
+-t, --type <String>          项目类型。通常无需指定，除非你使用 --build 和/或 --format。检查服务能力（--list）获取更多详情
+--target <String>            要使用的服务 URL（默认：https://start.spring.io）
+-v, --version <String>       项目版本（如 '0.0.1-SNAPSHOT'）
+-x, --extract                解压项目归档。如果指定了无扩展名的位置则自动推断
 
-examples:
+示例：
 
-    To list all the capabilities of the service:
+    列出服务所有能力：
         $ spring init --list
 
-    To creates a default project:
+    创建默认项目：
         $ spring init
 
-    To create a web my-app.zip:
+    创建 web my-app.zip：
         $ spring init -d=web my-app.zip
 
-    To create a web/data-jpa gradle project unpacked:
+    创建 web/data-jpa gradle 项目并解包：
         $ spring init -d=web,jpa --build=gradle my-dir
 ----
 
-The `version` command provides a quick way to check which version of Spring Boot you are using, as follows:
+`version` 命令可快速查看你正在使用的 Spring Boot 版本，如下：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -97,9 +86,9 @@ Spring CLI v{version-spring-boot}
 
 
 [[cli.using-the-cli.initialize-new-project]]
-== Initialize a New Project
+== 初始化新项目
 
-The `init` command lets you create a new project by using https://start.spring.io without leaving the shell, as shown in the following example:
+`init` 命令允许你直接在 shell 中通过 https://start.spring.io 创建新项目，例如：
 
 [source,shell]
 ----
@@ -108,8 +97,8 @@ Using service at https://start.spring.io
 Project extracted to '/Users/developer/example/my-project'
 ----
 
-The preceding example creates a `my-project` directory with a Maven-based project that uses `spring-boot-starter-web` and `spring-boot-starter-data-jpa`.
-You can list the capabilities of the service by using the `--list` flag, as shown in the following example:
+上述示例会创建一个包含 Maven 构建、依赖 `spring-boot-starter-web` 和 `spring-boot-starter-data-jpa` 的 `my-project` 目录。
+你可以通过 `--list` 参数列出服务能力，例如：
 
 [source,shell]
 ----
@@ -136,9 +125,9 @@ maven-project -  Maven Project [format:project, build:maven] (default)
 ...
 ----
 
-The `init` command supports many options.
-See the `help` output for more details.
-For instance, the following command creates a Gradle project that uses Java 17 and `war` packaging:
+`init` 命令支持多种选项。
+详见 `help` 输出获取更多细节。
+例如，以下命令会创建一个使用 Java 17 和 `war` 打包的 Gradle 项目：
 
 [source,shell]
 ----
@@ -150,19 +139,19 @@ Content saved to 'sample-app.zip'
 
 
 [[cli.using-the-cli.embedded-shell]]
-== Using the Embedded Shell
+== 使用嵌入式 Shell
 
-Spring Boot includes command-line completion scripts for the BASH and zsh shells.
-If you do not use either of these shells (perhaps you are a Windows user), you can use the `shell` command to launch an integrated shell, as shown in the following example:
+Spring Boot 提供了 BASH 和 zsh shell 的命令行补全脚本。
+如果你不使用这些 shell（比如你是 Windows 用户），可以通过 `shell` 命令启动集成 shell，例如：
 
 [source,shell,subs="verbatim,quotes,attributes"]
 ----
 $ spring shell
 *Spring Boot* (v{version-spring-boot})
-Hit TAB to complete. Type \'help' and hit RETURN for help, and \'exit' to quit.
+按 TAB 补全。输入 'help' 并回车获取帮助，输入 'exit' 退出。
 ----
 
-From inside the embedded shell, you can run other commands directly:
+在嵌入式 shell 内，你可以直接运行其他命令：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -170,8 +159,8 @@ $ version
 Spring CLI v{version-spring-boot}
 ----
 
-The embedded shell supports ANSI color output as well as `tab` completion.
-If you need to run a native command, you can use the `!` prefix.
-To exit the embedded shell, press `ctrl-c`.
+嵌入式 shell 支持 ANSI 彩色输出和 `tab` 补全。
+如需运行原生命令，可用 `!` 前缀。
+退出嵌入式 shell，请按 `ctrl-c`。
 
 

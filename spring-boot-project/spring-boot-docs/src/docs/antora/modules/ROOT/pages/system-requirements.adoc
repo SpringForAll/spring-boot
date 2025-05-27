@@ -1,32 +1,32 @@
 [[getting-started.system-requirements]]
-= System Requirements
+= 系统要求
 
-Spring Boot {version-spring-boot} requires at least https://www.java.com[Java 17] and is compatible with versions up to and including Java 24.
-{url-spring-framework-docs}/[Spring Framework {version-spring-framework}] or above is also required.
+Spring Boot {version-spring-boot} 至少需要 https://www.java.com[Java 17]，并兼容最高至 Java 24。
+还需要 {url-spring-framework-docs}/[Spring Framework {version-spring-framework}] 或更高版本。
 
-Explicit build support is provided for the following build tools:
+以下构建工具提供了明确的支持：
 
 |===
-| Build Tool | Version
+| 构建工具 | 版本
 
 | Maven
-| 3.6.3 or later
+| 3.6.3 或更高
 
 | Gradle
-| Gradle 7.x (7.6.4 or later) or 8.x (8.4 or later)
+| Gradle 7.x（7.6.4 或更高）或 8.x（8.4 或更高）
 |===
 
 
 
 [[getting-started.system-requirements.servlet-containers]]
-== Servlet Containers
+== Servlet 容器
 
-Spring Boot supports the following embedded servlet containers:
+Spring Boot 支持以下内嵌 Servlet 容器：
 
 |===
-| Name | Servlet Version
+| 名称 | Servlet 版本
 
-| Tomcat 10.1 (10.1.25 or later)
+| Tomcat 10.1（10.1.25 或更高）
 | 6.0
 
 | Jetty 12.0
@@ -36,22 +36,22 @@ Spring Boot supports the following embedded servlet containers:
 | 6.0
 |===
 
-You can also deploy Spring Boot applications to any servlet 5.0+ compatible container.
+你也可以将 Spring Boot 应用部署到任何兼容 Servlet 5.0+ 的容器。
 
 
 
 [[getting-started.system-requirements.graal]]
 == GraalVM Native Images
 
-Spring Boot applications can be xref:reference:packaging/native-image/introducing-graalvm-native-images.adoc[converted into a Native Image] using GraalVM {version-graal} or above.
+Spring Boot 应用可使用 GraalVM {version-graal} 或更高版本 xref:reference:packaging/native-image/introducing-graalvm-native-images.adoc[转换为 Native Image]。
 
-Images can be created using the https://github.com/graalvm/native-build-tools[native build tools] Gradle/Maven plugins or `native-image` tool provided by GraalVM.
-You can also create native images using the https://github.com/paketo-buildpacks/native-image[native-image Paketo buildpack].
+镜像可通过 https://github.com/graalvm/native-build-tools[native build tools] Gradle/Maven 插件或 GraalVM 提供的 `native-image` 工具创建。
+你也可以使用 https://github.com/paketo-buildpacks/native-image[native-image Paketo buildpack] 创建 native image。
 
-The following versions are supported:
+支持以下版本：
 
 |===
-| Name | Version
+| 名称 | 版本
 
 | GraalVM Community
 | {version-graal}

@@ -1,15 +1,15 @@
-:navtitle: Overview
+:navtitle: 概览
 = Spring Boot
 
-Spring Boot helps you to create stand-alone, production-grade Spring-based applications that you can run.
-We take an opinionated view of the Spring platform and third-party libraries, so that you can get started with minimum fuss.
-Most Spring Boot applications need very little Spring configuration.
+Spring Boot 帮助你创建可独立运行、生产级的 Spring 应用程序。
+我们对 Spring 平台及第三方库采取了约定优于配置的理念，让你可以轻松上手。
+大多数 Spring Boot 应用几乎无需 Spring 配置。
 
-You can use Spring Boot to create Java applications that can be started by using `java -jar` or more traditional war deployments.
+你可以使用 Spring Boot 创建 Java 应用，这些应用可通过 `java -jar` 启动，或采用传统的 war 部署方式。
 
-Our primary goals are:
+我们的主要目标是：
 
-* Provide a radically faster and widely accessible getting-started experience for all Spring development.
-* Be opinionated out of the box but get out of the way quickly as requirements start to diverge from the defaults.
-* Provide a range of non-functional features that are common to large classes of projects (such as embedded servers, security, metrics, health checks, and externalized configuration).
-* Absolutely no code generation (when not targeting native image) and no requirement for XML configuration.
+* 为所有 Spring 开发提供极快且广泛适用的入门体验。
+* 默认提供最佳实践，但当需求偏离默认时能快速让位于自定义。
+* 提供一系列适用于大多数项目的非功能性特性（如内嵌服务器、安全、指标、健康检查和外部化配置）。
+* 绝不进行代码生成（非 native image 场景下）且无需 XML 配置。
