@@ -1,3 +1,3 @@
-= Tutorials
+= 教程
 
-This section provides tutorials to help you get started using Spring Boot.
+本节提供教程以帮助您开始使用Spring Boot。

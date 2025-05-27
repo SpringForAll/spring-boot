@@ -1,7 +1,7 @@
 [appendix]
 [[appendix.auto-configuration-classes]]
-= Auto-configuration Classes
+= 自动配置类
 
-This appendix contains details of all of the auto-configuration classes provided by Spring Boot, with links to documentation and source code.
-Remember to also look at the conditions report in your application for more details of which features are switched on.
-(To do so, start the app with `--debug` or `-Ddebug` or, in an Actuator application, use the `conditions` endpoint).
+本附录包含Spring Boot提供的所有自动配置类的详细信息，并附有文档和源码链接。
+请同时查看应用中的条件报告，以了解哪些功能已被启用。
+（方法：启动应用时加 `--debug` 或 `-Ddebug`，或在Actuator应用中使用 `conditions` 端点）。

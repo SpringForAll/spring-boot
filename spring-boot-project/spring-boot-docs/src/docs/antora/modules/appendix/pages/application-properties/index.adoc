@@ -1,15 +1,15 @@
 [appendix]
 [[appendix.application-properties]]
-= Common Application Properties
+= 常用应用属性
 
-Various properties can be specified inside your `application.properties` file, inside your `application.yaml` file, or as command line switches.
-This appendix provides a list of common Spring Boot properties and references to the underlying classes that consume them.
+你可以在 `application.properties` 文件、`application.yaml` 文件或作为命令行参数中指定各种属性。
+本附录提供了常用Spring Boot属性的列表，并引用了消费这些属性的底层类。
 
-TIP: Spring Boot provides various conversion mechanisms with advanced value formatting.
-Make sure to review xref:reference:features/external-config.adoc#features.external-config.typesafe-configuration-properties.conversion[the properties conversion section].
+TIP: Spring Boot 提供了多种转换机制，支持高级的值格式化。
+请务必查阅 xref:reference:features/external-config.adoc#features.external-config.typesafe-configuration-properties.conversion[属性转换章节]。
 
-NOTE: Property contributions can come from additional jar files on your classpath, so you should not consider this an exhaustive list.
-Also, you can define your own properties.
+NOTE: 属性的来源可能包括类路径上的额外jar文件，因此本列表并非详尽无遗。
+你也可以自定义自己的属性。
 
 include::partial$configuration-properties/actuator.adoc[]
 
