@@ -1,21 +1,21 @@
 [[appendix.executable-jar.restrictions]]
-= Executable Jar Restrictions
+= 可执行Jar包限制
 
-You need to consider the following restrictions when working with a Spring Boot Loader packaged application:
+在使用Spring Boot Loader打包的应用程序时，需要注意以下限制：
 
 
 
 [[appendix.executable-jar-zip-entry-compression]]
-* Zip entry compression:
-The javadoc:java.util.zip.ZipEntry[] for a nested jar must be saved by using the javadoc:java.util.zip.ZipEntry#STORED[] method.
-This is required so that we can seek directly to individual content within the nested jar.
-The content of the nested jar file itself can still be compressed, as can any other entry in the outer jar.
+* Zip条目压缩：
+嵌套jar的javadoc:java.util.zip.ZipEntry[]必须通过javadoc:java.util.zip.ZipEntry#STORED[]方法保存。
+这样做是为了能够直接定位到嵌套jar中的具体内容。
+嵌套jar文件本身的内容仍然可以被压缩，外部jar中的其他条目也可以被压缩。
 
 
 
 [[appendix.executable-jar-system-classloader]]
-* System classLoader:
-Launched applications should use `Thread.getContextClassLoader()` when loading classes (most libraries and frameworks do so by default).
-Trying to load nested jar classes with `ClassLoader.getSystemClassLoader()` fails.
-`java.util.Logging` always uses the system classloader.
-For this reason, you should consider a different logging implementation.
+* 系统classLoader：
+启动的应用程序在加载类时应使用 `Thread.getContextClassLoader()` （大多数库和框架默认如此）。
+尝试通过 `ClassLoader.getSystemClassLoader()` 加载嵌套jar类会失败。
+`java.util.Logging` 始终使用系统classloader。
+因此，建议考虑使用不同的日志实现。

@@ -1,7 +1,7 @@
 [[appendix.executable-jar.alternatives]]
-= Alternative Single Jar Solutions
+= 其他单Jar解决方案
 
-If the preceding restrictions mean that you cannot use Spring Boot Loader, consider the following alternatives:
+如果上述限制导致你无法使用 Spring Boot Loader，可以考虑以下替代方案：
 
 * https://maven.apache.org/plugins/maven-shade-plugin/[Maven Shade Plugin]
 * http://www.jdotsoft.com/JarClassLoader.php[JarClassLoader]

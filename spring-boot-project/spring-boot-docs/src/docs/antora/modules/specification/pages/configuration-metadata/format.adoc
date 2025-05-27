@@ -1,8 +1,8 @@
 [[appendix.configuration-metadata.format]]
-= Metadata Format
+= 元数据格式
 
-Configuration metadata files are located inside jars under `META-INF/spring-configuration-metadata.json`.
-They use a JSON format with items categorized under either "`groups`" or "`properties`", additional values hints categorized under "`hints`", and ignored items under "`ignored`" as shown in the following example:
+配置元数据文件位于jar包内的 `META-INF/spring-configuration-metadata.json` 路径下。
+它们采用JSON格式，条目被归类为“`groups`”或“`properties`”，额外的值提示归类为“`hints`”，被忽略的条目归类为“`ignored`”，如下例所示：
 
 [source,json]
 ----
@@ -43,23 +43,23 @@ They use a JSON format with items categorized under either "`groups`" or "`prope
 		"values": [
 			{
 				"value": "none",
-				"description": "Disable DDL handling."
+				"description": "禁用DDL处理。"
 			},
 			{
 				"value": "validate",
-				"description": "Validate the schema, make no changes to the database."
+				"description": "验证schema，不对数据库做任何更改。"
 			},
 			{
 				"value": "update",
-				"description": "Update the schema if necessary."
+				"description": "如有必要，更新schema。"
 			},
 			{
 				"value": "create",
-				"description": "Create the schema and destroy previous data."
+				"description": "创建schema并销毁原有数据。"
 			},
 			{
 				"value": "create-drop",
-				"description": "Create and then destroy the schema at the end of the session."
+				"description": "创建schema并在会话结束时销毁。"
 			}
 		]
 	}
@@ -74,8 +74,8 @@ They use a JSON format with items categorized under either "`groups`" or "`prope
 }}
 ----
 
-Each "`property`" is a configuration item that the user specifies with a given value.
-For example, `server.port` and `server.address` might be specified in your `application.properties`/`application.yaml`, as follows:
+每个“`property`”是用户可指定值的配置项。
+例如，`server.port` 和 `server.address` 可以在你的 `application.properties`/`application.yaml` 文件中如下指定：
 
 [configprops,yaml]
 ----
@@ -84,24 +84,24 @@ server:
   address: 127.0.0.1
 ----
 
-The "`groups`" are higher level items that do not themselves specify a value but instead provide a contextual grouping for properties.
-For example, the `server.port` and `server.address` properties are part of the `server` group.
+“`groups`”是更高层次的条目，本身不指定值，而是为属性提供上下文分组。
+例如，`server.port` 和 `server.address` 属性属于 `server` 分组。
 
-NOTE: It is not required that every "`property`" has a "`group`".
-Some properties might exist in their own right.
+NOTE: 并非每个“`property`”都必须有“`group`”。
+有些属性可以独立存在。
 
-The "`hints`" are additional information used to assist the user in configuring a given property.
-For example, when a developer is configuring the configprop:spring.jpa.hibernate.ddl-auto[] property, a tool can use the hints to offer some auto-completion help for the `none`, `validate`, `update`, `create`, and `create-drop` values.
+“`hints`”为配置某个属性提供额外信息。
+例如，当开发者配置 configprop:spring.jpa.hibernate.ddl-auto[] 属性时，工具可以利用hints为 `none`、`validate`、`update`、`create` 和 `create-drop` 等值提供自动补全。
 
-Finally, "`ignored`" is for items which have been deliberately ignored.
-The content of this section usually comes from the xref:specification:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[additional metadata].
+最后，“`ignored`”用于那些被有意忽略的条目。
+本节内容通常来自 xref:specification:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[附加元数据]。
 
 
 
 [[appendix.configuration-metadata.format.group]]
-== Group Attributes
+== 分组属性（Group Attributes）
 
-The JSON object contained in the `groups` array can contain the attributes shown in the following table:
+`groups` 数组中的JSON对象可包含下表所示属性：
 
 [cols="1,1,4"]
 |===
@@ -109,41 +109,40 @@ The JSON object contained in the `groups` array can contain the attributes shown
 
 | `name`
 | String
-| The full name of the group.
-  This attribute is mandatory.
+| 分组的全名。
+  此属性为必填项。
 
 | `type`
 | String
-| The class name of the data type of the group.
-  For example, if the group were based on a class annotated with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation], the attribute would contain the fully qualified name of that class.
-  If it were based on a javadoc:org.springframework.context.annotation.Bean[format=annotation] method, it would be the return type of that method.
-  If the type is not known, the attribute may be omitted.
+| 分组数据类型的类名。
+  例如，如果分组基于带有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的类，则该属性包含该类的全限定名。
+  如果基于 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法，则为该方法的返回类型。
+  若类型未知，可省略此属性。
 
 | `description`
 | String
-| A short description of the group that can be displayed to users.
-  If no description is available, it may be omitted.
-  It is recommended that descriptions be short paragraphs, with the first line providing a concise summary.
-  The last line in the description should end with a period (`.`).
+| 可展示给用户的分组简要描述。
+  若无描述可省略。
+  建议描述为简短段落，首行为简明摘要，最后一行为句号（`.`）结尾。
 
 | `sourceType`
 | String
-| The class name of the source that contributed this group.
-  For example, if the group were based on a javadoc:org.springframework.context.annotation.Bean[format=annotation] method annotated with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation], this attribute would contain the fully qualified name of the javadoc:org.springframework.context.annotation.Configuration[format=annotation] class that contains the method.
-  If the source type is not known, the attribute may be omitted.
+| 贡献此分组的源的类名。
+  例如，若分组基于带有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法，则该属性为包含该方法的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类的全限定名。
+  若源类型未知，可省略。
 
 | `sourceMethod`
 | String
-| The full name of the method (include parenthesis and argument types) that contributed this group (for example, the name of a javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] annotated javadoc:org.springframework.context.annotation.Bean[format=annotation] method).
-  If the source method is not known, it may be omitted.
+| 贡献此分组的方法全名（包括括号和参数类型），如带有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法名。
+  若未知可省略。
 |===
 
 
 
 [[appendix.configuration-metadata.format.property]]
-== Property Attributes
+== 属性属性（Property Attributes）
 
-The JSON object contained in the `properties` array can contain the attributes described in the following table:
+`properties` 数组中的JSON对象可包含下表所述属性：
 
 [cols="1,1,4"]
 |===
@@ -151,45 +150,44 @@ The JSON object contained in the `properties` array can contain the attributes d
 
 | `name`
 | String
-| The full name of the property.
-  Names are in lower-case period-separated form (for example, `server.address`).
-  This attribute is mandatory.
+| 属性的全名。
+  名称采用小写点分隔形式（如 `server.address`）。
+  此属性为必填项。
 
 | `type`
 | String
-| The full signature of the data type of the property (for example, javadoc:java.lang.String[]) but also a full generic type (such as `java.util.Map<java.lang.String,com.example.MyEnum>`).
-  You can use this attribute to guide the user as to the types of values that they can enter.
-  For consistency, the type of a primitive is specified by using its wrapper counterpart (for example, `boolean` becomes javadoc:java.lang.Boolean[]).
-  Note that this class may be a complex type that gets converted from a javadoc:java.lang.String[] as values are bound.
-  If the type is not known, it may be omitted.
+| 属性数据类型的完整签名（如 javadoc:java.lang.String[]），也可以是完整泛型类型（如 `java.util.Map<java.lang.String,com.example.MyEnum>`）。
+  可用此属性指导用户可输入的值类型。
+  为保持一致，基本类型使用其包装类（如 `boolean` 用 javadoc:java.lang.Boolean[] 表示）。
+  注意该类可能是复杂类型，会从 javadoc:java.lang.String[] 转换绑定。
+  若类型未知可省略。
 
 | `description`
 | String
-| A short description of the property that can be displayed to users.
-  If no description is available, it may be omitted.
-  It is recommended that descriptions be short paragraphs, with the first line providing a concise summary.
-  The last line in the description should end with a period (`.`).
+| 可展示给用户的属性简要描述。
+  若无描述可省略。
+  建议描述为简短段落，首行为简明摘要，最后一行为句号（`.`）结尾。
 
 | `sourceType`
 | String
-| The class name of the source that contributed this property.
-  For example, if the property were from a class annotated with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation], this attribute would contain the fully qualified name of that class.
-  If the source type is unknown, it may be omitted.
+| 贡献此属性的源类名。
+  例如，若属性来自带有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的类，则该属性为该类的全限定名。
+  若源类型未知可省略。
 
 | `defaultValue`
 | Object
-| The default value, which is used if the property is not specified.
-  If the type of the property is an array, it can be an array of value(s).
-  If the default value is unknown, it may be omitted.
+| 默认值，若未指定该属性则使用。
+  若属性类型为数组，则可为值数组。
+  若默认值未知可省略。
 
 | `deprecation`
 | Deprecation
-| Specify whether the property is deprecated.
-  If the field is not deprecated or if that information is not known, it may be omitted.
-  The next table offers more detail about the `deprecation` attribute.
+| 指定属性是否已弃用。
+  若未弃用或未知可省略。
+  下表详细说明 `deprecation` 属性。
 |===
 
-The JSON object contained in the `deprecation` attribute of each `properties` element can contain the following attributes:
+`properties` 元素的 `deprecation` 属性中的JSON对象可包含如下属性：
 
 [cols="1,1,4"]
 |===
@@ -197,52 +195,50 @@ The JSON object contained in the `deprecation` attribute of each `properties` el
 
 | `level`
 | String
-| The level of deprecation, which can be either `warning` (the default) or `error`.
-  When a property has a `warning` deprecation level, it should still be bound in the environment.
-  However, when it has an `error` deprecation level, the property is no longer managed and is not bound.
+| 弃用级别，可为 `warning`（默认）或 `error`。
+  当属性为 `warning` 级别时，仍应在环境中绑定。
+  若为 `error` 级别，则该属性不再被管理且不会绑定。
 
 | `reason`
 | String
-| A short description of the reason why the property was deprecated.
-  If no reason is available, it may be omitted.
-  It is recommended that descriptions be short paragraphs, with the first line providing a concise summary.
-  The last line in the description should end with a period (`.`).
+| 属性弃用原因的简要描述。
+  若无原因可省略。
+  建议描述为简短段落，首行为简明摘要，最后一行为句号（`.`）结尾。
 
 | `replacement`
 | String
-| The full name of the property that _replaces_ this deprecated property.
-  If there is no replacement for this property, it may be omitted.
+| 替代此弃用属性的完整属性名。
+  若无替代项可省略。
 
 | `since`
 | String
-| The version in which the property became deprecated.
-  Can be omitted.
+| 属性弃用的版本号。
+  可省略。
 |===
 
-NOTE: Prior to Spring Boot 1.3, a single `deprecated` boolean attribute can be used instead of the `deprecation` element.
-This is still supported in a deprecated fashion and should no longer be used.
-If no reason and replacement are available, an empty `deprecation` object should be set.
+NOTE: 在Spring Boot 1.3之前，可用单个 `deprecated` 布尔属性替代 `deprecation` 元素。
+该方式已废弃但仍受支持，不应再使用。
+若无原因和替代项，应设置空的 `deprecation` 对象。
 
-Deprecation can also be specified declaratively in code by adding the javadoc:org.springframework.boot.context.properties.DeprecatedConfigurationProperty[format=annotation] annotation to the getter exposing the deprecated property.
-For instance, assume that the `my.app.target` property was confusing and was renamed to `my.app.name`.
-The following example shows how to handle that situation:
+弃用也可通过在getter方法上添加 javadoc:org.springframework.boot.context.properties.DeprecatedConfigurationProperty[format=annotation] 注解在代码中声明。
+例如，假设 `my.app.target` 属性令人困惑，被重命名为 `my.app.name`。
+以下示例展示如何处理：
 
 include-code::MyProperties[]
 
-NOTE: There is no way to set a `level`.
-`warning` is always assumed, since code is still handling the property.
+NOTE: 无法设置 `level`，始终视为 `warning`，因为代码仍在处理该属性。
 
-The preceding code makes sure that the deprecated property still works (delegating to the `name` property behind the scenes).
-Once the `getTarget` and `setTarget` methods can be removed from your public API, the automatic deprecation hint in the metadata goes away as well.
-If you want to keep a hint, adding manual metadata with an `error` deprecation level ensures that users are still informed about that property.
-Doing so is particularly useful when a `replacement` is provided.
+上述代码确保弃用属性仍然有效（底层委托给 `name` 属性）。
+一旦 `getTarget` 和 `setTarget` 方法可从公共API移除，元数据中的自动弃用提示也会消失。
+如需保留提示，可手动添加 `error` 级别的元数据，确保用户仍能获知该属性。
+当存在 `replacement` 时尤为有用。
 
 
 
 [[appendix.configuration-metadata.format.hints]]
-== Hint Attributes
+== 提示属性（Hint Attributes）
 
-The JSON object contained in the `hints` array can contain the attributes shown in the following table:
+`hints` 数组中的JSON对象可包含下表所示属性：
 
 [cols="1,1,4"]
 |===
@@ -250,23 +246,21 @@ The JSON object contained in the `hints` array can contain the attributes shown 
 
 | `name`
 | String
-| The full name of the property to which this hint refers.
-  Names are in lower-case period-separated form (such as `spring.mvc.servlet.path`).
-  If the property refers to a map (such as `system.contexts`), the hint either applies to the _keys_ of the map (`system.contexts.keys`) or the _values_ (`system.contexts.values`) of the map.
-  This attribute is mandatory.
+| 此提示所指向属性的全名。
+  名称采用小写点分隔形式（如 `spring.mvc.servlet.path`）。
+  若属性为map（如 `system.contexts`），则提示可应用于map的 _keys_（`system.contexts.keys`）或 _values_（`system.contexts.values`）。
+  此属性为必填项。
 
 | `values`
 | ValueHint[]
-| A list of valid values as defined by the `ValueHint` object (described in the next table).
-  Each entry defines the value and may have a description.
+| 有效值列表，由 `ValueHint` 对象定义（见下表）。每项定义一个值及其描述（如有）。
 
 | `providers`
 | ValueProvider[]
-| A list of providers as defined by the `ValueProvider` object (described later in this document).
-  Each entry defines the name of the provider and its parameters, if any.
+| 提供者列表，由 `ValueProvider` 对象定义（详见后文）。每项定义提供者名称及其参数（如有）。
 |===
 
-The JSON object contained in the `values` attribute of each `hint` element can contain the attributes described in the following table:
+`hint` 元素的 `values` 属性中的JSON对象可包含如下属性：
 
 [cols="1,1,4"]
 |===
@@ -274,19 +268,18 @@ The JSON object contained in the `values` attribute of each `hint` element can c
 
 | `value`
 | Object
-| A valid value for the element to which the hint refers.
-  If the type of the property is an array, it can also be an array of value(s).
-  This attribute is mandatory.
+| 此提示所指元素的有效值。
+  若属性类型为数组，也可为值数组。
+  此属性为必填项。
 
 | `description`
 | String
-| A short description of the value that can be displayed to users.
-  If no description is available, it may be omitted.
-  It is recommended that descriptions be short paragraphs, with the first line providing a concise summary.
-  The last line in the description should end with a period (`.`).
+| 可展示给用户的值简要描述。
+  若无描述可省略。
+  建议描述为简短段落，首行为简明摘要，最后一行为句号（`.`）结尾。
 |===
 
-The JSON object contained in the `providers` attribute of each `hint` element can contain the attributes described in the following table:
+`hint` 元素的 `providers` 属性中的JSON对象可包含如下属性：
 
 [cols="1,1,4"]
 |===
@@ -294,19 +287,19 @@ The JSON object contained in the `providers` attribute of each `hint` element ca
 
 | `name`
 | String
-| The name of the provider to use to offer additional content assistance for the element to which the hint refers.
+| 用于为该元素提供内容辅助的提供者名称。
 
 | `parameters`
 | JSON object
-| Any additional parameter that the provider supports (check the documentation of the provider for more details).
+| 提供者支持的其他参数（详见提供者文档）。
 |===
 
 
 
 [[appendix.configuration-metadata.format.ignored]]
-== Ignored Attributes
+== 忽略属性（Ignored Attributes）
 
-The `ignored` object can contain the attributes shown in the following table:
+`ignored` 对象可包含下表所示属性：
 
 [cols="1,1,4"]
 |===
@@ -314,11 +307,11 @@ The `ignored` object can contain the attributes shown in the following table:
 
 | `properties`
 | ItemIgnore[]
-| A list of ignored properties as defined by the ItemIgnore object (described in the next table). Each entry defines the name of the ignored property.
+| 忽略属性列表，由 ItemIgnore 对象定义（见下表）。每项定义被忽略属性的名称。
 
 |===
 
-The JSON object contained in the `properties` attribute of each `ignored` element can contain the attributes described in the following table:
+`ignored` 元素的 `properties` 属性中的JSON对象可包含如下属性：
 
 [cols="1,1,4"]
 |===
@@ -326,16 +319,16 @@ The JSON object contained in the `properties` attribute of each `ignored` elemen
 
 | `name`
 | String
-| The full name of the property to ignore.
-Names are in lower-case period-separated form (such as `spring.mvc.servlet.path`).
-This attribute is mandatory.
+| 要忽略的属性全名。
+名称采用小写点分隔形式（如 `spring.mvc.servlet.path`）。
+此属性为必填项。
 
 |===
 
 
 [[appendix.configuration-metadata.format.repeated-items]]
-== Repeated Metadata Items
+== 重复元数据项（Repeated Metadata Items）
 
-Objects with the same "`property`" and "`group`" name can appear multiple times within a metadata file.
-For example, you could bind two separate classes to the same prefix, with each having potentially overlapping property names.
-While the same names appearing in the metadata multiple times should not be common, consumers of metadata should take care to ensure that they support it.
+同一“`property`”和“`group`”名称的对象可在一个元数据文件中出现多次。
+例如，你可以将两个不同的类绑定到同一前缀，每个类可能有重叠的属性名。
+虽然元数据中出现同名情况并不常见，但元数据消费者应确保能够支持此情况。

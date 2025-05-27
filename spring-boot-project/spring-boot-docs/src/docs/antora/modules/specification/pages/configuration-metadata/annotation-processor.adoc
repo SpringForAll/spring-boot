@@ -1,15 +1,15 @@
 [[appendix.configuration-metadata.annotation-processor]]
-= Generating Your Own Metadata by Using the Annotation Processor
+= 使用注解处理器生成自定义元数据
 
-You can easily generate your own configuration metadata file from items annotated with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] by using the `spring-boot-configuration-processor` jar.
-The jar includes a Java annotation processor which is invoked as your project is compiled.
+你可以通过使用 `spring-boot-configuration-processor` jar，轻松地从带有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的项生成自定义配置元数据文件。
+该 jar 包含一个 Java 注解处理器，会在项目编译时被调用。
 
 
 
 [[appendix.configuration-metadata.annotation-processor.configuring]]
-== Configuring the Annotation Processor
+== 配置注解处理器
 
-When building with Maven, configure the compiler plugin (3.12.0 or later) to add `spring-boot-configuration-processor` to the annotation processor paths:
+使用 Maven 构建时，配置编译插件（3.12.0 或更高版本），将 `spring-boot-configuration-processor` 添加到注解处理器路径：
 
 [source,xml]
 ----
@@ -33,7 +33,7 @@ When building with Maven, configure the compiler plugin (3.12.0 or later) to add
 </project>
 ----
 
-With Gradle, a dependency should be declared in the `annotationProcessor` configuration, as shown in the following example:
+使用 Gradle 时，应在 `annotationProcessor` 配置中声明依赖，如下所示：
 
 [source,gradle]
 ----
@@ -42,7 +42,7 @@ dependencies {
 }
 ----
 
-If you are using an `additional-spring-configuration-metadata.json` file, the `compileJava` task should be configured to depend on the `processResources` task, as shown in the following example:
+如果你使用了 `additional-spring-configuration-metadata.json` 文件，应将 `compileJava` 任务配置为依赖 `processResources` 任务，如下所示：
 
 [source,gradle]
 ----
@@ -51,14 +51,14 @@ tasks.named('compileJava') {
 }
 ----
 
-This dependency ensures that the additional metadata is available when the annotation processor runs during compilation.
+此依赖关系确保在编译期间注解处理器运行时，附加元数据已可用。
 
 [NOTE]
 ====
-If you are using AspectJ in your project, you need to make sure that the annotation processor runs only once.
-There are several ways to do this.
-With Maven, you can configure the `maven-apt-plugin` explicitly and add the dependency to the annotation processor only there.
-You could also let the AspectJ plugin run all the processing and disable annotation processing in the `maven-compiler-plugin` configuration, as follows:
+如果你的项目中使用了 AspectJ，需要确保注解处理器只运行一次。
+有几种方式可以实现。
+对于 Maven，可以显式配置 `maven-apt-plugin`，并仅在其中添加注解处理器依赖。
+你也可以让 AspectJ 插件处理所有处理过程，并在 `maven-compiler-plugin` 配置中禁用注解处理，如下所示：
 
 [source,xml]
 ----
@@ -74,53 +74,52 @@ You could also let the AspectJ plugin run all the processing and disable annotat
 
 [NOTE]
 ====
-If you are using Lombok in your project, you need to make sure that its annotation processor runs before `spring-boot-configuration-processor`.
-To do so with Maven, list the annotation processors in the required order using the `annotationProcessors` attribute of the Maven compiler plugin.
-With Gradle, declare the dependencies in the `annotationProcessor` configuration in the required order.
+如果你的项目中使用了 Lombok，需要确保其注解处理器在 `spring-boot-configuration-processor` 之前运行。
+Maven 下可通过在 Maven 编译插件的 `annotationProcessors` 属性中按需排序注解处理器。
+Gradle 下则在 `annotationProcessor` 配置中按需声明依赖顺序。
 ====
 
 
 
 [[appendix.configuration-metadata.annotation-processor.automatic-metadata-generation]]
-== Automatic Metadata Generation
+== 自动元数据生成
 
-The processor picks up both classes and methods that are annotated with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation].
+处理器会自动识别所有带有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的类和方法。
 
-NOTE: Custom annotations that are meta-annotated with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] are not supported.
+NOTE: 不支持自定义注解（即被 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 元注解的注解）。
 
-If the class has a single parameterized constructor, one property is created per constructor parameter, unless the constructor is annotated with javadoc:org.springframework.beans.factory.annotation.Autowired[format=annotation].
-If the class has a constructor explicitly annotated with javadoc:org.springframework.boot.context.properties.bind.ConstructorBinding[format=annotation], one property is created per constructor parameter for that constructor.
-Otherwise, properties are discovered through the presence of standard getters and setters with special handling for collection and map types (that is detected even if only a getter is present).
-The annotation processor also supports the use of the javadoc:{url-lombok-javadoc}/lombok.Data[format=annotation], javadoc:{url-lombok-javadoc}/lombok.Value[format=annotation], javadoc:{url-lombok-javadoc}/lombok.Getter[format=annotation], and javadoc:{url-lombok-javadoc}/lombok.Setter[format=annotation] lombok annotations.
+如果类只有一个带参数的构造方法，则每个构造参数会生成一个属性，除非该构造方法带有 javadoc:org.springframework.beans.factory.annotation.Autowired[format=annotation] 注解。
+如果类有一个显式带有 javadoc:org.springframework.boot.context.properties.bind.ConstructorBinding[format=annotation] 注解的构造方法，则该构造方法的每个参数都会生成一个属性。
+否则，属性会通过标准 getter 和 setter 方法自动发现，并对集合和 map 类型做特殊处理（即使只有 getter 也能识别）。
+注解处理器还支持 javadoc:{url-lombok-javadoc}/lombok.Data[format=annotation]、javadoc:{url-lombok-javadoc}/lombok.Value[format=annotation]、javadoc:{url-lombok-javadoc}/lombok.Getter[format=annotation] 和 javadoc:{url-lombok-javadoc}/lombok.Setter[format=annotation] 等 lombok 注解。
 
-Consider the following example:
+例如：
 
 include-code::MyServerProperties[]
 
-This exposes three properties where `my.server.name` has no default and `my.server.ip` and `my.server.port` defaults to `"127.0.0.1"` and `9797` respectively.
-The Javadoc on fields is used to populate the `description` attribute.
-For instance, the description of `my.server.ip` is "IP address to listen to.".
-The `description` attribute can only be populated when the type is available as source code that is being compiled.
-It will not be populated when the type is only available as a compiled class from a dependency.
-For such cases, xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[manual metadata] should be provided.
+这会暴露三个属性，其中 `my.server.name` 没有默认值，`my.server.ip` 和 `my.server.port` 的默认值分别为 "127.0.0.1" 和 9797。
+字段上的 Javadoc 会用于填充 `description` 属性。
+例如，`my.server.ip` 的描述为“IP address to listen to.”。
+只有当类型作为源代码参与编译时，`description` 属性才会被填充。
+如果类型仅以依赖的已编译类形式存在，则不会填充。
+此类场景下应提供 xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[手动元数据]。
 
-NOTE: You should only use plain text with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] field Javadoc, since they are not processed before being added to the JSON.
+NOTE: javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 字段 Javadoc 只应使用纯文本，因为这些内容不会被处理，直接添加到 JSON。
 
-If you use javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] with record class then record components' descriptions should be provided via class-level Javadoc tag `@param` (there are no explicit instance fields in record classes to put regular field-level Javadocs on).
+如果你在 record 类上使用 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation]，则 record 组件的描述应通过类级 Javadoc 的 `@param` 标签提供（record 类没有显式实例字段用于常规字段级 Javadoc）。
 
-The annotation processor applies a number of heuristics to extract the default value from the source model.
-Default values can only be extracted when the type is available as source code that is being compiled.
-They will not be extracted when the type is only available as a compiled class from a dependency.
-Furthermore, default values have to be provided statically.
-In particular, do not refer to a constant defined in another class.
-Also, the annotation processor cannot auto-detect default values for ``Collections``s.
+注解处理器会通过多种启发式方式从源码模型中提取默认值。
+只有当类型作为源代码参与编译时，才能提取默认值。
+如果类型仅以依赖的已编译类形式存在，则不会提取。
+此外，默认值必须静态提供，不能引用其他类中定义的常量。
+注解处理器也无法自动检测 ``Collections`` 的默认值。
 
-For cases where the default value could not be detected, xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[manual metadata] should be provided.
-Consider the following example:
+如果无法检测到默认值，应提供 xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[手动元数据]。
+例如：
 
 include-code::MyMessagingProperties[]
 
-In order to document default values for properties in the class above, you could add the following content to xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[the manual metadata of the module]:
+为了为上述类中的属性记录默认值，可以在 xref:configuration-metadata/annotation-processor.adoc#appendix.configuration-metadata.annotation-processor.adding-additional-metadata[模块的手动元数据] 中添加如下内容：
 
 [source,json]
 ----
@@ -136,38 +135,38 @@ In order to document default values for properties in the class above, you could
 ]}
 ----
 
-NOTE: Only the `name` of the property is required to document additional metadata for existing properties.
+NOTE: 仅需为已存在属性记录附加元数据时，`name` 字段为必填。
 
 
 
 [[appendix.configuration-metadata.annotation-processor.automatic-metadata-generation.nested-properties]]
-=== Nested Properties
+=== 嵌套属性
 
-The annotation processor automatically considers inner classes as nested properties.
-Rather than documenting the `ip` and `port` at the root of the namespace, we could create a sub-namespace for it.
-Consider the updated example:
+注解处理器会自动将内部类视为嵌套属性。
+与其在命名空间根部记录 `ip` 和 `port`，不如为其创建子命名空间。
+例如：
 
 include-code::MyServerProperties[]
 
-The preceding example produces metadata information for `my.server.name`, `my.server.host.ip`, and `my.server.host.port` properties.
-You can use the javadoc:org.springframework.boot.context.properties.NestedConfigurationProperty[format=annotation] annotation on a field or a getter method to indicate that a regular (non-inner) class should be treated as if it were nested.
+上述示例会为 `my.server.name`、`my.server.host.ip` 和 `my.server.host.port` 属性生成元数据信息。
+你可以在字段或 getter 方法上使用 javadoc:org.springframework.boot.context.properties.NestedConfigurationProperty[format=annotation] 注解，指示普通（非内部）类也应被视为嵌套。
 
-TIP: This has no effect on collections and maps, as those types are automatically identified, and a single metadata property is generated for each of them.
+TIP: 这对集合和 map 类型无效，这些类型会被自动识别，并为每个生成单独的元数据属性。
 
 
 
 [[appendix.configuration-metadata.annotation-processor.adding-additional-metadata]]
-== Adding Additional Metadata
+== 添加附加元数据
 
-Spring Boot's configuration file handling is quite flexible, and it is often the case that properties may exist that are not bound to a javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] bean.
-You may also need to tune some attributes of an existing key or to ignore the key altogether.
-To support such cases and let you provide custom "hints", the annotation processor automatically merges items from `META-INF/additional-spring-configuration-metadata.json` into the main metadata file.
+Spring Boot 的配置文件处理非常灵活，通常会存在未绑定到 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] bean 的属性。
+你也可能需要调整已存在 key 的某些属性，或完全忽略该 key。
+为支持这些场景并允许你提供自定义“提示”，注解处理器会自动将 `META-INF/additional-spring-configuration-metadata.json` 中的内容合并到主元数据文件中。
 
-If you refer to a property that has been detected automatically, the description, default value, and deprecation information are overridden, if specified.
-If the manual property declaration is not identified in the current module, it is added as a new property.
+如果你引用了自动检测到的属性，描述、默认值和弃用信息会被覆盖（如有指定）。
+如果手动声明的属性未在当前模块中识别，则会作为新属性添加。
 
-The format of the `additional-spring-configuration-metadata.json` file is exactly the same as the regular `spring-configuration-metadata.json`.
-The items contained in the "`ignored.properties`" section are removed from the "`properties`" section of the generated  `spring-configuration-metadata.json` file.
+`additional-spring-configuration-metadata.json` 文件的格式与常规 `spring-configuration-metadata.json` 完全一致。
+`ignored.properties` 部分中的项会从生成的 `spring-configuration-metadata.json` 文件的 `properties` 部分移除。
 
-The additional properties file is optional.
-If you do not have any additional properties, do not add the file.
+附加属性文件为可选项。
+如果没有附加属性，则无需添加该文件。

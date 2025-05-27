@@ -1,4 +1,4 @@
-* Specifications
+* 规范
 
 ** xref:specification:configuration-metadata/index.adoc[]
 *** xref:specification:configuration-metadata/format.adoc[]
