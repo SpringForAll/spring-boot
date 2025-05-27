@@ -1,45 +1,45 @@
 [[howto.testing]]
-= Testing
+= 测试
 
-Spring Boot includes a number of testing utilities and support classes as well as a dedicated starter that provides common test dependencies.
-This section answers common questions about testing.
+Spring Boot 包含许多测试工具和支持类，以及一个提供常见测试依赖项的专用启动器。
+本节解答有关测试的常见问题。
 
 
 
 [[howto.testing.with-spring-security]]
-== Testing With Spring Security
+== 使用 Spring Security 进行测试
 
-Spring Security provides support for running tests as a specific user.
-For example, the test in the snippet below will run with an authenticated user that has the `ADMIN` role.
+Spring Security 提供了以特定用户身份运行测试的支持。
+例如，下面代码片段中的测试将以具有 `ADMIN` 角色的已认证用户身份运行。
 
 include-code::MySecurityTests[]
 
-Spring Security provides comprehensive integration with Spring MVC Test, and this can also be used when testing controllers using the javadoc:org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest[format=annotation] slice and javadoc:org.springframework.test.web.servlet.MockMvc[].
+Spring Security 提供了与 Spring MVC Test 的全面集成，这也可以在使用 javadoc:org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest[format=annotation] 切片和 javadoc:org.springframework.test.web.servlet.MockMvc[] 测试控制器时使用。
 
-For additional details on Spring Security's testing support, see Spring Security's {url-spring-security-docs}/servlet/test/index.html[reference documentation].
+有关 Spring Security 测试支持的更多详细信息，请参阅 Spring Security 的 {url-spring-security-docs}/servlet/test/index.html[参考文档]。
 
 
 
 
 [[howto.testing.slice-tests]]
-== Structure javadoc:org.springframework.context.annotation.Configuration[format=annotation] Classes for Inclusion in Slice Tests
+== 为包含在切片测试中构建 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类
 
-Slice tests work by restricting Spring Framework's component scanning to a limited set of components based on their type.
-For any beans that are not created through component scanning, for example, beans that are created using the javadoc:org.springframework.context.annotation.Bean[format=annotation] annotation, slice tests will not be able to include/exclude them from the application context.
-Consider this example:
+切片测试通过将 Spring Framework 的组件扫描限制为基于其类型的有限组件集来工作。
+对于任何不是通过组件扫描创建的 bean，例如使用 javadoc:org.springframework.context.annotation.Bean[format=annotation] 注解创建的 bean，切片测试将无法在应用程序上下文中包含/排除它们。
+考虑这个例子：
 
 include-code::MyConfiguration[]
 
-For a javadoc:org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest[format=annotation] for an application with the above javadoc:org.springframework.context.annotation.Configuration[format=annotation] class, you might expect to have the javadoc:org.springframework.security.web.SecurityFilterChain[] bean in the application context so that you can test if your controller endpoints are secured properly.
-However, `MyConfiguration` is not picked up by @WebMvcTest's component scanning filter because it doesn't match any of the types specified by the filter.
-You can include the configuration explicitly by annotating the test class with `@Import(MyConfiguration.class)`.
-This will load all the beans in `MyConfiguration` including the javadoc:com.zaxxer.hikari.HikariDataSource[] bean which isn't required when testing the web tier.
-Splitting the configuration class into two will enable importing just the security configuration.
+对于具有上述 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类的应用程序的 javadoc:org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest[format=annotation]，你可能期望在应用程序上下文中具有 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，以便你可以测试你的控制器端点是否正确保护。
+但是，`MyConfiguration` 不会被 @WebMvcTest 的组件扫描过滤器选中，因为它不匹配过滤器指定的任何类型。
+你可以通过用 `@Import(MyConfiguration.class)` 注解测试类来显式包含配置。
+这将加载 `MyConfiguration` 中的所有 bean，包括在测试 Web 层时不需要的 javadoc:com.zaxxer.hikari.HikariDataSource[] bean。
+将配置类拆分为两个将允许仅导入安全配置。
 
 include-code::MySecurityConfiguration[]
 
 include-code::MyDatasourceConfiguration[]
 
-Having a single configuration class can be inefficient when beans from a certain domain need to be included in slice tests.
-Instead, structuring the application's configuration as multiple granular classes with beans for a specific domain can enable importing them only for specific slice tests.
+当需要将某个域的 bean 包含在切片测试中时，拥有单个配置类可能效率低下。
+相反，将应用程序的配置构建为具有特定域 bean 的多个细粒度类可以仅针对特定的切片测试导入它们。
 

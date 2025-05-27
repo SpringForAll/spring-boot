@@ -1,30 +1,30 @@
 [[howto.spring-mvc]]
 = Spring MVC
 
-Spring Boot has a number of starters that include Spring MVC.
-Note that some starters include a dependency on Spring MVC rather than include it directly.
-This section answers common questions about Spring MVC and Spring Boot.
+Spring Boot 包含多个包含 Spring MVC 的启动器。
+请注意，一些启动器包含对 Spring MVC 的依赖，而不是直接包含它。
+本节解答有关 Spring MVC 和 Spring Boot 的常见问题。
 
 
 
 [[howto.spring-mvc.write-json-rest-service]]
-== Write a JSON REST Service
+== 编写 JSON REST 服务
 
-Any Spring javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] in a Spring Boot application should render JSON response by default as long as Jackson2 is on the classpath, as shown in the following example:
+只要 Jackson2 在类路径上，Spring Boot 应用程序中的任何 Spring javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] 都应该默认渲染 JSON 响应，如下例所示：
 
 include-code::MyController[]
 
-As long as `MyThing` can be serialized by Jackson2 (true for a normal POJO or Groovy object), then `http://localhost:8080/thing` serves a JSON representation of it by default.
-Note that, in a browser, you might sometimes see XML responses, because browsers tend to send accept headers that prefer XML.
+只要 `MyThing` 可以被 Jackson2 序列化（对于普通的 POJO 或 Groovy 对象来说都是如此），那么 `http://localhost:8080/thing` 默认会提供它的 JSON 表示。
+请注意，在浏览器中，你有时可能会看到 XML 响应，因为浏览器倾向于发送优先选择 XML 的 accept 头。
 
 
 
 [[howto.spring-mvc.write-xml-rest-service]]
-== Write an XML REST Service
+== 编写 XML REST 服务
 
-If you have the Jackson XML extension (`jackson-dataformat-xml`) on the classpath, you can use it to render XML responses.
-The previous example that we used for JSON would work.
-To use the Jackson XML renderer, add the following dependency to your project:
+如果你的类路径上有 Jackson XML 扩展（`jackson-dataformat-xml`），你可以使用它来渲染 XML 响应。
+我们用于 JSON 的前一个示例也可以工作。
+要使用 Jackson XML 渲染器，请将以下依赖项添加到你的项目中：
 
 [source,xml]
 ----
@@ -34,11 +34,11 @@ To use the Jackson XML renderer, add the following dependency to your project:
 </dependency>
 ----
 
-If Jackson's XML extension is not available and JAXB is available, XML can be rendered with the additional requirement of having `MyThing` annotated as javadoc:jakarta.xml.bind.annotation.XmlRootElement[format=annotation], as shown in the following example:
+如果 Jackson 的 XML 扩展不可用而 JAXB 可用，则可以通过将 `MyThing` 注解为 javadoc:jakarta.xml.bind.annotation.XmlRootElement[format=annotation] 来渲染 XML，如下例所示：
 
 include-code::MyThing[]
 
-You will need to ensure that the JAXB library is part of your project, for example by adding:
+你需要确保 JAXB 库是你项目的一部分，例如通过添加：
 
 [source,xml]
 ----
@@ -48,31 +48,31 @@ You will need to ensure that the JAXB library is part of your project, for examp
 </dependency>
 ----
 
-NOTE: To get the server to render XML instead of JSON, you might have to send an `Accept: text/xml` header (or use a browser).
+注意：要让服务器渲染 XML 而不是 JSON，你可能需要发送 `Accept: text/xml` 头（或使用浏览器）。
 
 
 
 [[howto.spring-mvc.customize-jackson-objectmapper]]
-== Customize the Jackson ObjectMapper
+== 自定义 Jackson ObjectMapper
 
-Spring MVC (client and server side) uses javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] to negotiate content conversion in an HTTP exchange.
-If Jackson is on the classpath, you already get the default converter(s) provided by javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[], an instance of which is auto-configured for you.
+Spring MVC（客户端和服务器端）使用 javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] 来协商 HTTP 交换中的内容转换。
+如果 Jackson 在类路径上，你已经获得了由 javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] 提供的默认转换器，该转换器的实例会自动为你配置。
 
-The javadoc:com.fasterxml.jackson.databind.ObjectMapper[] (or javadoc:com.fasterxml.jackson.dataformat.xml.XmlMapper[] for Jackson XML converter) instance (created by default) has the following customized properties:
+默认创建的 javadoc:com.fasterxml.jackson.databind.ObjectMapper[]（或 Jackson XML 转换器的 javadoc:com.fasterxml.jackson.dataformat.xml.XmlMapper[]）实例具有以下自定义属性：
 
-* `MapperFeature.DEFAULT_VIEW_INCLUSION` is disabled
-* `DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES` is disabled
-* `SerializationFeature.WRITE_DATES_AS_TIMESTAMPS` is disabled
-* `SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS` is disabled
+* `MapperFeature.DEFAULT_VIEW_INCLUSION` 被禁用
+* `DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES` 被禁用
+* `SerializationFeature.WRITE_DATES_AS_TIMESTAMPS` 被禁用
+* `SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS` 被禁用
 
-Spring Boot also has some features to make it easier to customize this behavior.
+Spring Boot 还有一些功能可以更容易地自定义这种行为。
 
-You can configure the javadoc:com.fasterxml.jackson.databind.ObjectMapper[] and javadoc:com.fasterxml.jackson.dataformat.xml.XmlMapper[] instances by using the environment.
-Jackson provides an extensive suite of on/off features that can be used to configure various aspects of its processing.
-These features are described in several enums (in Jackson) that map onto properties in the environment:
+你可以使用环境来配置 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] 和 javadoc:com.fasterxml.jackson.dataformat.xml.XmlMapper[] 实例。
+Jackson 提供了一套广泛的开/关功能，可用于配置其处理的各个方面。
+这些功能在 Jackson 中的几个枚举中描述，这些枚举映射到环境中的属性：
 
 |===
-| Enum | Property | Values
+| 枚举 | 属性 | 值
 
 | javadoc:com.fasterxml.jackson.databind.cfg.EnumFeature[]
 | `spring.jackson.datatype.enum.<feature_name>`
@@ -107,69 +107,69 @@ These features are described in several enums (in Jackson) that map onto propert
 | `always`, `non_null`, `non_absent`, `non_default`, `non_empty`
 |===
 
-For example, to enable pretty print, set `spring.jackson.serialization.indent_output=true`.
-Note that, thanks to the use of xref:reference:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding[relaxed binding], the case of `indent_output` does not have to match the case of the corresponding enum constant, which is `INDENT_OUTPUT`.
+例如，要启用美化打印，设置 `spring.jackson.serialization.indent_output=true`。
+注意，由于使用了 xref:reference:features/external-config.adoc#features.external-config.typesafe-configuration-properties.relaxed-binding[宽松绑定]，`indent_output` 的大小写不必与相应枚举常量 `INDENT_OUTPUT` 的大小写匹配。
 
-This environment-based configuration is applied to the auto-configured javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] bean and applies to any mappers created by using the builder, including the auto-configured javadoc:com.fasterxml.jackson.databind.ObjectMapper[] bean.
+这种基于环境的配置应用于自动配置的 javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] bean，并适用于使用该构建器创建的任何映射器，包括自动配置的 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] bean。
 
-The context's javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] can be customized by one or more javadoc:org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer[] beans.
-Such customizer beans can be ordered (Boot's own customizer has an order of 0), letting additional customization be applied both before and after Boot's customization.
+上下文中的 javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] 可以通过一个或多个 javadoc:org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer[] bean 进行自定义。
+这些自定义器 bean 可以排序（Boot 自己的自定义器顺序为 0），允许在 Boot 的自定义之前和之后应用额外的自定义。
 
-Any beans of type javadoc:com.fasterxml.jackson.databind.Module[] are automatically registered with the auto-configured javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] and are applied to any javadoc:com.fasterxml.jackson.databind.ObjectMapper[] instances that it creates.
-This provides a global mechanism for contributing custom modules when you add new features to your application.
+任何类型为 javadoc:com.fasterxml.jackson.databind.Module[] 的 bean 都会自动注册到自动配置的 javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] 中，并应用于它创建的任何 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] 实例。
+这为在向应用程序添加新功能时提供自定义模块提供了一种全局机制。
 
-NOTE: If you wish to register additional modules programmatically using a javadoc:org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer[], make sure to use the `modulesToInstall` method that takes a consumer as the other variants are not additive.
+注意：如果你希望使用 javadoc:org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer[] 以编程方式注册额外的模块，请确保使用接受消费者的 `modulesToInstall` 方法，因为其他变体不是累加的。
 
-If you want to replace the default javadoc:com.fasterxml.jackson.databind.ObjectMapper[] completely, either define a javadoc:org.springframework.context.annotation.Bean[format=annotation] of that type or, if you prefer the builder-based approach, define a javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] javadoc:org.springframework.context.annotation.Bean[format=annotation].
-When defining an javadoc:com.fasterxml.jackson.databind.ObjectMapper[] bean, marking it as javadoc:org.springframework.context.annotation.Primary[format=annotation] is recommended as the auto-configuration's javadoc:com.fasterxml.jackson.databind.ObjectMapper[] that it will replace is javadoc:org.springframework.context.annotation.Primary[format=annotation].
-Note that, in either case, doing so disables all auto-configuration of the javadoc:com.fasterxml.jackson.databind.ObjectMapper[].
+如果你想完全替换默认的 javadoc:com.fasterxml.jackson.databind.ObjectMapper[]，可以定义该类型的 javadoc:org.springframework.context.annotation.Bean[format=annotation]，或者如果你更喜欢基于构建器的方法，可以定义 javadoc:org.springframework.http.converter.json.Jackson2ObjectMapperBuilder[] javadoc:org.springframework.context.annotation.Bean[format=annotation]。
+在定义 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] bean 时，建议将其标记为 javadoc:org.springframework.context.annotation.Primary[format=annotation]，因为它将替换的自动配置的 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] 是 javadoc:org.springframework.context.annotation.Primary[format=annotation]。
+注意，在这两种情况下，这样做都会禁用 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] 的所有自动配置。
 
-If you provide any javadoc:java.beans.Beans[format=annotation] of type javadoc:org.springframework.http.converter.json.MappingJackson2HttpMessageConverter[], they replace the default value in the MVC configuration.
-Also, a convenience bean of type javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] is provided (and is always available if you use the default MVC configuration).
-It has some useful methods to access the default and user-enhanced message converters.
+如果你提供任何类型为 javadoc:org.springframework.http.converter.json.MappingJackson2HttpMessageConverter[] 的 javadoc:java.beans.Beans[format=annotation]，它们会替换 MVC 配置中的默认值。
+此外，还提供了一个类型为 javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] 的便捷 bean（如果你使用默认的 MVC 配置，它始终可用）。
+它有一些有用的方法来访问默认和用户增强的消息转换器。
 
-See the xref:spring-mvc.adoc#howto.spring-mvc.customize-responsebody-rendering[] section and the {code-spring-boot-autoconfigure-src}/web/servlet/WebMvcAutoConfiguration.java[`WebMvcAutoConfiguration`] source code for more details.
+有关更多详细信息，请参阅 xref:spring-mvc.adoc#howto.spring-mvc.customize-responsebody-rendering[] 部分和 {code-spring-boot-autoconfigure-src}/web/servlet/WebMvcAutoConfiguration.java[`WebMvcAutoConfiguration`] 源代码。
 
 
 
 [[howto.spring-mvc.customize-responsebody-rendering]]
-== Customize the @ResponseBody Rendering
+== 自定义 @ResponseBody 渲染
 
-Spring uses javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] to render javadoc:org.springframework.web.bind.annotation.ResponseBody[format=annotation] (or responses from javadoc:org.springframework.web.bind.annotation.RestController[format=annotation]).
-You can contribute additional converters by adding beans of the appropriate type in a Spring Boot context.
-If a bean you add is of a type that would have been included by default anyway (such as javadoc:org.springframework.http.converter.json.MappingJackson2HttpMessageConverter[] for JSON conversions), it replaces the default value.
-A convenience bean of type javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] is provided and is always available if you use the default MVC configuration.
-It has some useful methods to access the default and user-enhanced message converters (For example, it can be useful if you want to manually inject them into a custom javadoc:org.springframework.web.client.RestTemplate[]).
+Spring 使用 javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] 来渲染 javadoc:org.springframework.web.bind.annotation.ResponseBody[format=annotation]（或来自 javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] 的响应）。
+你可以通过在 Spring Boot 上下文中添加适当类型的 bean 来贡献额外的转换器。
+如果你添加的 bean 的类型本来就会被默认包含（例如用于 JSON 转换的 javadoc:org.springframework.http.converter.json.MappingJackson2HttpMessageConverter[]），它会替换默认值。
+如果你使用默认的 MVC 配置，会提供一个类型为 javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] 的便捷 bean，并且它始终可用。
+它有一些有用的方法来访问默认和用户增强的消息转换器（例如，如果你想要手动将它们注入到自定义的 javadoc:org.springframework.web.client.RestTemplate[] 中，这可能很有用）。
 
-As in normal MVC usage, any javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] beans that you provide can also contribute converters by overriding the `configureMessageConverters` method.
-However, unlike with normal MVC, you can supply only additional converters that you need (because Spring Boot uses the same mechanism to contribute its defaults).
-Finally, if you opt out of the default Spring Boot MVC configuration by providing your own javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] configuration, you can take control completely and do everything manually by using `getMessageConverters` from javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport[].
+与普通 MVC 用法一样，你提供的任何 javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] bean 也可以通过覆盖 `configureMessageConverters` 方法来贡献转换器。
+但是，与普通 MVC 不同，你只能提供你需要的额外转换器（因为 Spring Boot 使用相同的机制来贡献其默认值）。
+最后，如果你通过提供自己的 javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] 配置来选择退出默认的 Spring Boot MVC 配置，你可以通过使用 javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport[] 的 `getMessageConverters` 完全控制并手动完成所有操作。
 
-See the {code-spring-boot-autoconfigure-src}/web/servlet/WebMvcAutoConfiguration.java[`WebMvcAutoConfiguration`] source code for more details.
+有关更多详细信息，请参阅 {code-spring-boot-autoconfigure-src}/web/servlet/WebMvcAutoConfiguration.java[`WebMvcAutoConfiguration`] 源代码。
 
 
 
 [[howto.spring-mvc.multipart-file-uploads]]
-== Handling Multipart File Uploads
+== 处理多部分文件上传
 
-Spring Boot embraces the servlet 5 javadoc:jakarta.servlet.http.Part[] API to support uploading files.
-By default, Spring Boot configures Spring MVC with a maximum size of 1MB per file and a maximum of 10MB of file data in a single request.
-You may override these values, the location to which intermediate data is stored (for example, to the `/tmp` directory), and the threshold past which data is flushed to disk by using the properties exposed in the javadoc:org.springframework.boot.autoconfigure.web.servlet.MultipartProperties[] class.
-For example, if you want to specify that files be unlimited, set the configprop:spring.servlet.multipart.max-file-size[] property to `-1`.
+Spring Boot 采用 servlet 5 javadoc:jakarta.servlet.http.Part[] API 来支持文件上传。
+默认情况下，Spring Boot 配置 Spring MVC 时，每个文件的最大大小为 1MB，单个请求中的文件数据最大为 10MB。
+你可以通过使用 javadoc:org.springframework.boot.autoconfigure.web.servlet.MultipartProperties[] 类中公开的属性来覆盖这些值、存储中间数据的位置（例如，到 `/tmp` 目录）以及数据刷新到磁盘的阈值。
+例如，如果你想指定文件大小不受限制，请将 configprop:spring.servlet.multipart.max-file-size[] 属性设置为 `-1`。
 
-The multipart support is helpful when you want to receive multipart encoded file data as a javadoc:org.springframework.web.bind.annotation.RequestParam[format=annotation]-annotated parameter of type javadoc:org.springframework.web.multipart.MultipartFile[] in a Spring MVC controller handler method.
+当你想要在 Spring MVC 控制器处理方法中接收多部分编码的文件数据作为类型为 javadoc:org.springframework.web.multipart.MultipartFile[] 的 javadoc:org.springframework.web.bind.annotation.RequestParam[format=annotation] 注解参数时，多部分支持很有帮助。
 
-See the {code-spring-boot-autoconfigure-src}/web/servlet/MultipartAutoConfiguration.java[`MultipartAutoConfiguration`] source for more details.
+有关更多详细信息，请参阅 {code-spring-boot-autoconfigure-src}/web/servlet/MultipartAutoConfiguration.java[`MultipartAutoConfiguration`] 源代码。
 
-NOTE: It is recommended to use the container's built-in support for multipart uploads rather than introduce an additional dependency such as Apache Commons File Upload.
+注意：建议使用容器的内置多部分上传支持，而不是引入额外的依赖项，如 Apache Commons File Upload。
 
 
 
 [[howto.spring-mvc.switch-off-dispatcherservlet]]
-== Switch Off the Spring MVC DispatcherServlet
+== 关闭 Spring MVC DispatcherServlet
 
-By default, all content is served from the root of your application (`/`).
-If you would rather map to a different path, you can configure one as follows:
+默认情况下，所有内容都从应用程序的根目录（`/`）提供服务。
+如果你希望映射到不同的路径，可以按如下方式配置：
 
 [configprops,yaml]
 ----
@@ -179,67 +179,67 @@ spring:
       path: "/mypath"
 ----
 
-If you have additional servlets you can declare a javadoc:org.springframework.context.annotation.Bean[format=annotation] of type javadoc:jakarta.servlet.Servlet[] or javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[] for each and Spring Boot will register them transparently to the container.
-It is also possible to use javadoc:org.springframework.boot.web.servlet.ServletRegistration[format=annotation] as an annotation-based alternative to javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[].
-Because servlets are registered that way, they can be mapped to a sub-context of the javadoc:org.springframework.web.servlet.DispatcherServlet[] without invoking it.
+如果你有其他 servlet，你可以为每个 servlet 声明一个类型为 javadoc:jakarta.servlet.Servlet[] 或 javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]，Spring Boot 将透明地将它们注册到容器中。
+也可以使用 javadoc:org.springframework.boot.web.servlet.ServletRegistration[format=annotation] 作为 javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[] 的基于注解的替代方案。
+因为 servlet 是以这种方式注册的，所以它们可以映射到 javadoc:org.springframework.web.servlet.DispatcherServlet[] 的子上下文，而无需调用它。
 
-Configuring the javadoc:org.springframework.web.servlet.DispatcherServlet[] yourself is unusual but if you really need to do it, a javadoc:org.springframework.context.annotation.Bean[format=annotation] of type javadoc:org.springframework.boot.autoconfigure.web.servlet.DispatcherServletPath[] must be provided as well to provide the path of your custom javadoc:org.springframework.web.servlet.DispatcherServlet[].
+自己配置 javadoc:org.springframework.web.servlet.DispatcherServlet[] 是不常见的，但如果你真的需要这样做，还必须提供一个类型为 javadoc:org.springframework.boot.autoconfigure.web.servlet.DispatcherServletPath[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 来提供你的自定义 javadoc:org.springframework.web.servlet.DispatcherServlet[] 的路径。
 
 
 
 [[howto.spring-mvc.switch-off-default-configuration]]
-== Switch Off the Default MVC Configuration
+== 关闭默认 MVC 配置
 
-The easiest way to take complete control over MVC configuration is to provide your own javadoc:org.springframework.context.annotation.Configuration[format=annotation] with the javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] annotation.
-Doing so leaves all MVC configuration in your hands.
+完全控制 MVC 配置的最简单方法是提供你自己的带有 javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] 注解的 javadoc:org.springframework.context.annotation.Configuration[format=annotation]。
+这样做会将所有 MVC 配置交给你控制。
 
 
 
 [[howto.spring-mvc.customize-view-resolvers]]
-== Customize ViewResolvers
+== 自定义 ViewResolvers
 
-A javadoc:org.springframework.web.servlet.ViewResolver[] is a core component of Spring MVC, translating view names in javadoc:org.springframework.stereotype.Controller[format=annotation] to actual javadoc:org.springframework.web.servlet.View[] implementations.
-Note that view resolvers are mainly used in UI applications, rather than REST-style services (a javadoc:org.springframework.web.servlet.View[] is not used to render a javadoc:org.springframework.web.bind.annotation.ResponseBody[format=annotation]).
-There are many implementations of javadoc:org.springframework.web.servlet.ViewResolver[] to choose from, and Spring on its own is not opinionated about which ones you should use.
-Spring Boot, on the other hand, installs one or two for you, depending on what it finds on the classpath and in the application context.
-The javadoc:org.springframework.web.servlet.DispatcherServlet[] uses all the resolvers it finds in the application context, trying each one in turn until it gets a result.
-If you add your own, you have to be aware of the order and in which position your resolver is added.
+javadoc:org.springframework.web.servlet.ViewResolver[] 是 Spring MVC 的核心组件，它将 javadoc:org.springframework.stereotype.Controller[format=annotation] 中的视图名称转换为实际的 javadoc:org.springframework.web.servlet.View[] 实现。
+请注意，视图解析器主要用于 UI 应用程序，而不是 REST 风格的服务（javadoc:org.springframework.web.servlet.View[] 不用于渲染 javadoc:org.springframework.web.bind.annotation.ResponseBody[format=annotation]）。
+有很多 javadoc:org.springframework.web.servlet.ViewResolver[] 的实现可供选择，Spring 本身对应该使用哪些实现没有意见。
+另一方面，Spring Boot 会根据它在类路径和应用程序上下文中找到的内容为你安装一个或两个。
+javadoc:org.springframework.web.servlet.DispatcherServlet[] 使用它在应用程序上下文中找到的所有解析器，依次尝试每个解析器，直到得到结果。
+如果你添加自己的解析器，你必须注意顺序和你的解析器添加的位置。
 
-javadoc:org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration[] adds the following javadoc:org.springframework.web.servlet.ViewResolver[] beans to your context:
+javadoc:org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration[] 将以下 javadoc:org.springframework.web.servlet.ViewResolver[] bean 添加到你的上下文中：
 
-* An javadoc:org.springframework.web.servlet.view.InternalResourceViewResolver[] named '`defaultViewResolver`'.
-  This one locates physical resources that can be rendered by using the `DefaultServlet` (including static resources and JSP pages, if you use those).
-  It applies a prefix and a suffix to the view name and then looks for a physical resource with that path in the servlet context (the defaults are both empty but are accessible for external configuration through `spring.mvc.view.prefix` and `spring.mvc.view.suffix`).
-  You can override it by providing a bean of the same type.
-* A javadoc:org.springframework.web.servlet.view.BeanNameViewResolver[] named '`beanNameViewResolver`'.
-  This is a useful member of the view resolver chain and picks up any beans with the same name as the javadoc:org.springframework.web.servlet.View[] being resolved.
-  It should not be necessary to override or replace it.
-* A javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[] named '`viewResolver`' is added only if there *are* actually beans of type javadoc:org.springframework.web.servlet.View[] present.
-  This is a composite resolver, delegating to all the others and attempting to find a match to the '`Accept`' HTTP header sent by the client.
-  There is a useful https://spring.io/blog/2013/06/03/content-negotiation-using-views[blog about javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[]] that you might like to study to learn more, and you might also look at the source code for detail.
-  You can switch off the auto-configured javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[] by defining a bean named '`viewResolver`'.
-* If you use Thymeleaf, you also have a javadoc:org.thymeleaf.spring6.view.ThymeleafViewResolver[] named '`thymeleafViewResolver`'.
-  It looks for resources by surrounding the view name with a prefix and suffix.
-  The prefix is `spring.thymeleaf.prefix`, and the suffix is `spring.thymeleaf.suffix`.
-  The values of the prefix and suffix default to '`classpath:/templates/`' and '`.html`', respectively.
-  You can override javadoc:org.thymeleaf.spring6.view.ThymeleafViewResolver[] by providing a bean of the same name.
-* If you use FreeMarker, you also have a javadoc:org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver[] named '`freeMarkerViewResolver`'.
-  It looks for resources in a loader path (which is externalized to `spring.freemarker.templateLoaderPath` and has a default value of '`classpath:/templates/`') by surrounding the view name with a prefix and a suffix.
-  The prefix is externalized to `spring.freemarker.prefix`, and the suffix is externalized to `spring.freemarker.suffix`.
-  The default values of the prefix and suffix are empty and '`.ftlh`', respectively.
-  You can override javadoc:org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver[] by providing a bean of the same name.
-  FreeMarker variables can be customized by defining a bean of type javadoc:org.springframework.boot.autoconfigure.freemarker.FreeMarkerVariablesCustomizer[].
-* If you use Groovy templates (actually, if `groovy-templates` is on your classpath), you also have a javadoc:org.springframework.web.servlet.view.groovy.GroovyMarkupViewResolver[] named '`groovyMarkupViewResolver`'.
-  It looks for resources in a loader path by surrounding the view name with a prefix and suffix (externalized to `spring.groovy.template.prefix` and `spring.groovy.template.suffix`).
-  The prefix and suffix have default values of '`classpath:/templates/`' and '`.tpl`', respectively.
-  You can override javadoc:org.springframework.web.servlet.view.groovy.GroovyMarkupViewResolver[] by providing a bean of the same name.
-* If you use Mustache, you also have a javadoc:org.springframework.boot.web.servlet.view.MustacheViewResolver[] named '`mustacheViewResolver`'.
-  It looks for resources by surrounding the view name with a prefix and suffix.
-  The prefix is `spring.mustache.prefix`, and the suffix is `spring.mustache.suffix`.
-  The values of the prefix and suffix default to '`classpath:/templates/`' and '`.mustache`', respectively.
-  You can override javadoc:org.springframework.boot.web.servlet.view.MustacheViewResolver[] by providing a bean of the same name.
+* 一个名为 '`defaultViewResolver`' 的 javadoc:org.springframework.web.servlet.view.InternalResourceViewResolver[]。
+  这个解析器定位可以使用 `DefaultServlet` 渲染的物理资源（包括静态资源和 JSP 页面，如果你使用它们的话）。
+  它将前缀和后缀应用于视图名称，然后在 servlet 上下文中查找具有该路径的物理资源（默认值都为空但可以通过 `spring.mvc.view.prefix` 和 `spring.mvc.view.suffix` 进行外部配置）。
+  你可以通过提供相同类型的 bean 来覆盖它。
+* 一个名为 '`beanNameViewResolver`' 的 javadoc:org.springframework.web.servlet.view.BeanNameViewResolver[]。
+  这是视图解析器链中的一个有用成员，它会选择与正在解析的 javadoc:org.springframework.web.servlet.View[] 同名的任何 bean。
+  不需要覆盖或替换它。
+* 只有在实际存在类型为 javadoc:org.springframework.web.servlet.View[] 的 bean 时，才会添加一个名为 '`viewResolver`' 的 javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[]。
+  这是一个复合解析器，委托给所有其他解析器，并尝试找到与客户端发送的 '`Accept`' HTTP 头匹配的解析器。
+  有一篇关于 javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[] 的 https://spring.io/blog/2013/06/03/content-negotiation-using-views[有用的博客]，你可能想研究它以了解更多信息，你也可以查看源代码以获取详细信息。
+  你可以通过定义一个名为 '`viewResolver`' 的 bean 来关闭自动配置的 javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[]。
+* 如果你使用 Thymeleaf，你还会有一个名为 '`thymeleafViewResolver`' 的 javadoc:org.thymeleaf.spring6.view.ThymeleafViewResolver[]。
+  它通过在视图名称周围添加前缀和后缀来查找资源。
+  前缀是 `spring.thymeleaf.prefix`，后缀是 `spring.thymeleaf.suffix`。
+  前缀和后缀的值默认为 '`classpath:/templates/`' 和 '`.html`'。
+  你可以通过提供相同名称的 bean 来覆盖 javadoc:org.thymeleaf.spring6.view.ThymeleafViewResolver[]。
+* 如果你使用 FreeMarker，你还会有一个名为 '`freeMarkerViewResolver`' 的 javadoc:org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver[]。
+  它通过在视图名称周围添加前缀和后缀，在加载路径（外部化为 `spring.freemarker.templateLoaderPath`，默认值为 '`classpath:/templates/`'）中查找资源。
+  前缀外部化为 `spring.freemarker.prefix`，后缀外部化为 `spring.freemarker.suffix`。
+  前缀和后缀的默认值分别为空和 '`.ftlh`'。
+  你可以通过提供相同名称的 bean 来覆盖 javadoc:org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver[]。
+  FreeMarker 变量可以通过定义类型为 javadoc:org.springframework.boot.autoconfigure.freemarker.FreeMarkerVariablesCustomizer[] 的 bean 来自定义。
+* 如果你使用 Groovy 模板（实际上，如果 `groovy-templates` 在你的类路径上），你还会有一个名为 '`groovyMarkupViewResolver`' 的 javadoc:org.springframework.web.servlet.view.groovy.GroovyMarkupViewResolver[]。
+  它通过在视图名称周围添加前缀和后缀（外部化为 `spring.groovy.template.prefix` 和 `spring.groovy.template.suffix`）在加载路径中查找资源。
+  前缀和后缀的默认值分别为 '`classpath:/templates/`' 和 '`.tpl`'。
+  你可以通过提供相同名称的 bean 来覆盖 javadoc:org.springframework.web.servlet.view.groovy.GroovyMarkupViewResolver[]。
+* 如果你使用 Mustache，你还会有一个名为 '`mustacheViewResolver`' 的 javadoc:org.springframework.boot.web.servlet.view.MustacheViewResolver[]。
+  它通过在视图名称周围添加前缀和后缀来查找资源。
+  前缀是 `spring.mustache.prefix`，后缀是 `spring.mustache.suffix`。
+  前缀和后缀的值默认为 '`classpath:/templates/`' 和 '`.mustache`'。
+  你可以通过提供相同名称的 bean 来覆盖 javadoc:org.springframework.boot.web.servlet.view.MustacheViewResolver[]。
 
-For more detail, see the following sections:
+有关更多详细信息，请参阅以下部分：
 
 * {code-spring-boot-autoconfigure-src}/web/servlet/WebMvcAutoConfiguration.java[`WebMvcAutoConfiguration`]
 * {code-spring-boot-autoconfigure-src}/thymeleaf/ThymeleafAutoConfiguration.java[`ThymeleafAutoConfiguration`]
@@ -249,19 +249,19 @@ For more detail, see the following sections:
 
 
 [[howto.spring-mvc.customize-whitelabel-error-page]]
-== Customize the '`whitelabel`' Error Page
+== 自定义 '`whitelabel`' 错误页面
 
-Spring Boot installs a '`whitelabel`' error page that you see in a browser client if you encounter a server error (machine clients consuming JSON and other media types should see a sensible response with the right error code).
+Spring Boot 安装了一个 '`whitelabel`' 错误页面，如果你遇到服务器错误，你会在浏览器客户端中看到它（使用 JSON 和其他媒体类型的机器客户端应该看到带有正确错误代码的合理响应）。
 
-NOTE: Set `server.error.whitelabel.enabled=false` to switch the default error page off.
-Doing so restores the default of the servlet container that you are using.
-Note that Spring Boot still tries to resolve the error view, so you should probably add your own error page rather than disabling it completely.
+注意：设置 `server.error.whitelabel.enabled=false` 可以关闭默认错误页面。
+这样做会恢复你使用的 servlet 容器的默认值。
+请注意，Spring Boot 仍然会尝试解析错误视图，所以你可能应该添加自己的错误页面，而不是完全禁用它。
 
-Overriding the error page with your own depends on the templating technology that you use.
-For example, if you use Thymeleaf, you can add an `error.html` template.
-If you use FreeMarker, you can add an `error.ftlh` template.
-In general, you need a javadoc:org.springframework.web.servlet.View[] that resolves with a name of `error` or a javadoc:org.springframework.stereotype.Controller[format=annotation] that handles the `/error` path.
-Unless you replaced some of the default configuration, you should find a javadoc:org.springframework.web.servlet.view.BeanNameViewResolver[] in your javadoc:org.springframework.context.ApplicationContext[], so a javadoc:org.springframework.context.annotation.Bean[format=annotation] named `error` would be one way of doing that.
-See {code-spring-boot-autoconfigure-src}/web/servlet/error/ErrorMvcAutoConfiguration.java[`ErrorMvcAutoConfiguration`] for more options.
+用你自己的错误页面覆盖错误页面取决于你使用的模板技术。
+例如，如果你使用 Thymeleaf，你可以添加一个 `error.html` 模板。
+如果你使用 FreeMarker，你可以添加一个 `error.ftlh` 模板。
+一般来说，你需要一个解析为 `error` 名称的 javadoc:org.springframework.web.servlet.View[] 或一个处理 `/error` 路径的 javadoc:org.springframework.stereotype.Controller[format=annotation]。
+除非你替换了一些默认配置，否则你应该在 javadoc:org.springframework.context.ApplicationContext[] 中找到 javadoc:org.springframework.web.servlet.view.BeanNameViewResolver[]，所以一个名为 `error` 的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 将是一种方法。
+有关更多选项，请参阅 {code-spring-boot-autoconfigure-src}/web/servlet/error/ErrorMvcAutoConfiguration.java[`ErrorMvcAutoConfiguration`]。
 
-See also the section on xref:reference:web/servlet.adoc#web.servlet.spring-mvc.error-handling[] for details of how to register handlers in the servlet container.
+另请参阅 xref:reference:web/servlet.adoc#web.servlet.spring-mvc.error-handling[] 部分，了解如何在 servlet 容器中注册处理程序的详细信息。

@@ -1,7 +1,7 @@
 [[howto.native-image]]
-= GraalVM Native Applications
+= GraalVM Native 应用程序
 
-This section contains details on developing and testing Spring Boot applications as GraalVM native images.
+本节包含有关开发和测试作为 GraalVM native images 的 Spring Boot 应用程序的详细信息。
 
-TIP: For an overview of GraalVM native image concepts, see the xref:reference:packaging/native-image/introducing-graalvm-native-images.adoc[] section.
+提示：有关 GraalVM native image 概念的概述，请参阅 xref:reference:packaging/native-image/introducing-graalvm-native-images.adoc[] 部分。
 

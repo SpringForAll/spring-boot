@@ -1,22 +1,22 @@
 [[howto.aot]]
-= Ahead-of-Time Processing
+= 提前处理（Ahead-of-Time Processing）
 
-A number of questions often arise when people use the ahead-of-time processing of Spring Boot applications.
-This section addresses those questions.
+当人们使用 Spring Boot 应用程序的提前处理时，经常会遇到一些问题。
+本节将解答这些问题。
 
 
 
 [[howto.aot.conditions]]
-== Conditions
+== 条件（Conditions）
 
-Ahead-of-time processing optimizes the application and evaluates javadoc:org.springframework.context.annotation.Conditional[format=annotation] annotations based on the environment at build time.
-xref:reference:features/profiles.adoc[Profiles] are implemented through conditions and are therefore affected, too.
+提前处理会优化应用程序，并在构建时根据环境评估 javadoc:org.springframework.context.annotation.Conditional[format=annotation] 注解。
+xref:reference:features/profiles.adoc[Profiles] 是通过条件实现的，因此也会受到影响。
 
-If you want beans that are created based on a condition in an ahead-of-time optimized application, you have to set up the environment when building the application.
-The beans which are created while ahead-of-time processing at build time are then always created when running the application and can't be switched off.
-To do this, you can set the profiles which should be used when building the application.
+如果你想在提前优化的应用程序中创建基于条件的 bean，你必须在构建应用程序时设置环境。
+在构建时通过提前处理创建的 bean 在运行应用程序时将始终被创建，并且无法被关闭。
+为此，你可以设置构建应用程序时应使用的 profiles。
 
-For Maven, this works by setting the `profiles` configuration of the `spring-boot-maven-plugin:process-aot` execution:
+对于 Maven，这可以通过设置 `spring-boot-maven-plugin:process-aot` 执行的 `profiles` 配置来实现：
 
 [source,xml]
 ----
@@ -43,7 +43,7 @@ For Maven, this works by setting the `profiles` configuration of the `spring-boo
 </profile>
 ----
 
-For Gradle, you need to configure the `ProcessAot` task:
+对于 Gradle，你需要配置 `ProcessAot` 任务：
 
 [source,gradle]
 ----
@@ -52,4 +52,4 @@ tasks.withType(org.springframework.boot.gradle.tasks.aot.ProcessAot).configureEa
 }
 ----
 
-Profiles which only change configuration properties that don't influence conditions are supported without limitations when running ahead-of-time optimized applications.
+在运行提前优化的应用程序时，仅更改不影响条件的配置属性的 profiles 不受限制。
