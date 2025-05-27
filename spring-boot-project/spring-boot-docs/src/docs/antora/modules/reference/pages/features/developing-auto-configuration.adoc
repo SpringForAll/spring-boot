@@ -1,32 +1,30 @@
 [[features.developing-auto-configuration]]
-= Creating Your Own Auto-configuration
+= 创建自定义自动配置
 
-If you work in a company that develops shared libraries, or if you work on an open-source or commercial library, you might want to develop your own auto-configuration.
-Auto-configuration classes can be bundled in external jars and still be picked up by Spring Boot.
+如果你在公司开发共享库，或参与开源/商业库开发，可能希望开发自己的自动配置。
+自动配置类可以打包在外部 jar 中，Spring Boot 依然能够识别。
 
-Auto-configuration can be associated to a "`starter`" that provides the auto-configuration code as well as the typical libraries that you would use with it.
-We first cover what you need to know to build your own auto-configuration and then we move on to the xref:features/developing-auto-configuration.adoc#features.developing-auto-configuration.custom-starter[typical steps required to create a custom starter].
-
+自动配置通常与"starter"关联，starter 提供自动配置代码及其常用依赖。
+本节首先介绍如何构建自己的自动配置，然后讲解 xref:features/developing-auto-configuration.adoc#features.developing-auto-configuration.custom-starter[创建自定义 starter 的典型步骤]。
 
 
 [[features.developing-auto-configuration.understanding-auto-configured-beans]]
-== Understanding Auto-configured Beans
+== 理解自动配置的 Bean
 
-Classes that implement auto-configuration are annotated with javadoc:org.springframework.boot.autoconfigure.AutoConfiguration[format=annotation].
-This annotation itself is meta-annotated with javadoc:org.springframework.context.annotation.Configuration[format=annotation], making auto-configurations standard javadoc:org.springframework.context.annotation.Configuration[format=annotation] classes.
-Additional javadoc:org.springframework.context.annotation.Conditional[format=annotation] annotations are used to constrain when the auto-configuration should apply.
-Usually, auto-configuration classes use javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnClass[format=annotation] and javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] annotations.
-This ensures that auto-configuration applies only when relevant classes are found and when you have not declared your own javadoc:org.springframework.context.annotation.Configuration[format=annotation].
+实现自动配置的类需加上 javadoc:org.springframework.boot.autoconfigure.AutoConfiguration[format=annotation] 注解。
+该注解本身带有 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 元注解，使自动配置类成为标准的 javadoc:org.springframework.context.annotation.Configuration[format=annotation]。
+还会结合 javadoc:org.springframework.context.annotation.Conditional[format=annotation] 注解，限定自动配置的生效条件。
+通常，自动配置类会用到 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnClass[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation]。
+这样只有在相关类存在且你未声明自己的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 时，自动配置才会生效。
 
-You can browse the source code of {code-spring-boot-autoconfigure-src}[`spring-boot-autoconfigure`] to see the javadoc:org.springframework.boot.autoconfigure.AutoConfiguration[format=annotation] classes that Spring provides (see the {code-spring-boot}/spring-boot-project/spring-boot-autoconfigure/src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports[`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`] file).
-
+你可以浏览 {code-spring-boot-autoconfigure-src}[`spring-boot-autoconfigure`] 源码，查看 Spring 提供的 javadoc:org.springframework.boot.autoconfigure.AutoConfiguration[format=annotation] 类（见 {code-spring-boot}/spring-boot-project/spring-boot-autoconfigure/src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports[`META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports`] 文件）。
 
 
 [[features.developing-auto-configuration.locating-auto-configuration-candidates]]
-== Locating Auto-configuration Candidates
+== 定位自动配置候选类
 
-Spring Boot checks for the presence of a `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` file within your published jar.
-The file should list your configuration classes, with one class name per line, as shown in the following example:
+Spring Boot 会检查已发布 jar 包中的 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` 文件。
+该文件应列出你的配置类，每行一个类名，例如：
 
 [source]
 ----
@@ -34,54 +32,50 @@ com.mycorp.libx.autoconfigure.LibXAutoConfiguration
 com.mycorp.libx.autoconfigure.LibXWebAutoConfiguration
 ----
 
-TIP: You can add comments to the imports file using the `#` character.
+TIP: 可用 `#` 字符为 imports 文件添加注释。
 
-TIP:  In the unusual case that an auto-configuration class is not a top-level class, its class name should use `$` to separate it from its containing class, for example `com.example.Outer$NestedAutoConfiguration`.
+TIP: 若自动配置类不是顶级类，类名应用 `$` 分隔，例如 `com.example.Outer$NestedAutoConfiguration`。
 
-NOTE: Auto-configurations must be loaded _only_ by being named in the imports file.
-Make sure that they are defined in a specific package space and that they are never the target of component scanning.
-Furthermore, auto-configuration classes should not enable component scanning to find additional components.
-Specific javadoc:org.springframework.context.annotation.Import[format=annotation] annotations should be used instead.
+NOTE: 自动配置类*只能*通过 imports 文件指定加载。
+请确保它们定义在特定包空间，且不会被组件扫描。
+此外，自动配置类不应启用组件扫描以查找其他组件，应使用特定的 javadoc:org.springframework.context.annotation.Import[format=annotation]。
 
-If your configuration needs to be applied in a specific order, you can use the `before`, `beforeName`, `after` and `afterName` attributes on the javadoc:org.springframework.boot.autoconfigure.AutoConfiguration[format=annotation] annotation or the dedicated javadoc:org.springframework.boot.autoconfigure.AutoConfigureBefore[format=annotation] and javadoc:org.springframework.boot.autoconfigure.AutoConfigureAfter[format=annotation] annotations.
-For example, if you provide web-specific configuration, your class may need to be applied after javadoc:org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration[].
+如需指定配置应用顺序，可在 javadoc:org.springframework.boot.autoconfigure.AutoConfiguration[format=annotation] 注解上使用 `before`、`beforeName`、`after`、`afterName` 属性，或用专用的 javadoc:org.springframework.boot.autoconfigure.AutoConfigureBefore[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.AutoConfigureAfter[format=annotation]。
+例如，若你提供 web 相关配置，可能需在 javadoc:org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration[] 之后应用。
 
-If you want to order certain auto-configurations that should not have any direct knowledge of each other, you can also use javadoc:org.springframework.boot.autoconfigure.AutoConfigureOrder[format=annotation].
-That annotation has the same semantic as the regular javadoc:org.springframework.core.annotation.Order[format=annotation] annotation but provides a dedicated order for auto-configuration classes.
+若需对互不知晓的自动配置排序，也可用 javadoc:org.springframework.boot.autoconfigure.AutoConfigureOrder[format=annotation]。
+该注解语义与常规 javadoc:org.springframework.core.annotation.Order[format=annotation] 相同，但专用于自动配置类。
 
-As with standard javadoc:org.springframework.context.annotation.Configuration[format=annotation] classes, the order in which auto-configuration classes are applied only affects the order in which their beans are defined.
-The order in which those beans are subsequently created is unaffected and is determined by each bean's dependencies and any javadoc:org.springframework.context.annotation.DependsOn[format=annotation] relationships.
-
+与标准 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类一样，自动配置类的应用顺序只影响 bean 的定义顺序。
+后续 bean 的创建顺序由依赖关系和 javadoc:org.springframework.context.annotation.DependsOn[format=annotation] 决定。
 
 
 [[features.developing-auto-configuration.locating-auto-configuration-candidates.deprecating]]
-=== Deprecating and Replacing Auto-configuration Classes
+=== 弃用与替换自动配置类
 
-You may need to occasionally deprecate auto-configuration classes and offer an alternative.
-For example, you may want to change the package name where your auto-configuration class resides.
+有时你需要弃用自动配置类并提供替代方案。
+例如，可能想更改自动配置类所在包名。
 
-Since auto-configuration classes may be referenced in `before`/`after` ordering and `excludes`, you'll need to add an additional file that tells Spring Boot how to deal with replacements.
-To define replacements, create a `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.replacements` file indicating the link between the old class and the new one.
+由于自动配置类可能被 `before`/`after` 排序和 `excludes` 引用，你需添加额外文件告知 Spring Boot 替换关系。
+为此，创建 `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.replacements` 文件，指明旧类与新类的映射。
 
-For example:
+例如：
 
 [source]
 ----
 com.mycorp.libx.autoconfigure.LibXAutoConfiguration=com.mycorp.libx.autoconfigure.core.LibXAutoConfiguration
 ----
 
-NOTE: The `AutoConfiguration.imports` file should also be updated to _only_ reference the replacement class.
-
+NOTE: `AutoConfiguration.imports` 文件也应只引用替换后的类。
 
 
 [[features.developing-auto-configuration.condition-annotations]]
-== Condition Annotations
+== 条件注解
 
-You almost always want to include one or more javadoc:org.springframework.context.annotation.Conditional[format=annotation] annotations on your auto-configuration class.
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] annotation is one common example that is used to allow developers to override auto-configuration if they are not happy with your defaults.
+自动配置类几乎总会用到一个或多个 javadoc:org.springframework.context.annotation.Conditional[format=annotation] 注解。
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] 是常用示例，允许开发者覆盖默认自动配置。
 
-Spring Boot includes a number of javadoc:org.springframework.context.annotation.Conditional[format=annotation] annotations that you can reuse in your own code by annotating javadoc:org.springframework.context.annotation.Configuration[format=annotation] classes or individual javadoc:org.springframework.context.annotation.Bean[format=annotation] methods.
-These annotations include:
+Spring Boot 提供了多种 javadoc:org.springframework.context.annotation.Conditional[format=annotation] 注解，可在自定义 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类或 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法上使用，包括：
 
 * xref:features/developing-auto-configuration.adoc#features.developing-auto-configuration.condition-annotations.class-conditions[]
 * xref:features/developing-auto-configuration.adoc#features.developing-auto-configuration.condition-annotations.bean-conditions[]
@@ -91,222 +85,207 @@ These annotations include:
 * xref:features/developing-auto-configuration.adoc#features.developing-auto-configuration.condition-annotations.spel-conditions[]
 
 
-
 [[features.developing-auto-configuration.condition-annotations.class-conditions]]
-=== Class Conditions
+=== 类条件
 
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnClass[format=annotation] and javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass[format=annotation] annotations let javadoc:org.springframework.context.annotation.Configuration[format=annotation] classes be included based on the presence or absence of specific classes.
-Due to the fact that annotation metadata is parsed by using https://asm.ow2.io/[ASM], you can use the `value` attribute to refer to the real class, even though that class might not actually appear on the running application classpath.
-You can also use the `name` attribute if you prefer to specify the class name by using a javadoc:java.lang.String[] value.
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnClass[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass[format=annotation] 允许根据特定类的存在与否包含 javadoc:org.springframework.context.annotation.Configuration[format=annotation]。
+由于注解元数据通过 https://asm.ow2.io/[ASM] 解析，即使类不在运行时 classpath，也可用 `value` 属性引用真实类。
+如需用类名字符串，可用 `name` 属性。
 
-This mechanism does not apply the same way to javadoc:org.springframework.context.annotation.Bean[format=annotation] methods where typically the return type is the target of the condition: before the condition on the method applies, the JVM will have loaded the class and potentially processed method references which will fail if the class is not present.
+该机制不适用于 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法，因方法返回类型会被 JVM 加载，若类不存在会报错。
 
-To handle this scenario, a separate javadoc:org.springframework.context.annotation.Configuration[format=annotation] class can be used to isolate the condition, as shown in the following example:
+为此，可用单独的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类隔离条件，如下例：
 
 include-code::MyAutoConfiguration[]
 
-TIP: If you use javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnClass[format=annotation] or javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass[format=annotation] as a part of a meta-annotation to compose your own composed annotations, you must use `name` as referring to the class in such a case is not handled.
-
+TIP: 若将 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnClass[format=annotation] 或 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass[format=annotation] 用作元注解组合自定义注解，必须用 `name` 属性，因此场景下无法直接引用类。
 
 
 [[features.developing-auto-configuration.condition-annotations.bean-conditions]]
-=== Bean Conditions
+=== Bean 条件
 
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBean[format=annotation] and javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] annotations let a bean be included based on the presence or absence of specific beans.
-You can use the `value` attribute to specify beans by type or `name` to specify beans by name.
-The `search` attribute lets you limit the javadoc:org.springframework.context.ApplicationContext[] hierarchy that should be considered when searching for beans.
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBean[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] 允许根据特定 bean 的存在与否包含 bean。
+可用 `value` 属性按类型指定 bean，或用 `name` 按名称指定。
+`search` 属性可限定查找 bean 的 javadoc:org.springframework.context.ApplicationContext[] 层级。
 
-When placed on a javadoc:org.springframework.context.annotation.Bean[format=annotation] method, the target type defaults to the return type of the method, as shown in the following example:
+用于 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法时，目标类型默认为方法返回类型，如下例：
 
 include-code::MyAutoConfiguration[]
 
-In the preceding example, the `someService` bean is going to be created if no bean of type `SomeService` is already contained in the javadoc:org.springframework.context.ApplicationContext[].
+上述例中，若 javadoc:org.springframework.context.ApplicationContext[] 中不存在 `SomeService` 类型 bean，则会创建 `someService`。
 
-TIP: You need to be very careful about the order in which bean definitions are added, as these conditions are evaluated based on what has been processed so far.
-For this reason, we recommend using only javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBean[format=annotation] and javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] annotations on auto-configuration classes (since these are guaranteed to load after any user-defined bean definitions have been added).
+TIP: 需注意 bean 定义的添加顺序，这些条件基于已处理的内容评估。
+因此建议仅在自动配置类上用 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBean[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation]（保证在用户自定义 bean 之后加载）。
 
-NOTE: javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBean[format=annotation] and javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] do not prevent javadoc:org.springframework.context.annotation.Configuration[format=annotation] classes from being created.
-The only difference between using these conditions at the class level and marking each contained javadoc:org.springframework.context.annotation.Bean[format=annotation] method with the annotation is that the former prevents registration of the javadoc:org.springframework.context.annotation.Configuration[format=annotation] class as a bean if the condition does not match.
+NOTE: javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBean[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean[format=annotation] 不会阻止 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类被创建。
+二者的区别在于，类级条件不匹配时不会注册该配置类。
 
-TIP: When declaring a javadoc:org.springframework.context.annotation.Bean[format=annotation] method, provide as much type information as possible in the method's return type.
-For example, if your bean's concrete class implements an interface the bean method's return type should be the concrete class and not the interface.
-Providing as much type information as possible in javadoc:org.springframework.context.annotation.Bean[format=annotation] methods is particularly important when using bean conditions as their evaluation can only rely upon to type information that is available in the method signature.
-
+TIP: 声明 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法时，尽量在返回类型中提供详细类型信息。
+例如，若 bean 的具体类实现了接口，方法返回类型应为具体类而非接口。
+这对 bean 条件尤为重要，因为条件评估只能依赖方法签名中的类型信息。
 
 
 [[features.developing-auto-configuration.condition-annotations.property-conditions]]
-=== Property Conditions
+=== 属性条件
 
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnProperty[format=annotation] annotation lets configuration be included based on a Spring Environment property.
-Use the `prefix` and `name` attributes to specify the property that should be checked.
-By default, any property that exists and is not equal to `false` is matched.
-There is also a dedicated javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty[format=annotation] annotation specifically made for boolean properties.
-With both annotations you can also create more advanced checks by using the `havingValue` and `matchIfMissing` attributes.
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnProperty[format=annotation] 允许根据 Spring Environment 属性包含配置。
+用 `prefix` 和 `name` 属性指定需检查的属性。
+默认情况下，属性存在且不为 `false` 即匹配。
+也可用专用的 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty[format=annotation] 注解处理布尔属性。
+二者均可通过 `havingValue` 和 `matchIfMissing` 实现更复杂的判断。
 
-If multiple names are given in the `name` attribute, all of the properties have to pass the test for the condition to match.
-
+若 `name` 属性指定多个名称，所有属性都需通过测试条件才匹配。
 
 
 [[features.developing-auto-configuration.condition-annotations.resource-conditions]]
-=== Resource Conditions
+=== 资源条件
 
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnResource[format=annotation] annotation lets configuration be included only when a specific resource is present.
-Resources can be specified by using the usual Spring conventions, as shown in the following example: `file:/home/user/test.dat`.
-
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnResource[format=annotation] 允许仅在特定资源存在时包含配置。
+资源可用常规 Spring 约定指定，如：`file:/home/user/test.dat`。
 
 
 [[features.developing-auto-configuration.condition-annotations.web-application-conditions]]
-=== Web Application Conditions
+=== Web 应用条件
 
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication[format=annotation] and javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication[format=annotation] annotations let configuration be included depending on whether the application is a web application.
-A servlet-based web application is any application that uses a Spring javadoc:org.springframework.web.context.WebApplicationContext[], defines a `session` scope, or has a javadoc:org.springframework.web.context.ConfigurableWebEnvironment[].
-A reactive web application is any application that uses a javadoc:org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext[], or has a javadoc:org.springframework.boot.web.reactive.context.ConfigurableReactiveWebEnvironment[].
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication[format=annotation] 允许根据应用是否为 Web 应用包含配置。
+Servlet Web 应用指使用 Spring javadoc:org.springframework.web.context.WebApplicationContext[]、定义 `session` 作用域或有 javadoc:org.springframework.web.context.ConfigurableWebEnvironment[]。
+响应式 Web 应用指使用 javadoc:org.springframework.boot.web.reactive.context.ReactiveWebApplicationContext[] 或有 javadoc:org.springframework.boot.web.reactive.context.ConfigurableReactiveWebEnvironment[]。
 
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment[format=annotation] and javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnNotWarDeployment[format=annotation] annotations let configuration be included depending on whether the application is a traditional WAR application that is deployed to a servlet container.
-This condition will not match for applications that are run with an embedded web server.
-
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnNotWarDeployment[format=annotation] 允许根据应用是否为传统 WAR 部署包含配置。
+该条件不会匹配嵌入式 Web 服务器运行的应用。
 
 
 [[features.developing-auto-configuration.condition-annotations.spel-conditions]]
-=== SpEL Expression Conditions
+=== SpEL 表达式条件
 
-The javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnExpression[format=annotation] annotation lets configuration be included based on the result of a {url-spring-framework-docs}/core/expressions.html[SpEL expression].
+javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnExpression[format=annotation] 允许根据 {url-spring-framework-docs}/core/expressions.html[SpEL 表达式] 结果包含配置。
 
-NOTE: Referencing a bean in the expression will cause that bean to be initialized very early in context refresh processing.
-As a result, the bean won't be eligible for post-processing (such as configuration properties binding) and its state may be incomplete.
-
+NOTE: 在表达式中引用 bean 会导致该 bean 在上下文刷新早期初始化，无法进行后处理（如配置属性绑定），其状态可能不完整。
 
 
 [[features.developing-auto-configuration.testing]]
-== Testing your Auto-configuration
+== 测试自动配置
 
-An auto-configuration can be affected by many factors: user configuration (`@Bean` definition and javadoc:org.springframework.core.env.Environment[] customization), condition evaluation (presence of a particular library), and others.
-Concretely, each test should create a well defined javadoc:org.springframework.context.ApplicationContext[] that represents a combination of those customizations.
-javadoc:org.springframework.boot.test.context.runner.ApplicationContextRunner[] provides a great way to achieve that.
+自动配置可能受多种因素影响：用户配置（`@Bean` 定义和 javadoc:org.springframework.core.env.Environment[] 定制）、条件评估（特定库是否存在）等。
+每个测试应创建一个明确的 javadoc:org.springframework.context.ApplicationContext[]，代表这些定制的组合。
+javadoc:org.springframework.boot.test.context.runner.ApplicationContextRunner[] 是实现这一目标的好工具。
 
-WARNING: javadoc:org.springframework.boot.test.context.runner.ApplicationContextRunner[] doesn't work when running the tests in a native image.
+WARNING: javadoc:org.springframework.boot.test.context.runner.ApplicationContextRunner[] 不适用于 native image 下的测试。
 
-javadoc:org.springframework.boot.test.context.runner.ApplicationContextRunner[] is usually defined as a field of the test class to gather the base, common configuration.
-The following example makes sure that `MyServiceAutoConfiguration` is always invoked:
+javadoc:org.springframework.boot.test.context.runner.ApplicationContextRunner[] 通常作为测试类字段，收集基础通用配置。
+如下例确保 `MyServiceAutoConfiguration` 总会被调用：
 
 include-code::MyServiceAutoConfigurationTests[tag=runner]
 
-TIP: If multiple auto-configurations have to be defined, there is no need to order their declarations as they are invoked in the exact same order as when running the application.
+TIP: 若需定义多个自动配置，无需排序声明，调用顺序与应用运行时一致。
 
-Each test can use the runner to represent a particular use case.
-For instance, the sample below invokes a user configuration (`UserConfiguration`) and checks that the auto-configuration backs off properly.
-Invoking `run` provides a callback context that can be used with AssertJ.
+每个测试可用 runner 表示特定用例。
+例如，下面示例调用用户配置（`UserConfiguration`），检查自动配置能否正确回退。
+调用 `run` 提供回调上下文，可配合 AssertJ 使用。
 
 include-code::MyServiceAutoConfigurationTests[tag=test-user-config]
 
-It is also possible to easily customize the javadoc:org.springframework.core.env.Environment[], as shown in the following example:
+还可轻松定制 javadoc:org.springframework.core.env.Environment[]，如下例：
 
 include-code::MyServiceAutoConfigurationTests[tag=test-env]
 
-The runner can also be used to display the javadoc:org.springframework.boot.autoconfigure.condition.ConditionEvaluationReport[].
-The report can be printed at `INFO` or `DEBUG` level.
-The following example shows how to use the javadoc:org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener[] to print the report in auto-configuration tests.
+runner 还能用于显示 javadoc:org.springframework.boot.autoconfigure.condition.ConditionEvaluationReport[]。
+报告可在 `INFO` 或 `DEBUG` 级别打印。
+如下例展示如何用 javadoc:org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener[] 在自动配置测试中打印报告。
 
 include-code::MyConditionEvaluationReportingTests[]
 
 
-
 [[features.developing-auto-configuration.testing.simulating-a-web-context]]
-=== Simulating a Web Context
+=== 模拟 Web 上下文
 
-If you need to test an auto-configuration that only operates in a servlet or reactive web application context, use the javadoc:org.springframework.boot.test.context.runner.WebApplicationContextRunner[] or javadoc:org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner[] respectively.
-
+如需测试仅在 Servlet 或响应式 Web 应用上下文下生效的自动配置，分别使用 javadoc:org.springframework.boot.test.context.runner.WebApplicationContextRunner[] 或 javadoc:org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner[]。
 
 
 [[features.developing-auto-configuration.testing.overriding-classpath]]
-=== Overriding the Classpath
+=== 覆盖 Classpath
 
-It is also possible to test what happens when a particular class and/or package is not present at runtime.
-Spring Boot ships with a javadoc:org.springframework.boot.test.context.FilteredClassLoader[] that can easily be used by the runner.
-In the following example, we assert that if `MyService` is not present, the auto-configuration is properly disabled:
+还可测试某类/包在运行时缺失的情况。
+Spring Boot 提供 javadoc:org.springframework.boot.test.context.FilteredClassLoader[]，可被 runner 轻松使用。
+如下例断言若无 `MyService`，自动配置会被禁用：
 
 include-code::../MyServiceAutoConfigurationTests[tag=test-classloader]
 
 
-
 [[features.developing-auto-configuration.custom-starter]]
-== Creating Your Own Starter
+== 创建自定义 Starter
 
-A typical Spring Boot starter contains code to auto-configure and customize the infrastructure of a given technology, let's call that "acme".
-To make it easily extensible, a number of configuration keys in a dedicated namespace can be exposed to the environment.
-Finally, a single "starter" dependency is provided to help users get started as easily as possible.
+典型的 Spring Boot starter 包含自动配置和基础设施定制代码，以"acme"为例。
+为便于扩展，可在专用命名空间暴露一系列配置键。
+最后，starter 依赖提供一切所需，帮助用户快速上手。
 
-Concretely, a custom starter can contain the following:
+具体而言，自定义 starter 可包含：
 
-* The `autoconfigure` module that contains the auto-configuration code for "acme".
-* The `starter` module that provides a dependency to the `autoconfigure` module as well as "acme" and any additional dependencies that are typically useful.
-In a nutshell, adding the starter should provide everything needed to start using that library.
+* 包含"acme"自动配置代码的 `autoconfigure` 模块。
+* `starter` 模块依赖 `autoconfigure`，并引入"acme"及常用依赖。
+简言之，添加 starter 即可直接使用该库。
 
-This separation in two modules is in no way necessary.
-If "acme" has several flavors, options or optional features, then it is better to separate the auto-configuration as you can clearly express the fact some features are optional.
-Besides, you have the ability to craft a starter that provides an opinion about those optional dependencies.
-At the same time, others can rely only on the `autoconfigure` module and craft their own starter with different opinions.
+这种两模块分离并非必须。
+若"acme"有多种风格、选项或可选特性，建议分离自动配置，便于表达部分特性为可选。
+同时可打造带主观推荐的 starter，其他人也可仅依赖 `autoconfigure` 模块。
 
-If the auto-configuration is relatively straightforward and does not have optional features, merging the two modules in the starter is definitely an option.
-
+如果自动配置相对简单且没有可选特性，在 starter 中合并这两个模块绝对是可行的选择。
 
 
 [[features.developing-auto-configuration.custom-starter.naming]]
-=== Naming
+=== 命名
 
-You should make sure to provide a proper namespace for your starter.
-Do not start your module names with `spring-boot`, even if you use a different Maven `groupId`.
-We may offer official support for the thing you auto-configure in the future.
+你应该为你的 starter 提供一个合适的命名空间。
+即使你使用不同的 Maven `groupId`，也不要以 `spring-boot` 开头命名你的模块。
+我们将来可能会为你自动配置的内容提供官方支持。
 
-As a rule of thumb, you should name a combined module after the starter.
-For example, assume that you are creating a starter for "acme" and that you name the auto-configure module `acme-spring-boot` and the starter `acme-spring-boot-starter`.
-If you only have one module that combines the two, name it `acme-spring-boot-starter`.
-
+一般来说，你应该根据 starter 来命名组合模块。
+例如，假设你正在为"acme"创建一个 starter，并将自动配置模块命名为 `acme-spring-boot`，starter 命名为 `acme-spring-boot-starter`。
+如果你只有一个组合了这两者的模块，将其命名为 `acme-spring-boot-starter`。
 
 
 [[features.developing-auto-configuration.custom-starter.configuration-keys]]
-=== Configuration keys
+=== 配置键
 
-If your starter provides configuration keys, use a unique namespace for them.
-In particular, do not include your keys in the namespaces that Spring Boot uses (such as `server`, `management`, `spring`, and so on).
-If you use the same namespace, we may modify these namespaces in the future in ways that break your modules.
-As a rule of thumb, prefix all your keys with a namespace that you own (for example `acme`).
+如果你的 starter 提供配置键，请为它们使用唯一的命名空间。
+特别是，不要将你的键包含在 Spring Boot 使用的命名空间中（如 `server`、`management`、`spring` 等）。
+如果你使用相同的命名空间，我们将来可能会以破坏你的模块的方式修改这些命名空间。
+一般来说，为你所有的键添加你拥有的命名空间前缀（例如 `acme`）。
 
-Make sure that configuration keys are documented by adding field Javadoc for each property, as shown in the following example:
+确保通过为每个属性添加字段 Javadoc 来记录配置键，如下例所示：
 
 include-code::AcmeProperties[]
 
-NOTE: You should only use plain text with javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] field Javadoc, since they are not processed before being added to the JSON.
+NOTE: 你应该只使用纯文本作为 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 字段 Javadoc，因为它们在被添加到 JSON 之前不会被处理。
 
-If you use javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] with record class then record components' descriptions should be provided via class-level Javadoc tag `@param` (there are no explicit instance fields in record classes to put regular field-level Javadocs on).
+如果你将 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 与 record 类一起使用，则应该通过类级 Javadoc 标签 `@param` 提供 record 组件的描述（因为 record 类中没有显式的实例字段来放置常规的字段级 Javadoc）。
 
-Here are some rules we follow internally to make sure descriptions are consistent:
+以下是我们内部遵循的一些规则，以确保描述的一致性：
 
-* Do not start the description by "The" or "A".
-* For `boolean` types, start the description with "Whether" or "Enable".
-* For collection-based types, start the description with "Comma-separated list"
-* Use javadoc:java.time.Duration[] rather than `long` and describe the default unit if it differs from milliseconds, such as "If a duration suffix is not specified, seconds will be used".
-* Do not provide the default value in the description unless it has to be determined at runtime.
+* 不要以"The"或"A"开头描述。
+* 对于 `boolean` 类型，以"Whether"或"Enable"开头描述。
+* 对于基于集合的类型，以"Comma-separated list"开头描述。
+* 使用 javadoc:java.time.Duration[] 而不是 `long`，如果默认单位与毫秒不同，请描述默认单位，例如"如果未指定持续时间后缀，将使用秒"。
+* 除非必须在运行时确定，否则不要在描述中提供默认值。
 
-Make sure to xref:specification:configuration-metadata/annotation-processor.adoc[trigger meta-data generation] so that IDE assistance is available for your keys as well.
-You may want to review the generated metadata (`META-INF/spring-configuration-metadata.json`) to make sure your keys are properly documented.
-Using your own starter in a compatible IDE is also a good idea to validate that quality of the metadata.
-
+确保 xref:specification:configuration-metadata/annotation-processor.adoc[触发元数据生成]，以便你的键也能获得 IDE 辅助。
+你可能想要查看生成的元数据（`META-INF/spring-configuration-metadata.json`）以确保你的键被正确记录。
+在兼容的 IDE 中使用你自己的 starter 也是验证元数据质量的好方法。
 
 
 [[features.developing-auto-configuration.custom-starter.autoconfigure-module]]
-=== The "`autoconfigure`" Module
+=== "autoconfigure" 模块
 
-The `autoconfigure` module contains everything that is necessary to get started with the library.
-It may also contain configuration key definitions (such as javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation]) and any callback interface that can be used to further customize how the components are initialized.
+`autoconfigure` 模块包含开始使用该库所需的一切。
+它还可能包含配置键定义（如 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation]）和可用于进一步自定义组件初始化方式的回调接口。
 
-TIP: You should mark the dependencies to the library as optional so that you can include the `autoconfigure` module in your projects more easily.
-If you do it that way, the library is not provided and, by default, Spring Boot backs off.
+TIP: 你应该将库的依赖标记为可选，这样你可以更容易地在项目中包含 `autoconfigure` 模块。
+如果你这样做，库不会被提供，默认情况下，Spring Boot 会回退。
 
-Spring Boot uses an annotation processor to collect the conditions on auto-configurations in a metadata file (`META-INF/spring-autoconfigure-metadata.properties`).
-If that file is present, it is used to eagerly filter auto-configurations that do not match, which will improve startup time.
+Spring Boot 使用注解处理器在元数据文件（`META-INF/spring-autoconfigure-metadata.properties`）中收集自动配置的条件。
+如果该文件存在，它将被用于急切地过滤不匹配的自动配置，这将提高启动时间。
 
-When building with Maven, configure the compiler plugin (3.12.0 or later) to add `spring-boot-autoconfigure-processor` to the annotation processor paths:
+使用 Maven 构建时，配置编译器插件（3.12.0 或更高版本）以将 `spring-boot-autoconfigure-processor` 添加到注解处理器路径：
 
 [source,xml]
 ----
@@ -330,7 +309,7 @@ When building with Maven, configure the compiler plugin (3.12.0 or later) to add
 </project>
 ----
 
-With Gradle, the dependency should be declared in the `annotationProcessor` configuration, as shown in the following example:
+使用 Gradle 时，依赖应该在 `annotationProcessor` 配置中声明，如下例所示：
 
 [source,gradle]
 ----
@@ -340,18 +319,17 @@ dependencies {
 ----
 
 
-
 [[features.developing-auto-configuration.custom-starter.starter-module]]
-=== Starter Module
+=== Starter 模块
 
-The starter is really an empty jar.
-Its only purpose is to provide the necessary dependencies to work with the library.
-You can think of it as an opinionated view of what is required to get started.
+starter 实际上是一个空 jar。
+它的唯一目的是提供使用该库所需的必要依赖。
+你可以将其视为对开始使用所需内容的推荐视图。
 
-Do not make assumptions about the project in which your starter is added.
-If the library you are auto-configuring typically requires other starters, mention them as well.
-Providing a proper set of _default_ dependencies may be hard if the number of optional dependencies is high, as you should avoid including dependencies that are unnecessary for a typical usage of the library.
-In other words, you should not include optional dependencies.
+不要对你添加 starter 的项目做假设。
+如果你正在自动配置的库通常需要其他 starter，也要提到它们。
+如果可选依赖的数量很多，提供一组合适的_默认_依赖可能很困难，因为你应该避免包含对库的典型使用不必要的依赖。
+换句话说，你不应该包含可选依赖。
 
-NOTE: Either way, your starter must reference the core Spring Boot starter (`spring-boot-starter`) directly or indirectly (there is no need to add it if your starter relies on another starter).
-If a project is created with only your custom starter, Spring Boot's core features will be honoured by the presence of the core starter.
+NOTE: 无论哪种方式，你的 starter 必须直接或间接引用核心 Spring Boot starter（`spring-boot-starter`）（如果你的 starter 依赖另一个 starter，则无需添加它）。
+如果项目仅使用你的自定义 starter 创建，Spring Boot 的核心功能将通过核心 starter 的存在而得到支持。

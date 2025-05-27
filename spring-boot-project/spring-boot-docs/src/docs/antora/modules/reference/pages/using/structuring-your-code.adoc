@@ -1,35 +1,35 @@
 [[using.structuring-your-code]]
-= Structuring Your Code
+= 构建您的代码
 
-Spring Boot does not require any specific code layout to work.
-However, there are some best practices that help.
+Spring Boot 不需要任何特定的代码布局就能工作。
+但是，有一些最佳实践可以提供帮助。
 
-TIP: If you wish to enforce a structure based on domains, take a look at https://spring.io/projects/spring-modulith#overview[Spring Modulith].
+提示：如果您希望基于领域强制执行结构，请查看 https://spring.io/projects/spring-modulith#overview[Spring Modulith]。
 
 
 
 [[using.structuring-your-code.using-the-default-package]]
-== Using the "`default`" Package
+== 使用"default"包
 
-When a class does not include a `package` declaration, it is considered to be in the "`default package`".
-The use of the "`default package`" is generally discouraged and should be avoided.
-It can cause particular problems for Spring Boot applications that use the javadoc:org.springframework.context.annotation.ComponentScan[format=annotation], javadoc:org.springframework.boot.context.properties.ConfigurationPropertiesScan[format=annotation], javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation], or javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] annotations, since every class from every jar is read.
+当一个类不包含 `package` 声明时，它被认为是在"`default package`"中。
+通常不鼓励使用"`default package`"，应该避免使用。
+它可能会对使用 javadoc:org.springframework.context.annotation.ComponentScan[format=annotation]、javadoc:org.springframework.boot.context.properties.ConfigurationPropertiesScan[format=annotation]、javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 或 javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] 注解的 Spring Boot 应用程序造成特殊问题，因为会读取每个 jar 中的每个类。
 
-TIP: We recommend that you follow Java's recommended package naming conventions and use a reversed domain name (for example, `com.example.project`).
+提示：我们建议您遵循 Java 推荐的包命名约定，并使用反向域名（例如，`com.example.project`）。
 
 
 
 [[using.structuring-your-code.locating-the-main-class]]
-== Locating the Main Application Class
+== 定位主应用程序类
 
-We generally recommend that you locate your main application class in a root package above other classes.
-The xref:using/using-the-springbootapplication-annotation.adoc[`@SpringBootApplication` annotation] is often placed on your main class, and it implicitly defines a base "`search package`" for certain items.
-For example, if you are writing a JPA application, the package of the javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] annotated class is used to search for javadoc:jakarta.persistence.Entity[format=annotation] items.
-Using a root package also allows component scan to apply only on your project.
+我们通常建议您将主应用程序类放在其他类的根包之上。
+xref:using/using-the-springbootapplication-annotation.adoc[`@SpringBootApplication` 注解] 通常放在您的主类上，它隐式地为某些项目定义了基础"`search package`"。
+例如，如果您正在编写 JPA 应用程序，则使用 javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] 注解的类的包来搜索 javadoc:jakarta.persistence.Entity[format=annotation] 项目。
+使用根包还允许组件扫描仅应用于您的项目。
 
-TIP: If you do not want to use javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation], the javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] and javadoc:org.springframework.context.annotation.ComponentScan[format=annotation] annotations that it imports defines that behavior so you can also use those instead.
+提示：如果您不想使用 javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation]，它导入的 javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] 和 javadoc:org.springframework.context.annotation.ComponentScan[format=annotation] 注解定义了该行为，因此您也可以使用这些注解代替。
 
-The following listing shows a typical layout:
+以下列表显示了一个典型的布局：
 
 [source]
 ----
@@ -51,6 +51,6 @@ com
              +- OrderRepository.java
 ----
 
-The `MyApplication.java` file would declare the `main` method, along with the basic javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation], as follows:
+`MyApplication.java` 文件将声明 `main` 方法，以及基本的 javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation]，如下所示：
 
 include-code::MyApplication[]

@@ -1,7 +1,7 @@
 [[features]]
-= Core Features
+= 核心特性
 
-This section dives into the details of Spring Boot.
-Here you can learn about the key features that you may want to use and customize.
-If you have not already done so, you might want to read the xref:tutorial:index.adoc[] and xref:using/index.adoc[] sections, so that you have a good grounding of the basics.
+本节深入介绍 Spring Boot 的详细特性。
+你可以在这里了解你可能想要使用和自定义的关键功能。
+如果你还没有阅读过，建议先查看 xref:tutorial:index.adoc[] 和 xref:using/index.adoc[] 部分，以便打下良好的基础。
 

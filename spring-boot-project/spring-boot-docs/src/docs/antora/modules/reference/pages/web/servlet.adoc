@@ -1,87 +1,87 @@
 [[web.servlet]]
-= Servlet Web Applications
+= Servlet Web 应用程序
 
-If you want to build servlet-based web applications, you can take advantage of Spring Boot's auto-configuration for Spring MVC or Jersey.
+如果你想构建基于 servlet 的 Web 应用程序，你可以利用 Spring Boot 为 Spring MVC 或 Jersey 提供的自动配置功能。
 
 
 
 [[web.servlet.spring-mvc]]
-== The "`Spring Web MVC Framework`"
+== "`Spring Web MVC 框架`"
 
-The {url-spring-framework-docs}/web/webmvc.html[Spring Web MVC framework] (often referred to as "`Spring MVC`") is a rich "`model view controller`" web framework.
-Spring MVC lets you create special javadoc:org.springframework.stereotype.Controller[format=annotation] or javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] beans to handle incoming HTTP requests.
-Methods in your controller are mapped to HTTP by using javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] annotations.
+{url-spring-framework-docs}/web/webmvc.html[Spring Web MVC 框架]（通常简称为"`Spring MVC`"）是一个功能丰富的"`模型视图控制器`"Web 框架。
+Spring MVC 允许你创建特殊的 javadoc:org.springframework.stereotype.Controller[format=annotation] 或 javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] bean 来处理传入的 HTTP 请求。
+控制器中的方法通过使用 javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] 注解映射到 HTTP。
 
-The following code shows a typical javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] that serves JSON data:
+以下代码展示了一个典型的提供 JSON 数据的 javadoc:org.springframework.web.bind.annotation.RestController[format=annotation]：
 
 include-code::MyRestController[]
 
-"`WebMvc.fn`", the functional variant, separates the routing configuration from the actual handling of the requests, as shown in the following example:
+"`WebMvc.fn`"，即函数式变体，将路由配置与实际请求处理分开，如下例所示：
 
 include-code::MyRoutingConfiguration[]
 
 include-code::MyUserHandler[]
 
-Spring MVC is part of the core Spring Framework, and detailed information is available in the {url-spring-framework-docs}/web/webmvc.html[reference documentation].
-There are also several guides that cover Spring MVC available at https://spring.io/guides.
+Spring MVC 是 Spring Framework 核心的一部分，详细信息可在 {url-spring-framework-docs}/web/webmvc.html[参考文档] 中获取。
+在 https://spring.io/guides 上也有几个涵盖 Spring MVC 的指南。
 
-TIP: You can define as many javadoc:org.springframework.web.servlet.function.RouterFunction[] beans as you like to modularize the definition of the router.
-Beans can be ordered if you need to apply a precedence.
+提示：你可以定义任意数量的 javadoc:org.springframework.web.servlet.function.RouterFunction[] bean 来模块化路由定义。
+如果需要应用优先级，可以对 bean 进行排序。
 
 
 
 [[web.servlet.spring-mvc.auto-configuration]]
-=== Spring MVC Auto-configuration
+=== Spring MVC 自动配置
 
-Spring Boot provides auto-configuration for Spring MVC that works well with most applications.
-It replaces the need for javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] and the two cannot be used together.
-In addition to Spring MVC's defaults, the auto-configuration provides the following features:
+Spring Boot 为 Spring MVC 提供了适用于大多数应用程序的自动配置。
+它替代了对 javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] 的需求，并且两者不能一起使用。
+除了 Spring MVC 的默认值外，自动配置还提供以下功能：
 
-* Inclusion of javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[] and javadoc:org.springframework.web.servlet.view.BeanNameViewResolver[] beans.
-* Support for serving static resources, including support for WebJars (covered xref:web/servlet.adoc#web.servlet.spring-mvc.static-content[later in this document]).
-* Automatic registration of javadoc:org.springframework.core.convert.converter.Converter[], javadoc:org.springframework.core.convert.converter.GenericConverter[], and javadoc:org.springframework.format.Formatter[] beans.
-* Support for javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] (covered xref:web/servlet.adoc#web.servlet.spring-mvc.message-converters[later in this document]).
-* Automatic registration of javadoc:org.springframework.validation.MessageCodesResolver[] (covered xref:web/servlet.adoc#web.servlet.spring-mvc.message-codes[later in this document]).
-* Static `index.html` support.
-* Automatic use of a javadoc:org.springframework.web.bind.support.ConfigurableWebBindingInitializer[] bean (covered xref:web/servlet.adoc#web.servlet.spring-mvc.binding-initializer[later in this document]).
+* 包含 javadoc:org.springframework.web.servlet.view.ContentNegotiatingViewResolver[] 和 javadoc:org.springframework.web.servlet.view.BeanNameViewResolver[] bean。
+* 支持提供静态资源，包括对 WebJars 的支持（在本文档后面会介绍）。
+* 自动注册 javadoc:org.springframework.core.convert.converter.Converter[]、javadoc:org.springframework.core.convert.converter.GenericConverter[] 和 javadoc:org.springframework.format.Formatter[] bean。
+* 支持 javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[]（在本文档后面会介绍）。
+* 自动注册 javadoc:org.springframework.validation.MessageCodesResolver[]（在本文档后面会介绍）。
+* 静态 `index.html` 支持。
+* 自动使用 javadoc:org.springframework.web.bind.support.ConfigurableWebBindingInitializer[] bean（在本文档后面会介绍）。
 
-If you want to keep those Spring Boot MVC customizations and make more {url-spring-framework-docs}/web/webmvc.html[MVC customizations] (interceptors, formatters, view controllers, and other features), you can add your own javadoc:org.springframework.context.annotation.Configuration[format=annotation] class of type javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] but *without* javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation].
+如果你想保留这些 Spring Boot MVC 自定义并添加更多 {url-spring-framework-docs}/web/webmvc.html[MVC 自定义]（拦截器、格式化器、视图控制器和其他功能），你可以添加自己的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类，类型为 javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[]，但*不要*使用 javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation]。
 
-If you want to provide custom instances of javadoc:org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping[], javadoc:org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter[], or javadoc:org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver[], and still keep the Spring Boot MVC customizations, you can declare a bean of type javadoc:org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations[] and use it to provide custom instances of those components.
-The custom instances will be subject to further initialization and configuration by Spring MVC.
-To participate in, and if desired, override that subsequent processing, a javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] should be used.
+如果你想提供 javadoc:org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping[]、javadoc:org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter[] 或 javadoc:org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver[] 的自定义实例，同时保留 Spring Boot MVC 自定义，你可以声明一个类型为 javadoc:org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations[] 的 bean，并使用它来提供这些组件的自定义实例。
+自定义实例将受到 Spring MVC 的进一步初始化和配置。
+要参与并（如果需要）覆盖后续处理，应使用 javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[]。
 
-If you do not want to use the auto-configuration and want to take complete control of Spring MVC, add your own javadoc:org.springframework.context.annotation.Configuration[format=annotation] annotated with javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation].
-Alternatively, add your own javadoc:org.springframework.context.annotation.Configuration[format=annotation]-annotated javadoc:org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration[] as described in the javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] API documentation.
+如果你不想使用自动配置并想完全控制 Spring MVC，添加你自己的带有 javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] 注解的 javadoc:org.springframework.context.annotation.Configuration[format=annotation]。
+或者，按照 javadoc:org.springframework.web.servlet.config.annotation.EnableWebMvc[format=annotation] API 文档中的描述，添加你自己的带有 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 注解的 javadoc:org.springframework.web.servlet.config.annotation.DelegatingWebMvcConfiguration[]。
 
 
 
 [[web.servlet.spring-mvc.conversion-service]]
-=== Spring MVC Conversion Service
+=== Spring MVC 转换服务
 
-Spring MVC uses a different javadoc:org.springframework.core.convert.ConversionService[] to the one used to convert values from your `application.properties` or `application.yaml` file.
-It means that javadoc:java.time.Period[], javadoc:java.time.Duration[] and javadoc:org.springframework.util.unit.DataSize[] converters are not available and that javadoc:org.springframework.boot.convert.DurationUnit[format=annotation] and javadoc:org.springframework.boot.convert.DataSizeUnit[format=annotation] annotations will be ignored.
+Spring MVC 使用与用于转换 `application.properties` 或 `application.yaml` 文件中的值的 javadoc:org.springframework.core.convert.ConversionService[] 不同的转换服务。
+这意味着 javadoc:java.time.Period[]、javadoc:java.time.Duration[] 和 javadoc:org.springframework.util.unit.DataSize[] 转换器不可用，并且 javadoc:org.springframework.boot.convert.DurationUnit[format=annotation] 和 javadoc:org.springframework.boot.convert.DataSizeUnit[format=annotation] 注解将被忽略。
 
-If you want to customize the javadoc:org.springframework.core.convert.ConversionService[] used by Spring MVC, you can provide a javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] bean with an `addFormatters` method.
-From this method you can register any converter that you like, or you can delegate to the static methods available on javadoc:org.springframework.boot.convert.ApplicationConversionService[].
+如果你想自定义 Spring MVC 使用的 javadoc:org.springframework.core.convert.ConversionService[]，你可以提供一个带有 `addFormatters` 方法的 javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] bean。
+从这个方法中，你可以注册任何你喜欢的转换器，或者你可以委托给 javadoc:org.springframework.boot.convert.ApplicationConversionService[] 上可用的静态方法。
 
-Conversion can also be customized using the `spring.mvc.format.*` configuration properties.
-When not configured, the following defaults are used:
+转换也可以使用 `spring.mvc.format.*` 配置属性进行自定义。
+未配置时，使用以下默认值：
 
 |===
-|Property |`DateTimeFormatter` |Formats
+|属性 |`DateTimeFormatter` |格式
 
 |configprop:spring.mvc.format.date[]
 |`ofLocalizedDate(FormatStyle.SHORT)`
-|`java.util.Date` and javadoc:java.time.LocalDate[]
+|`java.util.Date` 和 javadoc:java.time.LocalDate[]
 
 |configprop:spring.mvc.format.time[]
 |`ofLocalizedTime(FormatStyle.SHORT)`
-|java.time's javadoc:java.time.LocalTime[] and javadoc:java.time.OffsetTime[]
+|java.time 的 javadoc:java.time.LocalTime[] 和 javadoc:java.time.OffsetTime[]
 
 |configprop:spring.mvc.format.date-time[]
 |`ofLocalizedDateTime(FormatStyle.SHORT)`
-|java.time's javadoc:java.time.LocalDateTime[], javadoc:java.time.OffsetDateTime[], and javadoc:java.time.ZonedDateTime[]
+|java.time 的 javadoc:java.time.LocalDateTime[]、javadoc:java.time.OffsetDateTime[] 和 javadoc:java.time.ZonedDateTime[]
 |===
 
 
@@ -89,45 +89,45 @@ When not configured, the following defaults are used:
 [[web.servlet.spring-mvc.message-converters]]
 === HttpMessageConverters
 
-Spring MVC uses the javadoc:org.springframework.http.converter.HttpMessageConverter[] interface to convert HTTP requests and responses.
-Sensible defaults are included out of the box.
-For example, objects can be automatically converted to JSON (by using the Jackson library) or XML (by using the Jackson XML extension, if available, or by using JAXB if the Jackson XML extension is not available).
-By default, strings are encoded in `UTF-8`.
+Spring MVC 使用 javadoc:org.springframework.http.converter.HttpMessageConverter[] 接口来转换 HTTP 请求和响应。
+默认包含合理的默认值。
+例如，对象可以自动转换为 JSON（通过使用 Jackson 库）或 XML（通过使用 Jackson XML 扩展，如果可用，或者如果 Jackson XML 扩展不可用，则使用 JAXB）。
+默认情况下，字符串以 `UTF-8` 编码。
 
-Any javadoc:org.springframework.http.converter.HttpMessageConverter[] bean that is present in the context is added to the list of converters.
-You can also override default converters in the same way.
+上下文中存在的任何 javadoc:org.springframework.http.converter.HttpMessageConverter[] bean 都会添加到转换器列表中。
+你也可以以相同的方式覆盖默认转换器。
 
-If you need to add or customize converters, you can use Spring Boot's javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] class, as shown in the following listing:
+如果需要添加或自定义转换器，可以使用 Spring Boot 的 javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] 类，如下所示：
 
 include-code::MyHttpMessageConvertersConfiguration[]
 
-For further control, you can also sub-class javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] and override its `postProcessConverters` and/or `postProcessPartConverters` methods.
-This can be useful when you want to re-order or remove some of the converters that Spring MVC configures by default.
+为了进一步控制，你还可以子类化 javadoc:org.springframework.boot.autoconfigure.http.HttpMessageConverters[] 并覆盖其 `postProcessConverters` 和/或 `postProcessPartConverters` 方法。
+当你想重新排序或删除 Spring MVC 默认配置的一些转换器时，这很有用。
 
 
 
 [[web.servlet.spring-mvc.message-codes]]
 === MessageCodesResolver
 
-Spring MVC has a strategy for generating error codes for rendering error messages from binding errors: javadoc:org.springframework.validation.MessageCodesResolver[].
-If you set the configprop:spring.mvc.message-codes-resolver-format[] property `PREFIX_ERROR_CODE` or `POSTFIX_ERROR_CODE`, Spring Boot creates one for you (see the enumeration in javadoc:org.springframework.validation.DefaultMessageCodesResolver#Format[]).
+Spring MVC 有一个用于从绑定错误生成错误代码以渲染错误消息的策略：javadoc:org.springframework.validation.MessageCodesResolver[]。
+如果你将 configprop:spring.mvc.message-codes-resolver-format[] 属性设置为 `PREFIX_ERROR_CODE` 或 `POSTFIX_ERROR_CODE`，Spring Boot 会为你创建一个（参见 javadoc:org.springframework.validation.DefaultMessageCodesResolver#Format[] 中的枚举）。
 
 
 
 [[web.servlet.spring-mvc.static-content]]
-=== Static Content
+=== 静态内容
 
-By default, Spring Boot serves static content from a directory called `/static` (or `/public` or `/resources` or `/META-INF/resources`) in the classpath or from the root of the javadoc:jakarta.servlet.ServletContext[].
-It uses the javadoc:org.springframework.web.servlet.resource.ResourceHttpRequestHandler[] from Spring MVC so that you can modify that behavior by adding your own javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] and overriding the `addResourceHandlers` method.
+默认情况下，Spring Boot 从类路径中名为 `/static`（或 `/public` 或 `/resources` 或 `/META-INF/resources`）的目录或从 javadoc:jakarta.servlet.ServletContext[] 的根目录提供静态内容。
+它使用来自 Spring MVC 的 javadoc:org.springframework.web.servlet.resource.ResourceHttpRequestHandler[]，因此你可以通过添加自己的 javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] 并覆盖 `addResourceHandlers` 方法来修改该行为。
 
-In a stand-alone web application, the default servlet from the container is not enabled.
-It can be enabled using the configprop:server.servlet.register-default-servlet[] property.
+在独立 Web 应用程序中，容器的默认 servlet 未启用。
+可以使用 configprop:server.servlet.register-default-servlet[] 属性启用它。
 
-The default servlet acts as a fallback, serving content from the root of the javadoc:jakarta.servlet.ServletContext[] if Spring decides not to handle it.
-Most of the time, this does not happen (unless you modify the default MVC configuration), because Spring can always handle requests through the javadoc:org.springframework.web.servlet.DispatcherServlet[].
+默认 servlet 作为后备，如果 Spring 决定不处理请求，则从 javadoc:jakarta.servlet.ServletContext[] 的根目录提供内容。
+大多数情况下，这不会发生（除非你修改默认的 MVC 配置），因为 Spring 始终可以通过 javadoc:org.springframework.web.servlet.DispatcherServlet[] 处理请求。
 
-By default, resources are mapped on `+/**+`, but you can tune that with the configprop:spring.mvc.static-path-pattern[] property.
-For instance, relocating all resources to `/resources/**` can be achieved as follows:
+默认情况下，资源映射到 `+/**+`，但你可以使用 configprop:spring.mvc.static-path-pattern[] 属性调整它。
+例如，可以通过以下方式将所有资源重新定位到 `/resources/**`：
 
 [configprops,yaml]
 ----
@@ -136,23 +136,23 @@ spring:
     static-path-pattern: "/resources/**"
 ----
 
-You can also customize the static resource locations by using the configprop:spring.web.resources.static-locations[] property (replacing the default values with a list of directory locations).
-The root servlet context path, `"/"`, is automatically added as a location as well.
+你还可以使用 configprop:spring.web.resources.static-locations[] 属性自定义静态资源位置（用目录位置列表替换默认值）。
+根 servlet 上下文路径 `"/"` 也会自动添加为位置。
 
-In addition to the "`standard`" static resource locations mentioned earlier, a special case is made for https://www.webjars.org/[Webjars content].
-By default, any resources with a path in `+/webjars/**+` are served from jar files if they are packaged in the Webjars format.
-The path can be customized with the configprop:spring.mvc.webjars-path-pattern[] property.
+除了前面提到的"`标准`"静态资源位置外，还对 https://www.webjars.org/[Webjars 内容] 进行了特殊处理。
+默认情况下，如果资源以 Webjars 格式打包，则从 jar 文件中提供路径为 `+/webjars/**+` 的任何资源。
+可以使用 configprop:spring.mvc.webjars-path-pattern[] 属性自定义路径。
 
-TIP: Do not use the `src/main/webapp` directory if your application is packaged as a jar.
-Although this directory is a common standard, it works *only* with war packaging, and it is silently ignored by most build tools if you generate a jar.
+提示：如果你的应用程序打包为 jar，请不要使用 `src/main/webapp` 目录。
+虽然这个目录是一个常见标准，但它*仅*适用于 war 打包，如果你生成 jar，大多数构建工具会静默忽略它。
 
-Spring Boot also supports the advanced resource handling features provided by Spring MVC, allowing use cases such as cache-busting static resources or using version agnostic URLs for Webjars.
+Spring Boot 还支持 Spring MVC 提供的高级资源处理功能，允许使用诸如缓存破坏静态资源或为 Webjars 使用版本无关的 URL 等用例。
 
-To use version agnostic URLs for Webjars, add the `org.webjars:webjars-locator-lite` dependency.
-Then declare your Webjar.
-Using jQuery as an example, adding `"/webjars/jquery/jquery.min.js"` results in `"/webjars/jquery/x.y.z/jquery.min.js"` where `x.y.z` is the Webjar version.
+要为 Webjars 使用版本无关的 URL，添加 `org.webjars:webjars-locator-lite` 依赖。
+然后声明你的 Webjar。
+以 jQuery 为例，添加 `"/webjars/jquery/jquery.min.js"` 会得到 `"/webjars/jquery/x.y.z/jquery.min.js"`，其中 `x.y.z` 是 Webjar 版本。
 
-To use cache busting, the following configuration configures a cache busting solution for all static resources, effectively adding a content hash, such as `<link href="/css/spring-2a2d595e6ed9a0b24f027f2b63b134d6.css"/>`, in URLs:
+要使用缓存破坏，以下配置为所有静态资源配置了一个缓存破坏解决方案，有效地在 URL 中添加内容哈希，例如 `<link href="/css/spring-2a2d595e6ed9a0b24f027f2b63b134d6.css"/>`：
 
 [configprops,yaml]
 ----
@@ -166,13 +166,13 @@ spring:
             paths: "/**"
 ----
 
-NOTE: Links to resources are rewritten in templates at runtime, thanks to a javadoc:org.springframework.web.servlet.resource.ResourceUrlEncodingFilter[] that is auto-configured for Thymeleaf and FreeMarker.
-You should manually declare this filter when using JSPs.
-Other template engines are currently not automatically supported but can be with custom template macros/helpers and the use of the javadoc:org.springframework.web.servlet.resource.ResourceUrlProvider[].
+注意：由于为 Thymeleaf 和 FreeMarker 自动配置了 javadoc:org.springframework.web.servlet.resource.ResourceUrlEncodingFilter[]，资源链接在运行时在模板中重写。
+使用 JSP 时，你应该手动声明此过滤器。
+其他模板引擎目前不自动支持，但可以通过自定义模板宏/助手和使用 javadoc:org.springframework.web.servlet.resource.ResourceUrlProvider[] 来支持。
 
-When loading resources dynamically with, for example, a JavaScript module loader, renaming files is not an option.
-That is why other strategies are also supported and can be combined.
-A "fixed" strategy adds a static version string in the URL without changing the file name, as shown in the following example:
+当使用 JavaScript 模块加载器等动态加载资源时，重命名文件不是选项。
+这就是为什么还支持其他策略并且可以组合使用。
+"`固定`"策略在 URL 中添加静态版本字符串而不更改文件名，如下例所示：
 
 [configprops,yaml]
 ----
@@ -190,62 +190,62 @@ spring:
             version: "v12"
 ----
 
-With this configuration, JavaScript modules located under `"/js/lib/"` use a fixed versioning strategy (`"/v12/js/lib/mymodule.js"`), while other resources still use the content one (`<link href="/css/spring-2a2d595e6ed9a0b24f027f2b63b134d6.css"/>`).
+使用此配置，位于 `"/js/lib/"` 下的 JavaScript 模块使用固定版本策略（`"/v12/js/lib/mymodule.js"`），而其他资源仍使用内容策略（`<link href="/css/spring-2a2d595e6ed9a0b24f027f2b63b134d6.css"/>`）。
 
-See javadoc:org.springframework.boot.autoconfigure.web.WebProperties$Resources[] for more supported options.
+有关更多支持的选项，请参见 javadoc:org.springframework.boot.autoconfigure.web.WebProperties$Resources[]。
 
-[TIP]
+[提示]
 ====
-This feature has been thoroughly described in a dedicated https://spring.io/blog/2014/07/24/spring-framework-4-1-handling-static-web-resources[blog post] and in Spring Framework's {url-spring-framework-docs}/web/webmvc/mvc-config/static-resources.html[reference documentation].
+此功能在专门的 https://spring.io/blog/2014/07/24/spring-framework-4-1-handling-static-web-resources[博客文章] 和 Spring Framework 的 {url-spring-framework-docs}/web/webmvc/mvc-config/static-resources.html[参考文档] 中有详细描述。
 ====
 
 
 
 [[web.servlet.spring-mvc.welcome-page]]
-=== Welcome Page
+=== 欢迎页面
 
-Spring Boot supports both static and templated welcome pages.
-It first looks for an `index.html` file in the configured static content locations.
-If one is not found, it then looks for an `index` template.
-If either is found, it is automatically used as the welcome page of the application.
+Spring Boot 支持静态和模板化的欢迎页面。
+它首先在配置的静态内容位置中查找 `index.html` 文件。
+如果未找到，则查找 `index` 模板。
+如果找到任何一个，它会自动用作应用程序的欢迎页面。
 
-This only acts as a fallback for actual index routes defined by the application.
-The ordering is defined by the order of javadoc:org.springframework.web.servlet.HandlerMapping[] beans which is by default the following:
+这仅作为应用程序定义的实际索引路由的后备。
+排序由 javadoc:org.springframework.web.servlet.HandlerMapping[] bean 的顺序定义，默认顺序如下：
 
 [cols="1,1"]
 |===
 |`RouterFunctionMapping`
-|Endpoints declared with javadoc:org.springframework.web.servlet.function.RouterFunction[] beans
+|使用 javadoc:org.springframework.web.servlet.function.RouterFunction[] bean 声明的端点
 
 |`RequestMappingHandlerMapping`
-|Endpoints declared in javadoc:org.springframework.stereotype.Controller[format=annotation] beans
+|在 javadoc:org.springframework.stereotype.Controller[format=annotation] bean 中声明的端点
 
 |`WelcomePageHandlerMapping`
-|The welcome page support
+|欢迎页面支持
 |===
 
 
 
 [[web.servlet.spring-mvc.favicon]]
-=== Custom Favicon
+=== 自定义 Favicon
 
-As with other static resources, Spring Boot checks for a `favicon.ico` in the configured static content locations.
-If such a file is present, it is automatically used as the favicon of the application.
+与其他静态资源一样，Spring Boot 在配置的静态内容位置中检查 `favicon.ico`。
+如果存在这样的文件，它会自动用作应用程序的 favicon。
 
 
 
 [[web.servlet.spring-mvc.content-negotiation]]
-=== Path Matching and Content Negotiation
+=== 路径匹配和内容协商
 
-Spring MVC can map incoming HTTP requests to handlers by looking at the request path and matching it to the mappings defined in your application (for example, javadoc:org.springframework.web.bind.annotation.GetMapping[format=annotation] annotations on Controller methods).
+Spring MVC 可以通过查看请求路径并将其与应用程序中定义的映射（例如，Controller 方法上的 javadoc:org.springframework.web.bind.annotation.GetMapping[format=annotation] 注解）进行匹配来映射传入的 HTTP 请求到处理器。
 
-Spring Boot chooses to disable suffix pattern matching by default, which means that requests like `"GET /projects/spring-boot.json"` will not be matched to `@GetMapping("/projects/spring-boot")` mappings.
-This is considered as a {url-spring-framework-docs}/web/webmvc/mvc-controller/ann-requestmapping.html#mvc-ann-requestmapping-suffix-pattern-match[best practice for Spring MVC applications].
-This feature was mainly useful in the past for HTTP clients which did not send proper "Accept" request headers; we needed to make sure to send the correct Content Type to the client.
-Nowadays, Content Negotiation is much more reliable.
+Spring Boot 默认禁用后缀模式匹配，这意味着像 `"GET /projects/spring-boot.json"` 这样的请求不会匹配到 `@GetMapping("/projects/spring-boot")` 映射。
+这被认为是 {url-spring-framework-docs}/web/webmvc/mvc-controller/ann-requestmapping.html#mvc-ann-requestmapping-suffix-pattern-match[Spring MVC 应用程序的最佳实践]。
+这个功能在过去主要用于不发送正确的"Accept"请求头的 HTTP 客户端；我们需要确保向客户端发送正确的 Content Type。
+如今，内容协商更加可靠。
 
-There are other ways to deal with HTTP clients that do not consistently send proper "Accept" request headers.
-Instead of using suffix matching, we can use a query parameter to ensure that requests like `"GET /projects/spring-boot?format=json"` will be mapped to `@GetMapping("/projects/spring-boot")`:
+还有其他方法可以处理不一致发送正确的"Accept"请求头的 HTTP 客户端。
+我们可以使用查询参数而不是使用后缀匹配，确保像 `"GET /projects/spring-boot?format=json"` 这样的请求会映射到 `@GetMapping("/projects/spring-boot")`：
 
 [configprops,yaml]
 ----
@@ -255,7 +255,7 @@ spring:
       favor-parameter: true
 ----
 
-Or if you prefer to use a different parameter name:
+或者如果你更喜欢使用不同的参数名：
 
 [configprops,yaml]
 ----
@@ -266,7 +266,7 @@ spring:
       parameter-name: "myparam"
 ----
 
-Most standard media types are supported out-of-the-box, but you can also define new ones:
+大多数标准媒体类型都开箱即用，但你也可以定义新的：
 
 [configprops,yaml]
 ----
@@ -277,13 +277,13 @@ spring:
         markdown: "text/markdown"
 ----
 
-As of Spring Framework 5.3, Spring MVC supports two strategies for matching request paths to controllers.
-By default, Spring Boot uses the javadoc:org.springframework.web.util.pattern.PathPatternParser[] strategy.
-javadoc:org.springframework.web.util.pattern.PathPatternParser[] is an https://spring.io/blog/2020/06/30/url-matching-with-pathpattern-in-spring-mvc[optimized implementation] but comes with some restrictions compared to the javadoc:org.springframework.util.AntPathMatcher[] strategy.
-javadoc:org.springframework.web.util.pattern.PathPatternParser[] restricts usage of {url-spring-framework-docs}/web/webmvc/mvc-controller/ann-requestmapping.html#mvc-ann-requestmapping-uri-templates[some path pattern variants].
-It is also incompatible with configuring the javadoc:org.springframework.web.servlet.DispatcherServlet[] with a path prefix (configprop:spring.mvc.servlet.path[]).
+从 Spring Framework 5.3 开始，Spring MVC 支持两种将请求路径匹配到控制器的策略。
+默认情况下，Spring Boot 使用 javadoc:org.springframework.web.util.pattern.PathPatternParser[] 策略。
+javadoc:org.springframework.web.util.pattern.PathPatternParser[] 是一个 https://spring.io/blog/2020/06/30/url-matching-with-pathpattern-in-spring-mvc[优化的实现]，但与 javadoc:org.springframework.util.AntPathMatcher[] 策略相比有一些限制。
+javadoc:org.springframework.web.util.pattern.PathPatternParser[] 限制使用 {url-spring-framework-docs}/web/webmvc/mvc-controller/ann-requestmapping.html#mvc-ann-requestmapping-uri-templates[某些路径模式变体]。
+它还与配置带有路径前缀的 javadoc:org.springframework.web.servlet.DispatcherServlet[]（configprop:spring.mvc.servlet.path[]）不兼容。
 
-The strategy can be configured using the configprop:spring.mvc.pathmatch.matching-strategy[] configuration property, as shown in the following example:
+可以使用 configprop:spring.mvc.pathmatch.matching-strategy[] 配置属性配置策略，如下例所示：
 
 [configprops,yaml]
 ----
@@ -293,65 +293,65 @@ spring:
       matching-strategy: "ant-path-matcher"
 ----
 
-Spring MVC will throw a javadoc:org.springframework.web.servlet.NoHandlerFoundException[] if a handler is not found for a request.
-Note that, by default, the xref:web/servlet.adoc#web.servlet.spring-mvc.static-content[serving of static content] is mapped to `+/**+` and will, therefore, provide a handler for all requests.
-If no static content is available, javadoc:org.springframework.web.servlet.resource.ResourceHttpRequestHandler[] will throw a javadoc:org.springframework.web.servlet.resource.NoResourceFoundException[].
-For a javadoc:org.springframework.web.servlet.NoHandlerFoundException[] to be thrown, set configprop:spring.mvc.static-path-pattern[] to a more specific value such as `/resources/**` or set configprop:spring.web.resources.add-mappings[] to `false` to disable serving of static content entirely.
+如果找不到请求的处理器，Spring MVC 将抛出 javadoc:org.springframework.web.servlet.NoHandlerFoundException[]。
+注意，默认情况下，xref:web/servlet.adoc#web.servlet.spring-mvc.static-content[静态内容服务] 映射到 `+/**+`，因此将为所有请求提供处理器。
+如果没有可用的静态内容，javadoc:org.springframework.web.servlet.resource.ResourceHttpRequestHandler[] 将抛出 javadoc:org.springframework.web.servlet.resource.NoResourceFoundException[]。
+要抛出 javadoc:org.springframework.web.servlet.NoHandlerFoundException[]，将 configprop:spring.mvc.static-path-pattern[] 设置为更具体的值，如 `/resources/**`，或将 configprop:spring.web.resources.add-mappings[] 设置为 `false` 以完全禁用静态内容服务。
 
 
 
 [[web.servlet.spring-mvc.binding-initializer]]
 === ConfigurableWebBindingInitializer
 
-Spring MVC uses a javadoc:org.springframework.web.bind.support.WebBindingInitializer[] to initialize a javadoc:org.springframework.web.bind.WebDataBinder[] for a particular request.
-If you create your own javadoc:org.springframework.web.bind.support.ConfigurableWebBindingInitializer[] javadoc:org.springframework.context.annotation.Bean[format=annotation], Spring Boot automatically configures Spring MVC to use it.
+Spring MVC 使用 javadoc:org.springframework.web.bind.support.WebBindingInitializer[] 来初始化特定请求的 javadoc:org.springframework.web.bind.WebDataBinder[]。
+如果你创建自己的 javadoc:org.springframework.web.bind.support.ConfigurableWebBindingInitializer[] javadoc:org.springframework.context.annotation.Bean[format=annotation]，Spring Boot 会自动配置 Spring MVC 使用它。
 
 
 
 [[web.servlet.spring-mvc.template-engines]]
-=== Template Engines
+=== 模板引擎
 
-As well as REST web services, you can also use Spring MVC to serve dynamic HTML content.
-Spring MVC supports a variety of templating technologies, including Thymeleaf, FreeMarker, and JSPs.
-Also, many other templating engines include their own Spring MVC integrations.
+除了 REST Web 服务外，你还可以使用 Spring MVC 来提供动态 HTML 内容。
+Spring MVC 支持多种模板技术，包括 Thymeleaf、FreeMarker 和 JSP。
+此外，许多其他模板引擎都包含自己的 Spring MVC 集成。
 
-Spring Boot includes auto-configuration support for the following templating engines:
+Spring Boot 包含对以下模板引擎的自动配置支持：
 
 * https://freemarker.apache.org/docs/[FreeMarker]
 * https://docs.groovy-lang.org/docs/next/html/documentation/template-engines.html#_the_markuptemplateengine[Groovy]
 * https://www.thymeleaf.org[Thymeleaf]
 * https://mustache.github.io/[Mustache]
 
-TIP: If possible, JSPs should be avoided.
-There are several xref:web/servlet.adoc#web.servlet.embedded-container.jsp-limitations[known limitations] when using them with embedded servlet containers.
+提示：如果可能，应避免使用 JSP。
+在嵌入式 servlet 容器中使用它们时存在几个 xref:web/servlet.adoc#web.servlet.embedded-container.jsp-limitations[已知限制]。
 
-When you use one of these templating engines with the default configuration, your templates are picked up automatically from `src/main/resources/templates`.
+当你使用这些模板引擎之一并采用默认配置时，你的模板会自动从 `src/main/resources/templates` 中获取。
 
-TIP: Depending on how you run your application, your IDE may order the classpath differently.
-Running your application in the IDE from its main method results in a different ordering than when you run your application by using Maven or Gradle or from its packaged jar.
-This can cause Spring Boot to fail to find the expected template.
-If you have this problem, you can reorder the classpath in the IDE to place the module's classes and resources first.
+提示：根据你运行应用程序的方式，你的 IDE 可能会以不同顺序排列类路径。
+从主方法在 IDE 中运行应用程序会导致与使用 Maven 或 Gradle 或从其打包的 jar 运行应用程序时不同的顺序。
+这可能导致 Spring Boot 无法找到预期的模板。
+如果你遇到此问题，可以在 IDE 中重新排序类路径，将模块的类和资源放在首位。
 
 
 
 [[web.servlet.spring-mvc.error-handling]]
-=== Error Handling
+=== 错误处理
 
-By default, Spring Boot provides an `/error` mapping that handles all errors in a sensible way, and it is registered as a "`global`" error page in the servlet container.
-For machine clients, it produces a JSON response with details of the error, the HTTP status, and the exception message.
-For browser clients, there is a "`whitelabel`" error view that renders the same data in HTML format (to customize it, add a javadoc:org.springframework.web.servlet.View[] that resolves to `error`).
+默认情况下，Spring Boot 提供了一个 `/error` 映射，以合理的方式处理所有错误，并在 servlet 容器中注册为"`全局`"错误页面。
+对于机器客户端，它生成一个包含错误详情、HTTP 状态和异常消息的 JSON 响应。
+对于浏览器客户端，有一个"`whitelabel`"错误视图，以 HTML 格式渲染相同的数据（要自定义它，添加一个解析为 `error` 的 javadoc:org.springframework.web.servlet.View[]）。
 
-There are a number of `server.error` properties that can be set if you want to customize the default error handling behavior.
-See the xref:appendix:application-properties/index.adoc#appendix.application-properties.server[Server Properties] section of the Appendix.
+如果你想自定义默认错误处理行为，可以设置许多 `server.error` 属性。
+请参阅附录的 xref:appendix:application-properties/index.adoc#appendix.application-properties.server[服务器属性] 部分。
 
-To replace the default behavior completely, you can implement javadoc:org.springframework.boot.web.servlet.error.ErrorController[] and register a bean definition of that type or add a bean of type javadoc:org.springframework.boot.web.servlet.error.ErrorAttributes[] to use the existing mechanism but replace the contents.
+要完全替换默认行为，你可以实现 javadoc:org.springframework.boot.web.servlet.error.ErrorController[] 并注册该类型的 bean 定义，或添加一个类型为 javadoc:org.springframework.boot.web.servlet.error.ErrorAttributes[] 的 bean 以使用现有机制但替换内容。
 
-TIP: The javadoc:org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController[] can be used as a base class for a custom javadoc:org.springframework.boot.web.servlet.error.ErrorController[].
-This is particularly useful if you want to add a handler for a new content type (the default is to handle `text/html` specifically and provide a fallback for everything else).
-To do so, extend javadoc:org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController[], add a public method with a javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] that has a `produces` attribute, and create a bean of your new type.
+提示：javadoc:org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController[] 可以用作自定义 javadoc:org.springframework.boot.web.servlet.error.ErrorController[] 的基类。
+这在你想为新的内容类型添加处理器时特别有用（默认是专门处理 `text/html` 并为其他所有内容提供后备）。
+为此，扩展 javadoc:org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController[]，添加一个带有 javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] 的公共方法，该注解具有 `produces` 属性，并创建你的新类型的 bean。
 
-As of Spring Framework 6.0, {url-spring-framework-docs}/web/webmvc/mvc-ann-rest-exceptions.html[RFC 9457 Problem Details] is supported.
-Spring MVC can produce custom error messages with the `application/problem+json` media type, like:
+从 Spring Framework 6.0 开始，支持 {url-spring-framework-docs}/web/webmvc/mvc-ann-rest-exceptions.html[RFC 9457 Problem Details]。
+Spring MVC 可以生成带有 `application/problem+json` 媒体类型的自定义错误消息，如：
 
 [source,json]
 ----
@@ -364,27 +364,27 @@ Spring MVC can produce custom error messages with the `application/problem+json`
 }
 ----
 
-This support can be enabled by setting configprop:spring.mvc.problemdetails.enabled[] to `true`.
+可以通过将 configprop:spring.mvc.problemdetails.enabled[] 设置为 `true` 来启用此支持。
 
-You can also define a class annotated with javadoc:org.springframework.web.bind.annotation.ControllerAdvice[format=annotation] to customize the JSON document to return for a particular controller and/or exception type, as shown in the following example:
+你还可以定义一个带有 javadoc:org.springframework.web.bind.annotation.ControllerAdvice[format=annotation] 注解的类，以自定义为特定控制器和/或异常类型返回的 JSON 文档，如下例所示：
 
 include-code::MyControllerAdvice[]
 
-In the preceding example, if `MyException` is thrown by a controller defined in the same package as `SomeController`, a JSON representation of the `MyErrorBody` POJO is used instead of the javadoc:org.springframework.boot.web.servlet.error.ErrorAttributes[] representation.
+在前面的示例中，如果 `MyException` 由与 `SomeController` 在同一包中定义的控制器抛出，则使用 `MyErrorBody` POJO 的 JSON 表示，而不是 javadoc:org.springframework.boot.web.servlet.error.ErrorAttributes[] 表示。
 
-In some cases, errors handled at the controller level are not recorded by web observations or the xref:actuator/metrics.adoc#actuator.metrics.supported.spring-mvc[metrics infrastructure].
-Applications can ensure that such exceptions are recorded with the observations by {url-spring-framework-docs}/integration/observability.html#observability.http-server.servlet[setting the handled exception on the observation context].
+在某些情况下，在控制器级别处理的错误不会被 Web 观察或 xref:actuator/metrics.adoc#actuator.metrics.supported.spring-mvc[指标基础设施]记录。
+应用程序可以通过 {url-spring-framework-docs}/integration/observability.html#observability.http-server.servlet[在观察上下文上设置已处理的异常]来确保记录此类异常。
 
 
 
 [[web.servlet.spring-mvc.error-handling.error-pages]]
 ==== Custom Error Pages
 
-If you want to display a custom HTML error page for a given status code, you can add a file to an `/error` directory.
-Error pages can either be static HTML (that is, added under any of the static resource directories) or be built by using templates.
-The name of the file should be the exact status code or a series mask.
+如果想要为给定的状态码显示自定义的 HTML 错误页面，可以将文件添加到 `/error` 目录中。
+错误页面可以是静态 HTML（即，添加到任何静态资源目录下）或通过使用模板构建。
+文件名应为确切的状态码或系列掩码。
 
-For example, to map `404` to a static HTML file, your directory structure would be as follows:
+例如，要将 `404` 映射到静态 HTML 文件，你的目录结构应如下所示：
 
 [source]
 ----
@@ -399,7 +399,7 @@ src/
              +- <other public assets>
 ----
 
-To map all `5xx` errors by using a FreeMarker template, your directory structure would be as follows:
+要将所有 `5xx` 错误映射到 FreeMarker 模板，你的目录结构应如下所示：
 
 [source]
 ----
@@ -414,213 +414,213 @@ src/
              +- <other templates>
 ----
 
-For more complex mappings, you can also add beans that implement the javadoc:org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver[] interface, as shown in the following example:
+对于更复杂的映射，你还可以添加实现 javadoc:org.springframework.boot.autoconfigure.web.servlet.error.ErrorViewResolver[] 接口的 bean，如下例所示：
 
 include-code::MyErrorViewResolver[]
 
-You can also use regular Spring MVC features such as {url-spring-framework-docs}/web/webmvc/mvc-servlet/exceptionhandlers.html[`@ExceptionHandler` methods] and {url-spring-framework-docs}/web/webmvc/mvc-controller/ann-advice.html[`@ControllerAdvice`].
-The javadoc:org.springframework.boot.web.servlet.error.ErrorController[] then picks up any unhandled exceptions.
+你还可以使用常规的 Spring MVC 功能，例如 {url-spring-framework-docs}/web/webmvc/mvc-servlet/exceptionhandlers.html[`@ExceptionHandler` methods] 和 {url-spring-framework-docs}/web/webmvc/mvc-controller/ann-advice.html[`@ControllerAdvice`]。
+javadoc:org.springframework.boot.web.servlet.error.ErrorController[] 然后会拾取任何未处理的异常。
 
 
 
 [[web.servlet.spring-mvc.error-handling.error-pages-without-spring-mvc]]
 ==== Mapping Error Pages Outside of Spring MVC
 
-For applications that do not use Spring MVC, you can use the javadoc:org.springframework.boot.web.server.ErrorPageRegistrar[] interface to directly register javadoc:org.springframework.boot.web.server.ErrorPage[] instances.
-This abstraction works directly with the underlying embedded servlet container and works even if you do not have a Spring MVC javadoc:org.springframework.web.servlet.DispatcherServlet[].
+对于不使用 Spring MVC 的应用程序，你可以使用 javadoc:org.springframework.boot.web.server.ErrorPageRegistrar[] 接口直接注册 javadoc:org.springframework.boot.web.server.ErrorPage[] 实例。
+此抽象直接与底层嵌入式 servlet 容器一起工作，即使你没有 Spring MVC javadoc:org.springframework.web.servlet.DispatcherServlet[]。
 
 include-code::MyErrorPagesConfiguration[]
 
-NOTE: If you register an javadoc:org.springframework.boot.web.server.ErrorPage[] with a path that ends up being handled by a javadoc:jakarta.servlet.Filter[] (as is common with some non-Spring web frameworks, like Jersey and Wicket), then the javadoc:jakarta.servlet.Filter[] has to be explicitly registered as an `ERROR` dispatcher, as shown in the following example:
+注意：如果你注册一个 javadoc:org.springframework.boot.web.server.ErrorPage[] ，其路径以某种方式结束由 javadoc:jakarta.servlet.Filter[] 处理（如常见于一些非 Spring web 框架，如 Jersey 和 Wicket），则 javadoc:jakarta.servlet.Filter[] 必须显式注册为 `ERROR` dispatcher，如下例所示：
 
 include-code::MyFilterConfiguration[]
 
-Note that the default javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[] does not include the `ERROR` dispatcher type.
+注意，默认 javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[] 不包括 `ERROR` dispatcher 类型。
 
 
 
 [[web.servlet.spring-mvc.error-handling.in-a-war-deployment]]
 ==== Error Handling in a WAR Deployment
 
-When deployed to a servlet container, Spring Boot uses its error page filter to forward a request with an error status to the appropriate error page.
-This is necessary as the servlet specification does not provide an API for registering error pages.
-Depending on the container that you are deploying your war file to and the technologies that your application uses, some additional configuration may be required.
+当部署到 servlet 容器时，Spring Boot 使用其错误页面过滤器将错误状态的请求转发到适当的错误页面。
+这是必要的，因为 servlet 规范不提供注册错误页面的 API。
+根据你要部署 war 文件的容器以及应用程序使用的技术，可能需要一些额外的配置。
 
-The error page filter can only forward the request to the correct error page if the response has not already been committed.
-By default, WebSphere Application Server 8.0 and later commits the response upon successful completion of a servlet's service method.
-You should disable this behavior by setting `com.ibm.ws.webcontainer.invokeFlushAfterService` to `false`.
+错误页面过滤器只能将请求转发到正确的错误页面，如果响应尚未提交。
+默认情况下，WebSphere Application Server 8.0 及更高版本在 servlet 服务方法成功完成后提交响应。
+你应该将 `com.ibm.ws.webcontainer.invokeFlushAfterService` 设置为 `false`。
 
 
 
 [[web.servlet.spring-mvc.cors]]
-=== CORS Support
+=== CORS 支持
 
-https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[Cross-origin resource sharing] (CORS) is a https://www.w3.org/TR/cors/[W3C specification] implemented by https://caniuse.com/#feat=cors[most browsers] that lets you specify in a flexible way what kind of cross-domain requests are authorized, instead of using some less secure and less powerful approaches such as IFRAME or JSONP.
+https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[跨源资源共享] (CORS) 是一个由 https://caniuse.com/#feat=cors[大多数浏览器]实现的 https://www.w3.org/TR/cors/[W3C 规范]，它允许你以灵活的方式指定允许哪些类型的跨域请求，而不是使用一些不太安全和功能较弱的方案，如 IFRAME 或 JSONP。
 
-As of version 4.2, Spring MVC {url-spring-framework-docs}/web/webmvc-cors.html[supports CORS].
-Using {url-spring-framework-docs}/web/webmvc-cors.html#mvc-cors-controller[controller method CORS configuration] with javadoc:{url-spring-framework-javadoc}/org.springframework.web.bind.annotation.CrossOrigin[format=annotation] annotations in your Spring Boot application does not require any specific configuration.
-{url-spring-framework-docs}/web/webmvc-cors.html#mvc-cors-global[Global CORS configuration] can be defined by registering a javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] bean with a customized `addCorsMappings(CorsRegistry)` method, as shown in the following example:
+从 4.2 版本开始，Spring MVC {url-spring-framework-docs}/web/webmvc-cors.html[支持 CORS]。
+在 Spring Boot 应用程序中使用 {url-spring-framework-docs}/web/webmvc-cors.html#mvc-cors-controller[控制器方法 CORS 配置]和 javadoc:{url-spring-framework-javadoc}/org.springframework.web.bind.annotation.CrossOrigin[format=annotation] 注解不需要任何特定配置。
+{url-spring-framework-docs}/web/webmvc-cors.html#mvc-cors-global[全局 CORS 配置]可以通过注册一个带有自定义 `addCorsMappings(CorsRegistry)` 方法的 javadoc:org.springframework.web.servlet.config.annotation.WebMvcConfigurer[] bean 来定义，如下例所示：
 
 include-code::MyCorsConfiguration[]
 
 
 
 [[web.servlet.jersey]]
-== JAX-RS and Jersey
+== JAX-RS 和 Jersey
 
-If you prefer the JAX-RS programming model for REST endpoints, you can use one of the available implementations instead of Spring MVC.
-https://jersey.github.io/[Jersey] and https://cxf.apache.org/[Apache CXF] work quite well out of the box.
-CXF requires you to register its javadoc:jakarta.servlet.Servlet[] or javadoc:jakarta.servlet.Filter[] as a javadoc:org.springframework.context.annotation.Bean[format=annotation] in your application context.
-Jersey has some native Spring support, so we also provide auto-configuration support for it in Spring Boot, together with a starter.
+如果你更喜欢使用 JAX-RS 编程模型来构建 REST 端点，你可以使用可用的实现之一来替代 Spring MVC。
+https://jersey.github.io/[Jersey] 和 https://cxf.apache.org/[Apache CXF] 都可以开箱即用。
+CXF 要求你在应用程序上下文中将其 javadoc:jakarta.servlet.Servlet[] 或 javadoc:jakarta.servlet.Filter[] 注册为 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
+Jersey 有一些原生的 Spring 支持，所以我们在 Spring Boot 中也为其提供了自动配置支持，以及一个 starter。
 
-To get started with Jersey, include the `spring-boot-starter-jersey` as a dependency and then you need one javadoc:org.springframework.context.annotation.Bean[format=annotation] of type javadoc:org.glassfish.jersey.server.ResourceConfig[] in which you register all the endpoints, as shown in the following example:
+要开始使用 Jersey，需要包含 `spring-boot-starter-jersey` 作为依赖，然后你需要一个类型为 javadoc:org.glassfish.jersey.server.ResourceConfig[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]，在其中注册所有端点，如下例所示：
 
 include-code::MyJerseyConfig[]
 
-WARNING: Jersey's support for scanning executable archives is rather limited.
-For example, it cannot scan for endpoints in a package found in a xref:how-to:deployment/installing.adoc[fully executable jar file] or in `WEB-INF/classes` when running an executable war file.
-To avoid this limitation, the `packages` method should not be used, and endpoints should be registered individually by using the `register` method, as shown in the preceding example.
+警告：Jersey 对可执行归档文件的扫描支持相当有限。
+例如，它无法在 xref:how-to:deployment/installing.adoc[完全可执行的 jar 文件]中找到的包中或在运行可执行 war 文件时的 `WEB-INF/classes` 中扫描端点。
+为避免此限制，不应使用 `packages` 方法，而应使用 `register` 方法单独注册端点，如前面的示例所示。
 
-For more advanced customizations, you can also register an arbitrary number of beans that implement javadoc:org.springframework.boot.autoconfigure.jersey.ResourceConfigCustomizer[].
+对于更高级的自定义，你还可以注册任意数量的实现 javadoc:org.springframework.boot.autoconfigure.jersey.ResourceConfigCustomizer[] 的 bean。
 
-All the registered endpoints should be a javadoc:org.springframework.stereotype.Component[format=annotation] with HTTP resource annotations (`@GET` and others), as shown in the following example:
+所有注册的端点都应该是一个带有 HTTP 资源注解（`@GET` 等）的 javadoc:org.springframework.stereotype.Component[format=annotation]，如下例所示：
 
 include-code::MyEndpoint[]
 
-Since the javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation] is a Spring javadoc:org.springframework.stereotype.Component[format=annotation], its lifecycle is managed by Spring and you can use the javadoc:org.springframework.beans.factory.annotation.Autowired[format=annotation] annotation to inject dependencies and use the javadoc:org.springframework.beans.factory.annotation.Value[format=annotation] annotation to inject external configuration.
-By default, the Jersey servlet is registered and mapped to `/*`.
-You can change the mapping by adding javadoc:jakarta.ws.rs.ApplicationPath[format=annotation] to your javadoc:org.glassfish.jersey.server.ResourceConfig[].
+由于 javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation] 是一个 Spring javadoc:org.springframework.stereotype.Component[format=annotation]，其生命周期由 Spring 管理，你可以使用 javadoc:org.springframework.beans.factory.annotation.Autowired[format=annotation] 注解注入依赖项，并使用 javadoc:org.springframework.beans.factory.annotation.Value[format=annotation] 注解注入外部配置。
+默认情况下，Jersey servlet 被注册并映射到 `/*`。
+你可以通过向 javadoc:org.glassfish.jersey.server.ResourceConfig[] 添加 javadoc:jakarta.ws.rs.ApplicationPath[format=annotation] 来更改映射。
 
-By default, Jersey is set up as a servlet in a javadoc:org.springframework.context.annotation.Bean[format=annotation] of type javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[] named `jerseyServletRegistration`.
-By default, the servlet is initialized lazily, but you can customize that behavior by setting `spring.jersey.servlet.load-on-startup`.
-You can disable or override that bean by creating one of your own with the same name.
-You can also use a filter instead of a servlet by setting `spring.jersey.type=filter` (in which case, the javadoc:org.springframework.context.annotation.Bean[format=annotation] to replace or override is `jerseyFilterRegistration`).
-The filter has an javadoc:org.springframework.core.annotation.Order[format=annotation], which you can set with `spring.jersey.filter.order`.
-When using Jersey as a filter, a servlet that will handle any requests that are not intercepted by Jersey must be present.
-If your application does not contain such a servlet, you may want to enable the default servlet by setting configprop:server.servlet.register-default-servlet[] to `true`.
-Both the servlet and the filter registrations can be given init parameters by using `spring.jersey.init.*` to specify a map of properties.
+默认情况下，Jersey 被设置为类型为 javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 中的 servlet，名为 `jerseyServletRegistration`。
+默认情况下，servlet 是延迟初始化的，但你可以通过设置 `spring.jersey.servlet.load-on-startup` 来自定义该行为。
+你可以通过创建同名 bean 来禁用或覆盖该 bean。
+你也可以通过设置 `spring.jersey.type=filter` 来使用过滤器而不是 servlet（在这种情况下，要替换或覆盖的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 是 `jerseyFilterRegistration`）。
+过滤器有一个 javadoc:org.springframework.core.annotation.Order[format=annotation]，你可以使用 `spring.jersey.filter.order` 设置它。
+当使用 Jersey 作为过滤器时，必须存在一个 servlet 来处理未被 Jersey 拦截的任何请求。
+如果你的应用程序不包含这样的 servlet，你可能需要通过设置 configprop:server.servlet.register-default-servlet[] 为 `true` 来启用默认 servlet。
+servlet 和过滤器注册都可以通过使用 `spring.jersey.init.*` 来指定属性映射来获得初始化参数。
 
 
 
 [[web.servlet.embedded-container]]
-== Embedded Servlet Container Support
+== 嵌入式 Servlet 容器支持
 
-For servlet application, Spring Boot includes support for embedded https://tomcat.apache.org/[Tomcat], https://www.eclipse.org/jetty/[Jetty], and https://github.com/undertow-io/undertow[Undertow] servers.
-Most developers use the appropriate starter to obtain a fully configured instance.
+对于 servlet 应用程序，Spring Boot 包含对嵌入式 https://tomcat.apache.org/[Tomcat]、 https://www.eclipse.org/jetty/[Jetty] 和 https://github.com/undertow-io/undertow[Undertow] 服务器的支持。
+大多数开发人员使用适当的 starter 来获得完全配置的实例。
 By default, the embedded server listens for HTTP requests on port `8080`.
 
 
 
 [[web.servlet.embedded-container.servlets-filters-listeners]]
-=== Servlets, Filters, and Listeners
+=== Servlets、Filters 和 Listeners
 
-When using an embedded servlet container, you can register servlets, filters, and all the listeners (such as javadoc:jakarta.servlet.http.HttpSessionListener[]) from the servlet spec, either by using Spring beans or by scanning for servlet components.
+使用嵌入式 servlet 容器时，你可以通过使用 Spring bean 或扫描 servlet 组件来注册 servlets、filters 和所有来自 servlet 规范的 listeners（如 javadoc:jakarta.servlet.http.HttpSessionListener[]）。
 
 
 
 [[web.servlet.embedded-container.servlets-filters-listeners.beans]]
-==== Registering Servlets, Filters, and Listeners as Spring Beans
+==== 将 Servlets、Filters 和 Listeners 注册为 Spring Beans
 
-Any javadoc:jakarta.servlet.Servlet[], javadoc:jakarta.servlet.Filter[], or servlet `*Listener` instance that is a Spring bean is registered with the embedded container.
-This can be particularly convenient if you want to refer to a value from your `application.properties` during configuration.
+任何作为 Spring bean 的 javadoc:jakarta.servlet.Servlet[]、javadoc:jakarta.servlet.Filter[] 或 servlet `*Listener` instance 都会注册到嵌入式容器中。
+如果你想在配置期间引用 `application.properties` 中的值，这会特别方便。
 
-By default, if the context contains only a single Servlet, it is mapped to `/`.
-In the case of multiple servlet beans, the bean name is used as a path prefix.
-Filters map to `+/*+`.
+默认情况下，如果上下文中只包含一个 Servlet，它会被映射到 `/`。
+在多个 servlet bean 的情况下，bean 名称被用作路径前缀。
+Filters 映射到 `+/*+`。
 
-If convention-based mapping is not flexible enough, you can use the javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[], javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[], and javadoc:org.springframework.boot.web.servlet.ServletListenerRegistrationBean[] classes for complete control.
-If you prefer annotations over javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[] and javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[], you can also use javadoc:org.springframework.boot.web.servlet.ServletRegistration[format=annotation] and
-javadoc:org.springframework.boot.web.servlet.FilterRegistration[format=annotation] as an alternative.
+如果基于约定的映射不够灵活，你可以使用 javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[]、javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[] 和 javadoc:org.springframework.boot.web.servlet.ServletListenerRegistrationBean[] 类来完全控制。
+如果你更喜欢注解而不是 javadoc:org.springframework.boot.web.servlet.ServletRegistrationBean[] 和 javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[]，你也可以使用 javadoc:org.springframework.boot.web.servlet.ServletRegistration[format=annotation] 和
+javadoc:org.springframework.boot.web.servlet.FilterRegistration[format=annotation] 作为替代方案。
 
-It is usually safe to leave filter beans unordered.
-If a specific order is required, you should annotate the javadoc:jakarta.servlet.Filter[] with javadoc:org.springframework.core.annotation.Order[format=annotation] or make it implement javadoc:org.springframework.core.Ordered[].
-You cannot configure the order of a javadoc:jakarta.servlet.Filter[] by annotating its bean method with javadoc:org.springframework.core.annotation.Order[format=annotation].
-If you cannot change the javadoc:jakarta.servlet.Filter[] class to add javadoc:org.springframework.core.annotation.Order[format=annotation] or implement javadoc:org.springframework.core.Ordered[], you must define a javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[] for the javadoc:jakarta.servlet.Filter[] and set the registration bean's order using the `setOrder(int)` method.
-Or, if you prefer annotations, you can also use javadoc:org.springframework.boot.web.servlet.FilterRegistration[format=annotation] and set the `order` attribute.
-Avoid configuring a filter that reads the request body at `Ordered.HIGHEST_PRECEDENCE`, since it might go against the character encoding configuration of your application.
-If a servlet filter wraps the request, it should be configured with an order that is less than or equal to `OrderedFilter.REQUEST_WRAPPER_FILTER_MAX_ORDER`.
+通常可以安全地让 filter bean 保持无序。
+如果需要特定顺序，你应该用 javadoc:org.springframework.core.annotation.Order[format=annotation] 注解 javadoc:jakarta.servlet.Filter[] 或让它实现 javadoc:org.springframework.core.Ordered[]。
+你不能通过用 javadoc:org.springframework.core.annotation.Order[format=annotation] 注解其 bean 方法来配置 javadoc:jakarta.servlet.Filter[] 的顺序。
+如果你无法更改 javadoc:jakarta.servlet.Filter[] 类来添加 javadoc:org.springframework.core.annotation.Order[format=annotation] 或实现 javadoc:org.springframework.core.Ordered[]，你必须为 javadoc:jakarta.servlet.Filter[] 定义一个 javadoc:org.springframework.boot.web.servlet.FilterRegistrationBean[]，并使用 `setOrder(int)` 方法设置注册 bean 的顺序。
+或者，如果你更喜欢注解，你也可以使用 javadoc:org.springframework.boot.web.servlet.FilterRegistration[format=annotation] 并设置 `order` 属性。
+避免在 `Ordered.HIGHEST_PRECEDENCE` 配置读取请求体的过滤器，因为这可能会与应用程序的字符编码配置相冲突。
+如果 servlet 过滤器包装了请求，它应该配置一个小于或等于 `OrderedFilter.REQUEST_WRAPPER_FILTER_MAX_ORDER` 的顺序。
 
-TIP: To see the order of every javadoc:jakarta.servlet.Filter[] in your application, enable debug level logging for the `web` xref:features/logging.adoc#features.logging.log-groups[logging group] (`logging.level.web=debug`).
-Details of the registered filters, including their order and URL patterns, will then be logged at startup.
+提示：要查看应用程序中每个 javadoc:jakarta.servlet.Filter[] 的顺序，请为 `web` xref:features/logging.adoc#features.logging.log-groups[日志组]启用调试级别日志记录（`logging.level.web=debug`）。
+然后将在启动时记录已注册过滤器的详细信息，包括它们的顺序和 URL 模式。
 
-WARNING: Take care when registering javadoc:jakarta.servlet.Filter[] beans since they are initialized very early in the application lifecycle.
-If you need to register a javadoc:jakarta.servlet.Filter[] that interacts with other beans, consider using a javadoc:org.springframework.boot.web.servlet.DelegatingFilterProxyRegistrationBean[] instead.
+警告：注册 javadoc:jakarta.servlet.Filter[] bean 时要小心，因为它们在应用程序生命周期的很早阶段就被初始化。
+如果你需要注册一个与其他 bean 交互的 javadoc:jakarta.servlet.Filter[]，考虑使用 javadoc:org.springframework.boot.web.servlet.DelegatingFilterProxyRegistrationBean[] 代替。
 
 
 
 [[web.servlet.embedded-container.context-initializer]]
-=== Servlet Context Initialization
+=== Servlet Context 初始化
 
-Embedded servlet containers do not directly execute the javadoc:jakarta.servlet.ServletContainerInitializer[] interface or Spring's javadoc:org.springframework.web.WebApplicationInitializer[] interface.
-This is an intentional design decision intended to reduce the risk that third party libraries designed to run inside a war may break Spring Boot applications.
+嵌入式 servlet 容器不直接执行 javadoc:jakarta.servlet.ServletContainerInitializer[] 接口或 Spring 的 javadoc:org.springframework.web.WebApplicationInitializer[] 接口。
+这是一个有意的设计决定，旨在减少设计用于在 war 中运行的第三方库可能破坏 Spring Boot 应用程序的风险。
 
-If you need to perform servlet context initialization in a Spring Boot application, you should register a bean that implements the javadoc:org.springframework.boot.web.servlet.ServletContextInitializer[] interface.
-The single `onStartup` method provides access to the javadoc:jakarta.servlet.ServletContext[] and, if necessary, can easily be used as an adapter to an existing javadoc:org.springframework.web.WebApplicationInitializer[].
+如果你需要在 Spring Boot 应用程序中执行 servlet context 初始化，你应该注册一个实现 javadoc:org.springframework.boot.web.servlet.ServletContextInitializer[] 接口的 bean。
+单一的 `onStartup` 方法提供对 javadoc:jakarta.servlet.ServletContext[] 的访问，如果需要，可以很容易地用作现有 javadoc:org.springframework.web.WebApplicationInitializer[] 的适配器。
 
 
 
 [[web.servlet.embedded-container.context-initializer.scanning]]
-==== Scanning for Servlets, Filters, and listeners
+==== 扫描 Servlets、Filters 和 listeners
 
-When using an embedded container, automatic registration of classes annotated with javadoc:jakarta.servlet.annotation.WebServlet[format=annotation], javadoc:jakarta.servlet.annotation.WebFilter[format=annotation], and javadoc:jakarta.servlet.annotation.WebListener[format=annotation] can be enabled by using javadoc:org.springframework.boot.web.servlet.ServletComponentScan[format=annotation].
+使用嵌入式容器时，可以通过使用 javadoc:org.springframework.boot.web.servlet.ServletComponentScan[format=annotation] 来启用对带有 javadoc:jakarta.servlet.annotation.WebServlet[format=annotation]、javadoc:jakarta.servlet.annotation.WebFilter[format=annotation] 和 javadoc:jakarta.servlet.annotation.WebListener[format=annotation] 注解的类的自动注册。
 
-TIP: javadoc:org.springframework.boot.web.servlet.ServletComponentScan[format=annotation] has no effect in a standalone container, where the container's built-in discovery mechanisms are used instead.
+提示：javadoc:org.springframework.boot.web.servlet.ServletComponentScan[format=annotation] 在独立容器中没有效果，因为那里使用容器的内置发现机制。
 
 
 
 [[web.servlet.embedded-container.application-context]]
-=== The ServletWebServerApplicationContext
+=== ServletWebServerApplicationContext
 
-Under the hood, Spring Boot uses a different type of javadoc:org.springframework.context.ApplicationContext[] for embedded servlet container support.
-The javadoc:org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext[] is a special type of javadoc:org.springframework.web.context.WebApplicationContext[] that bootstraps itself by searching for a single javadoc:org.springframework.boot.web.servlet.server.ServletWebServerFactory[] bean.
-Usually a javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[], javadoc:org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory[], or javadoc:org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory[] has been auto-configured.
+在底层，Spring Boot 使用不同类型的 javadoc:org.springframework.context.ApplicationContext[] 来支持嵌入式 servlet 容器。
+javadoc:org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext[] 是一种特殊类型的 javadoc:org.springframework.web.context.WebApplicationContext[]，它通过搜索单个 javadoc:org.springframework.boot.web.servlet.server.ServletWebServerFactory[] bean 来自行引导。
+通常已经自动配置了 javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[]、javadoc:org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory[] 或 javadoc:org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory[]。
 
-NOTE: You usually do not need to be aware of these implementation classes.
-Most applications are auto-configured, and the appropriate javadoc:org.springframework.context.ApplicationContext[] and javadoc:org.springframework.boot.web.servlet.server.ServletWebServerFactory[] are created on your behalf.
+注意：你通常不需要了解这些实现类。
+大多数应用程序都是自动配置的，适当的 javadoc:org.springframework.context.ApplicationContext[] 和 javadoc:org.springframework.boot.web.servlet.server.ServletWebServerFactory[] 会代表你创建。
 
-In an embedded container setup, the javadoc:jakarta.servlet.ServletContext[] is set as part of server startup which happens during application context initialization.
-Because of this beans in the javadoc:org.springframework.context.ApplicationContext[] cannot be reliably initialized with a javadoc:jakarta.servlet.ServletContext[].
-One way to get around this is to inject javadoc:org.springframework.context.ApplicationContext[] as a dependency of the bean and access the javadoc:jakarta.servlet.ServletContext[] only when it is needed.
-Another way is to use a callback once the server has started.
-This can be done using an javadoc:org.springframework.context.ApplicationListener[] which listens for the javadoc:org.springframework.boot.context.event.ApplicationStartedEvent[] as follows:
+在嵌入式容器设置中，javadoc:jakarta.servlet.ServletContext[] 作为服务器启动的一部分被设置，这发生在应用程序上下文初始化期间。
+因此，javadoc:org.springframework.context.ApplicationContext[] 中的 bean 无法可靠地使用 javadoc:jakarta.servlet.ServletContext[] 进行初始化。
+一种解决方法是注入 javadoc:org.springframework.context.ApplicationContext[] 作为 bean 的依赖项，并仅在需要时访问 javadoc:jakarta.servlet.ServletContext[]。
+另一种方法是在服务器启动后使用回调。
+这可以通过使用 javadoc:org.springframework.context.ApplicationListener[] 来实现，它监听 javadoc:org.springframework.boot.context.event.ApplicationStartedEvent[]，如下所示：
 
 include-code::MyDemoBean[]
 
 
 
 [[web.servlet.embedded-container.customizing]]
-=== Customizing Embedded Servlet Containers
+=== 自定义嵌入式 Servlet 容器
 
-Common servlet container settings can be configured by using Spring javadoc:org.springframework.core.env.Environment[] properties.
-Usually, you would define the properties in your `application.properties` or `application.yaml` file.
+可以通过使用 Spring javadoc:org.springframework.core.env.Environment[] 属性来配置常见的 servlet 容器设置。
+通常，你会在 `application.properties` 或 `application.yaml` 文件中定义这些属性。
 
-Common server settings include:
+常见的服务器设置包括：
 
-* Network settings: Listen port for incoming HTTP requests (`server.port`), interface address to bind to (`server.address`), and so on.
-* Session settings: Whether the session is persistent (`server.servlet.session.persistent`), session timeout (`server.servlet.session.timeout`), location of session data (`server.servlet.session.store-dir`), and session-cookie configuration (`server.servlet.session.cookie.*`).
-* Error management: Location of the error page (`server.error.path`) and so on.
+* 网络设置：传入 HTTP 请求的监听端口（`server.port`）、要绑定的接口地址（`server.address`）等。
+* 会话设置：会话是否持久化（`server.servlet.session.persistent`）、会话超时（`server.servlet.session.timeout`）、会话数据位置（`server.servlet.session.store-dir`）和会话 cookie 配置（`server.servlet.session.cookie.*`）。
+* 错误管理：错误页面位置（`server.error.path`）等。
 * xref:how-to:webserver.adoc#howto.webserver.configure-ssl[SSL]
-* xref:how-to:webserver.adoc#howto.webserver.enable-response-compression[HTTP compression]
+* xref:how-to:webserver.adoc#howto.webserver.enable-response-compression[HTTP 压缩]
 
-Spring Boot tries as much as possible to expose common settings, but this is not always possible.
-For those cases, dedicated namespaces offer server-specific customizations (see `server.tomcat` and `server.undertow`).
-For instance, xref:how-to:webserver.adoc#howto.webserver.configure-access-logs[access logs] can be configured with specific features of the embedded servlet container.
+Spring Boot 尽可能多地暴露常见设置，但这并不总是可能的。
+对于这些情况，专用命名空间提供服务器特定的自定义（参见 `server.tomcat` 和 `server.undertow`）。
+例如，xref:how-to:webserver.adoc#howto.webserver.configure-access-logs[访问日志]可以使用嵌入式 servlet 容器的特定功能进行配置。
 
-TIP: See the javadoc:org.springframework.boot.autoconfigure.web.ServerProperties[] class for a complete list.
+提示：有关完整列表，请参见 javadoc:org.springframework.boot.autoconfigure.web.ServerProperties[] 类。
 
 
 
 [[web.servlet.embedded-container.customizing.samesite]]
 ==== SameSite Cookies
 
-The `SameSite` cookie attribute can be used by web browsers to control if and how cookies are submitted in cross-site requests.
-The attribute is particularly relevant for modern web browsers which have started to change the default value that is used when the attribute is missing.
+`SameSite` cookie 属性可以被 Web 浏览器用来控制 cookie 在跨站点请求中是否以及如何提交。
+该属性对现代 Web 浏览器特别重要，因为它们已经开始更改在缺少该属性时使用的默认值。
 
-If you want to change the `SameSite` attribute of your session cookie, you can use the configprop:server.servlet.session.cookie.same-site[] property.
-This property is supported by auto-configured Tomcat, Jetty and Undertow servers.
-It is also used to configure Spring Session servlet based javadoc:org.springframework.session.SessionRepository[] beans.
+如果你想更改会话 cookie 的 `SameSite` 属性，可以使用 configprop:server.servlet.session.cookie.same-site[] 属性。
+该属性由自动配置的 Tomcat、Jetty 和 Undertow 服务器支持。
+它还用于配置基于 Spring Session servlet 的 javadoc:org.springframework.session.SessionRepository[] bean。
 
-For example, if you want your session cookie to have a `SameSite` attribute of `None`, you can add the following to your `application.properties` or `application.yaml` file:
+例如，如果你希望会话 cookie 的 `SameSite` 属性为 `None`，可以在 `application.properties` 或 `application.yaml` 文件中添加以下内容：
 
 [configprops,yaml]
 ----
@@ -631,24 +631,24 @@ server:
         same-site: "none"
 ----
 
-If you want to change the `SameSite` attribute on other cookies added to your javadoc:jakarta.servlet.http.HttpServletResponse[], you can use a javadoc:org.springframework.boot.web.servlet.server.CookieSameSiteSupplier[].
-The javadoc:org.springframework.boot.web.servlet.server.CookieSameSiteSupplier[] is passed a javadoc:jakarta.servlet.http.Cookie[] and may return a `SameSite` value, or `null`.
+如果你想更改添加到 javadoc:jakarta.servlet.http.HttpServletResponse[] 的其他 cookie 的 `SameSite` 属性，可以使用 javadoc:org.springframework.boot.web.servlet.server.CookieSameSiteSupplier[]。
+javadoc:org.springframework.boot.web.servlet.server.CookieSameSiteSupplier[] 被传递一个 javadoc:jakarta.servlet.http.Cookie[]，并可能返回一个 `SameSite` 值，或 `null`。
 
-There are a number of convenience factory and filter methods that you can use to quickly match specific cookies.
-For example, adding the following bean will automatically apply a `SameSite` of `Lax` for all cookies with a name that matches the regular expression `myapp.*`.
+有许多方便的工厂和过滤方法可以用来快速匹配特定的 cookie。
+例如，添加以下 bean 将自动为名称与正则表达式 `myapp.*` 匹配的所有 cookie 应用 `Lax` 的 `SameSite`。
 
 include-code::MySameSiteConfiguration[]
 
 
 
 [[web.servlet.embedded-container.customizing.encoding]]
-==== Character Encoding
+==== 字符编码
 
-The character encoding behavior of the embedded servlet container for request and response handling can be configured using the `server.servlet.encoding.*` configuration properties.
+嵌入式 servlet 容器用于请求和响应处理的字符编码行为可以使用 `server.servlet.encoding.*` 配置属性进行配置。
 
-When a request's `Accept-Language` header indicates a locale for the request it will be automatically mapped to a charset by the servlet container.
-Each container provides default locale to charset mappings and you should verify that they meet your application's needs.
-When they do not, use the configprop:server.servlet.encoding.mapping[] configuration property to customize the mappings, as shown in the following example:
+当请求的 `Accept-Language` 头指示请求的区域设置时，servlet 容器会自动将其映射到字符集。
+每个容器都提供默认的区域设置到字符集的映射，你应该验证它们是否满足应用程序的需求。
+当它们不满足时，可以使用 configprop:server.servlet.encoding.mapping[] 配置属性来自定义映射，如下例所示：
 
 [configprops,yaml]
 ----
@@ -659,50 +659,50 @@ server:
         ko: "UTF-8"
 ----
 
-In the preceding example, the `ko` (Korean) locale has been mapped to `UTF-8`.
-This is equivalent to a `<locale-encoding-mapping-list>` entry in a `web.xml` file of a traditional war deployment.
+在前面的示例中，`ko`（韩语）区域设置被映射到 `UTF-8`。
+这相当于传统 war 部署的 `web.xml` 文件中的 `<locale-encoding-mapping-list>` 条目。
 
 
 
 [[web.servlet.embedded-container.customizing.programmatic]]
-==== Programmatic Customization
+==== 编程式自定义
 
-If you need to programmatically configure your embedded servlet container, you can register a Spring bean that implements the javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] interface.
-javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] provides access to the javadoc:org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory[], which includes numerous customization setter methods.
-The following example shows programmatically setting the port:
+如果你需要以编程方式配置嵌入式 servlet 容器，可以注册一个实现 javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] 接口的 Spring bean。
+javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] 提供对 javadoc:org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory[] 的访问，其中包含许多自定义 setter 方法。
+以下示例显示了以编程方式设置端口：
 
 include-code::MyWebServerFactoryCustomizer[]
 
-javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[], javadoc:org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory[] and javadoc:org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory[] are dedicated variants of javadoc:org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory[] that have additional customization setter methods for Tomcat, Jetty and Undertow respectively.
-The following example shows how to customize javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[] that provides access to Tomcat-specific configuration options:
+javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[]、javadoc:org.springframework.boot.web.embedded.jetty.JettyServletWebServerFactory[] 和 javadoc:org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory[] 是 javadoc:org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory[] 的专用变体，它们分别为 Tomcat、Jetty 和 Undertow 提供了额外的自定义 setter 方法。
+以下示例显示了如何自定义 javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[]，它提供对 Tomcat 特定配置选项的访问：
 
 include-code::MyTomcatWebServerFactoryCustomizer[]
 
 
 
 [[web.servlet.embedded-container.customizing.direct]]
-==== Customizing ConfigurableServletWebServerFactory Directly
+==== 直接自定义 ConfigurableServletWebServerFactory
 
-For more advanced use cases that require you to extend from javadoc:org.springframework.boot.web.servlet.server.ServletWebServerFactory[], you can expose a bean of such type yourself.
+对于需要从 javadoc:org.springframework.boot.web.servlet.server.ServletWebServerFactory[] 扩展的更高级用例，你可以自己暴露一个该类型的 bean。
 
-Setters are provided for many configuration options.
-Several protected method "`hooks`" are also provided should you need to do something more exotic.
-See the javadoc:org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory[] API documentation for details.
+为许多配置选项提供了 setter。
+如果你需要做一些更特殊的事情，还提供了几个受保护的"`hooks`"方法。
+有关详细信息，请参见 javadoc:org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory[] API 文档。
 
-NOTE: Auto-configured customizers are still applied on your custom factory, so use that option carefully.
+注意：自动配置的自定义器仍然应用于你的自定义工厂，所以要谨慎使用该选项。
 
 
 
 [[web.servlet.embedded-container.jsp-limitations]]
-=== JSP Limitations
+=== JSP 限制
 
-When running a Spring Boot application that uses an embedded servlet container (and is packaged as an executable archive), there are some limitations in the JSP support.
+在运行使用嵌入式 servlet 容器（并打包为可执行归档文件）的 Spring Boot 应用程序时，JSP 支持有一些限制。
 
-* With Jetty and Tomcat, it should work if you use war packaging.
+* 对于 Jetty 和 Tomcat，如果你使用 war 打包，它应该可以工作。
 An executable war will work when launched with `java -jar`, and will also be deployable to any standard container.
 JSPs are not supported when using an executable jar.
 
 * Undertow does not support JSPs.
 
-* Creating a custom `error.jsp` page does not override the default view for xref:web/servlet.adoc#web.servlet.spring-mvc.error-handling[error handling].
-  xref:web/servlet.adoc#web.servlet.spring-mvc.error-handling.error-pages[Custom error pages] should be used instead.
+* 创建自定义 `error.jsp` 页面不会覆盖 xref:web/servlet.adoc#web.servlet.spring-mvc.error-handling[错误处理]的默认视图。
+  应该使用 xref:web/servlet.adoc#web.servlet.spring-mvc.error-handling.error-pages[自定义错误页面]代替。

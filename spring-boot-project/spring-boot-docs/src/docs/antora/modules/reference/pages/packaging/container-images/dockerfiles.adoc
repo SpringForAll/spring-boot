@@ -1,21 +1,21 @@
 [[packaging.container-images.dockerfiles]]
 = Dockerfiles
 
-While it is possible to convert a Spring Boot uber jar into a Docker image with just a few lines in the `Dockerfile`, using the xref:packaging/container-images/efficient-images.adoc#packaging.container-images.efficient-images.layering[layering feature] will result in an optimized image.
-When you create a jar containing the layers index file, the `spring-boot-jarmode-tools` jar will be added as a dependency to your jar.
-With this jar on the classpath, you can launch your application in a special mode which allows the bootstrap code to run something entirely different from your application, for example, something that extracts the layers.
+虽然只需在 `Dockerfile` 中写几行就能将 Spring Boot uber jar 转换为 Docker 镜像，但使用 xref:packaging/container-images/efficient-images.adoc#packaging.container-images.efficient-images.layering[分层特性] 能获得更优的镜像。
+当你创建包含 layers 索引文件的 jar 时，`spring-boot-jarmode-tools` jar 会作为依赖添加到你的 jar 中。
+有了这个 jar 在类路径上，你可以以特殊模式启动应用，让引导代码运行与应用本身完全不同的内容，例如提取分层。
 
-CAUTION: The `tools` mode can not be used with a xref:how-to:deployment/installing.adoc[fully executable Spring Boot archive] that includes a launch script.
-Disable launch script configuration when building a jar file that is intended to be used with the `extract` tools mode command.
+CAUTION: 带有启动脚本的 xref:how-to:deployment/installing.adoc[完全可执行 Spring Boot 存档] 不支持 `tools` 模式。
+构建用于 `extract` tools 模式命令的 jar 文件时，请禁用启动脚本配置。
 
-Here’s how you can launch your jar with a `tools` jar mode:
+以下是以 `tools` jar 模式启动 jar 的方法：
 
 [source,shell]
 ----
 $ java -Djarmode=tools -jar my-app.jar
 ----
 
-This will provide the following output:
+这将输出如下内容：
 
 [subs="verbatim"]
 ----
@@ -28,68 +28,68 @@ Available commands:
   help         Help about any command
 ----
 
-The `extract` command can be used to easily split the application into layers to be added to the `Dockerfile`.
-Here is an example of a `Dockerfile` using `jarmode`.
+`extract` 命令可轻松将应用拆分为可添加到 `Dockerfile` 的分层。
+以下是使用 `jarmode` 的 `Dockerfile` 示例。
 
 [source,dockerfile]
 ----
 include::reference:partial$dockerfile[]
-# Start the application jar - this is not the uber jar used by the builder
-# This jar only contains application code and references to the extracted jar files
-# This layout is efficient to start up and CDS/AOT cache friendly
+# 启动应用 jar —— 这不是 builder 使用的 uber jar
+# 此 jar 仅包含应用代码及对已提取 jar 文件的引用
+# 这种布局启动高效，且对 CDS/AOT 缓存友好
 ENTRYPOINT ["java", "-jar", "application.jar"]
 ----
 
-Assuming the above `Dockerfile` is in the current directory, your Docker image can be built with `docker build .`, or optionally specifying the path to your application jar, as shown in the following example:
+假设上述 `Dockerfile` 位于当前目录，可用 `docker build .` 构建镜像，或如下面例子指定应用 jar 路径：
 
 [source,shell]
 ----
 $ docker build --build-arg JAR_FILE=path/to/myapp.jar .
 ----
 
-This is a multi-stage `Dockerfile`.
-The builder stage extracts the directories that are needed later.
-Each of the `COPY` commands relates to the layers extracted by the jarmode.
+这是一个多阶段 `Dockerfile`。
+builder 阶段会提取后续需要的目录。
+每个 `COPY` 命令都对应 jarmode 提取的分层。
 
-Of course, a `Dockerfile` can be written without using the `jarmode`.
-You can use some combination of `unzip` and `mv` to move things to the right layer but `jarmode` simplifies that.
-Additionally, the layout created by the `jarmode` is CDS and AOT cache friendly out of the box.
+当然，也可以不用 `jarmode` 编写 `Dockerfile`。
+你可以用 `unzip` 和 `mv` 等组合将内容移到正确分层，但 `jarmode` 简化了这一过程。
+此外，`jarmode` 创建的布局天生支持 CDS 和 AOT 缓存。
 
 
 
 [[packaging.container-images.dockerfiles.cds]]
 == CDS
 
-If you want to additionally enable xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.cds[CDS], you can use this `Dockerfile`:
+如果你还想启用 xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.cds[CDS]，可使用如下 `Dockerfile`：
 [source,dockerfile]
 ----
 include::reference:partial$dockerfile[]
-# Execute the CDS training run
+# 执行 CDS 训练运行
 RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar
-# Start the application jar with CDS enabled - this is not the uber jar used by the builder
-# This jar only contains application code and references to the extracted jar files
-# This layout is efficient to start up and CDS friendly
+# 启动已启用 CDS 的应用 jar —— 这不是 builder 使用的 uber jar
+# 此 jar 仅包含应用代码及对已提取 jar 文件的引用
+# 这种布局启动高效且对 CDS 友好
 ENTRYPOINT ["java", "-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
 ----
 
-This is mostly the same as the above `Dockerfile`.
-As the last steps, it creates the CDS archive by doing a training run and passes the CDS parameter to `java -jar`.
+这与上面的 `Dockerfile` 基本一致。
+最后一步通过训练运行创建 CDS 存档，并将 CDS 参数传递给 `java -jar`。
 
 [[packaging.container-images.dockerfiles.aot-cache]]
 == AOT cache
 
-If you want to additionally enable the xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.aot-cache[AOT cache], you can use this `Dockerfile`:
+如果你还想启用 xref:reference:packaging/class-data-sharing.adoc#packaging.class-data-sharing.aot-cache[AOT cache]，可使用如下 `Dockerfile`：
 [source,dockerfile]
 ----
 include::reference:partial$dockerfile[]
-# Execute the AOT cache training run
+# 执行 AOT 缓存训练运行
 RUN java -XX:AOTMode=record -XX:AOTConfiguration=app.aotconf -Dspring.context.exit=onRefresh -jar application.jar
 RUN java -XX:AOTMode=create -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -jar application.jar && rm app.aotconf
-# Start the application jar with AOT cache enabled - this is not the uber jar used by the builder
-# This jar only contains application code and references to the extracted jar files
-# This layout is efficient to start up and AOT cache friendly
+# 启动已启用 AOT 缓存的应用 jar —— 这不是 builder 使用的 uber jar
+# 此 jar 仅包含应用代码及对已提取 jar 文件的引用
+# 这种布局启动高效且对 AOT 缓存友好
 ENTRYPOINT ["java", "-XX:AOTCache=app.aot", "-jar", "application.jar"]
 ----
 
-This is mostly the same as the above `Dockerfile`.
-As the last steps, it creates the AOT cache file by doing a training run and passes the AOT cache parameter to `java -jar`.
+这与上面的 `Dockerfile` 基本一致。
+最后一步通过训练运行创建 AOT 缓存文件，并将 AOT 缓存参数传递给 `java -jar`。

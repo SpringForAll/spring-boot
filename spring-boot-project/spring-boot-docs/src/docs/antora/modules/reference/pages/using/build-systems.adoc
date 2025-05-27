@@ -1,35 +1,35 @@
 [[using.build-systems]]
-= Build Systems
+= 构建系统
 
-It is strongly recommended that you choose a build system that supports xref:using/build-systems.adoc#using.build-systems.dependency-management[dependency management] and that can consume artifacts published to the Maven Central repository.
-We would recommend that you choose Maven or Gradle.
-It is possible to get Spring Boot to work with other build systems (Ant, for example), but they are not particularly well supported.
+强烈建议你选择一个支持 xref:using/build-systems.adoc#using.build-systems.dependency-management[依赖管理] 并且可以使用发布到 Maven Central 仓库的构件的构建系统。
+我们建议你选择 Maven 或 Gradle。
+虽然可以让 Spring Boot 与其他构建系统（例如 Ant）一起工作，但它们并不是特别受支持。
 
 
 
 [[using.build-systems.dependency-management]]
-== Dependency Management
+== 依赖管理
 
-Each release of Spring Boot provides a curated list of dependencies that it supports.
-In practice, you do not need to provide a version for any of these dependencies in your build configuration, as Spring Boot manages that for you.
-When you upgrade Spring Boot itself, these dependencies are upgraded as well in a consistent way.
+每个 Spring Boot 版本都提供了一个它支持的依赖项精选列表。
+实际上，你不需要在构建配置中为这些依赖项中的任何一个提供版本，因为 Spring Boot 会为你管理这些。
+当你升级 Spring Boot 本身时，这些依赖项也会以一致的方式升级。
 
-NOTE: You can still specify a version and override Spring Boot's recommendations if you need to do so.
+注意：如果你需要这样做，你仍然可以指定版本并覆盖 Spring Boot 的建议。
 
-The curated list contains all the Spring modules that you can use with Spring Boot as well as a refined list of third party libraries.
-The list is available as a standard Bills of Materials (`spring-boot-dependencies`) that can be used with both xref:using/build-systems.adoc#using.build-systems.maven[Maven] and xref:using/build-systems.adoc#using.build-systems.gradle[Gradle].
+精选列表包含你可以与 Spring Boot 一起使用的所有 Spring 模块以及精选的第三方库列表。
+该列表可作为标准的物料清单（`spring-boot-dependencies`）使用，可以与 xref:using/build-systems.adoc#using.build-systems.maven[Maven] 和 xref:using/build-systems.adoc#using.build-systems.gradle[Gradle] 一起使用。
 
-WARNING: Each release of Spring Boot is associated with a base version of the Spring Framework.
-We **highly** recommend that you do not specify its version.
+警告：每个 Spring Boot 版本都与 Spring Framework 的基础版本相关联。
+我们**强烈**建议你不要指定其版本。
 
 
 
 [[using.build-systems.maven]]
 == Maven
 
-To learn about using Spring Boot with Maven, see the documentation for Spring Boot's Maven plugin:
+要了解如何将 Spring Boot 与 Maven 一起使用，请参阅 Spring Boot 的 Maven 插件文档：
 
-* xref:maven-plugin:index.adoc[Reference]
+* xref:maven-plugin:index.adoc[参考]
 * xref:maven-plugin:api/java/index.html[API]
 
 
@@ -37,20 +37,20 @@ To learn about using Spring Boot with Maven, see the documentation for Spring Bo
 [[using.build-systems.gradle]]
 == Gradle
 
-To learn about using Spring Boot with Gradle, see the documentation for Spring Boot's Gradle plugin:
+要了解如何将 Spring Boot 与 Gradle 一起使用，请参阅 Spring Boot 的 Gradle 插件文档：
 
-* xref:gradle-plugin:index.adoc[Reference]
+* xref:gradle-plugin:index.adoc[参考]
 * xref:gradle-plugin:api/java/index.html[API]
 
 
 
 [[using.build-systems.ant]]
-==  Ant
+== Ant
 
-It is possible to build a Spring Boot project using Apache Ant+Ivy.
-The `spring-boot-antlib` "`AntLib`" module is also available to help Ant create executable jars.
+可以使用 Apache Ant+Ivy 构建 Spring Boot 项目。
+`spring-boot-antlib` "`AntLib`" 模块也可用于帮助 Ant 创建可执行 jar。
 
-To declare dependencies, a typical `ivy.xml` file looks something like the following example:
+要声明依赖项，典型的 `ivy.xml` 文件如下所示：
 
 [source,xml]
 ----
@@ -67,7 +67,7 @@ To declare dependencies, a typical `ivy.xml` file looks something like the follo
 </ivy-module>
 ----
 
-A typical `build.xml` looks like the following example:
+典型的 `build.xml` 如下所示：
 
 [source,xml,subs="verbatim,attributes"]
 ----
@@ -106,46 +106,46 @@ A typical `build.xml` looks like the following example:
 </project>
 ----
 
-TIP: If you do not want to use the `spring-boot-antlib` module, see the xref:how-to:build.adoc#howto.build.build-an-executable-archive-with-ant-without-using-spring-boot-antlib[] section of "`How-to Guides`".
+提示：如果你不想使用 `spring-boot-antlib` 模块，请参阅 "`How-to Guides`" 中的 xref:how-to:build.adoc#howto.build.build-an-executable-archive-with-ant-without-using-spring-boot-antlib[] 部分。
 
 
 
 [[using.build-systems.starters]]
 == Starters
 
-Starters are a set of convenient dependency descriptors that you can include in your application.
-You get a one-stop shop for all the Spring and related technologies that you need without having to hunt through sample code and copy-paste loads of dependency descriptors.
-For example, if you want to get started using Spring and JPA for database access, include the `spring-boot-starter-data-jpa` dependency in your project.
+Starters 是一组方便的依赖描述符，你可以将其包含在应用程序中。
+你可以一站式获取所有需要的 Spring 和相关技术，而无需在示例代码中查找和复制粘贴大量依赖描述符。
+例如，如果你想开始使用 Spring 和 JPA 进行数据库访问，请在项目中包含 `spring-boot-starter-data-jpa` 依赖项。
 
-The starters contain a lot of the dependencies that you need to get a project up and running quickly and with a consistent, supported set of managed transitive dependencies.
+Starters 包含许多依赖项，这些依赖项可以帮助你快速启动项目，并提供一组一致的、受支持的托管传递依赖项。
 
-.What is in a name
+.名称的含义
 ****
-All **official** starters follow a similar naming pattern; `+spring-boot-starter-*+`, where `+*+` is a particular type of application.
-This naming structure is intended to help when you need to find a starter.
-The Maven integration in many IDEs lets you search dependencies by name.
-For example, with the appropriate Eclipse or Spring Tools plugin installed, you can press `ctrl-space` in the POM editor and type "`spring-boot-starter`" for a complete list.
+所有**官方** starters 都遵循类似的命名模式；`+spring-boot-starter-*+`，其中 `+*+` 是特定类型的应用程序。
+这种命名结构旨在帮助你查找 starter。
+许多 IDE 中的 Maven 集成允许你按名称搜索依赖项。
+例如，安装了适当的 Eclipse 或 Spring Tools 插件后，你可以在 POM 编辑器中按 `ctrl-space` 并输入 "`spring-boot-starter`" 以获取完整列表。
 
-As explained in the xref:features/developing-auto-configuration.adoc#features.developing-auto-configuration.custom-starter[] section, third party starters should not start with `spring-boot`, as it is reserved for official Spring Boot artifacts.
-Rather, a third-party starter typically starts with the name of the project.
-For example, a third-party starter project called `thirdpartyproject` would typically be named `thirdpartyproject-spring-boot-starter`.
+如 xref:features/developing-auto-configuration.adoc#features.developing-auto-configuration.custom-starter[] 部分所述，第三方 starters 不应以 `spring-boot` 开头，因为它保留给官方 Spring Boot 构件。
+相反，第三方 starter 通常以项目名称开头。
+例如，一个名为 `thirdpartyproject` 的第三方 starter 项目通常会被命名为 `thirdpartyproject-spring-boot-starter`。
 ****
 
-The following application starters are provided by Spring Boot under the `org.springframework.boot` group:
+以下应用程序 starters 由 Spring Boot 在 `org.springframework.boot` 组下提供：
 
-.Spring Boot application starters
+.Spring Boot 应用程序 starters
 include::ROOT:partial$starters/application-starters.adoc[]
 
-In addition to the application starters, the following starters can be used to add xref:how-to:actuator.adoc[production ready] features:
+除了应用程序 starters 之外，以下 starters 可用于添加 xref:how-to:actuator.adoc[生产就绪] 功能：
 
-.Spring Boot production starters
+.Spring Boot 生产 starters
 include::ROOT:partial$starters/production-starters.adoc[]
 
-Finally, Spring Boot also includes the following starters that can be used if you want to exclude or swap specific technical facets:
+最后，Spring Boot 还包括以下 starters，如果你想排除或交换特定的技术方面，可以使用它们：
 
-.Spring Boot technical starters
+.Spring Boot 技术 starters
 include::ROOT:partial$starters/technical-starters.adoc[]
 
-To learn how to swap technical facets, please see the how-to documentation for xref:how-to:webserver.adoc#howto.webserver.use-another[swapping web server] and xref:how-to:logging.adoc#howto.logging.log4j[logging system].
+要了解如何交换技术方面，请参阅有关 xref:how-to:webserver.adoc#howto.webserver.use-another[交换 Web 服务器] 和 xref:how-to:logging.adoc#howto.logging.log4j[日志系统] 的 how-to 文档。
 
-TIP: For a list of additional community contributed starters, see the {code-spring-boot-latest}/spring-boot-project/spring-boot-starters/README.adoc[README file] in the `spring-boot-starters` module on GitHub.
+提示：有关其他社区贡献的 starters 列表，请参阅 GitHub 上 `spring-boot-starters` 模块中的 {code-spring-boot-latest}/spring-boot-project/spring-boot-starters/README.adoc[README 文件]。

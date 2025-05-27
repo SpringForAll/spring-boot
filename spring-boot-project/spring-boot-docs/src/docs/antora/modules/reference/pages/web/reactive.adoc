@@ -1,112 +1,112 @@
 [[web.reactive]]
-= Reactive Web Applications
+= 响应式 Web 应用程序
 
-Spring Boot simplifies development of reactive web applications by providing auto-configuration for Spring Webflux.
+Spring Boot 通过为 Spring Webflux 提供自动配置，简化了响应式 Web 应用程序的开发。
 
 
 
 [[web.reactive.webflux]]
-== The "`Spring WebFlux Framework`"
+== "`Spring WebFlux Framework`"
 
-Spring WebFlux is the new reactive web framework introduced in Spring Framework 5.0.
-Unlike Spring MVC, it does not require the servlet API, is fully asynchronous and non-blocking, and implements the https://www.reactive-streams.org/[Reactive Streams] specification through https://projectreactor.io/[the Reactor project].
+Spring WebFlux 是 Spring Framework 5.0 中引入的新响应式 Web 框架。
+与 Spring MVC 不同，它不需要 servlet API，完全异步和非阻塞，并通过 https://projectreactor.io/[Reactor 项目] 实现了 https://www.reactive-streams.org/[Reactive Streams] 规范。
 
-Spring WebFlux comes in two flavors: functional and annotation-based.
-The annotation-based one is quite close to the Spring MVC model, as shown in the following example:
+Spring WebFlux 有两种风格：函数式和基于注解的。
+基于注解的方式与 Spring MVC 模型非常接近，如下例所示：
 
 include-code::MyRestController[]
 
-WebFlux is part of the Spring Framework and detailed information is available in its {url-spring-framework-docs}/web/webflux.html[reference documentation].
+WebFlux 是 Spring Framework 的一部分，详细信息可在其 {url-spring-framework-docs}/web/webflux.html[参考文档] 中找到。
 
-"`WebFlux.fn`", the functional variant, separates the routing configuration from the actual handling of the requests, as shown in the following example:
+"`WebFlux.fn`"，即函数式变体，将路由配置与实际请求处理分开，如下例所示：
 
 include-code::MyRoutingConfiguration[]
 
 include-code::MyUserHandler[]
 
-"`WebFlux.fn`" is part of the Spring Framework and detailed information is available in its {url-spring-framework-docs}/web/webflux-functional.html[reference documentation].
+"`WebFlux.fn`" 是 Spring Framework 的一部分，详细信息可在其 {url-spring-framework-docs}/web/webflux-functional.html[参考文档] 中找到。
 
-TIP: You can define as many javadoc:org.springframework.web.reactive.function.server.RouterFunction[] beans as you like to modularize the definition of the router.
-Beans can be ordered if you need to apply a precedence.
+TIP: 您可以定义任意数量的 javadoc:org.springframework.web.reactive.function.server.RouterFunction[] beans 来模块化路由定义。
+如果需要应用优先级，可以对 beans 进行排序。
 
-To get started, add the `spring-boot-starter-webflux` module to your application.
+要开始使用，请将 `spring-boot-starter-webflux` 模块添加到您的应用程序中。
 
-NOTE: Adding both `spring-boot-starter-web` and `spring-boot-starter-webflux` modules in your application results in Spring Boot auto-configuring Spring MVC, not WebFlux.
-This behavior has been chosen because many Spring developers add `spring-boot-starter-webflux` to their Spring MVC application to use the reactive javadoc:org.springframework.web.reactive.function.client.WebClient[].
-You can still enforce your choice by setting the chosen application type to `SpringApplication.setWebApplicationType(WebApplicationType.REACTIVE)`.
+NOTE: 在您的应用程序中同时添加 `spring-boot-starter-web` 和 `spring-boot-starter-webflux` 模块会导致 Spring Boot 自动配置 Spring MVC，而不是 WebFlux。
+选择这种行为是因为许多 Spring 开发人员将 `spring-boot-starter-webflux` 添加到他们的 Spring MVC 应用程序中以使用响应式 javadoc:org.springframework.web.reactive.function.client.WebClient[]。
+您仍然可以通过设置 `SpringApplication.setWebApplicationType(WebApplicationType.REACTIVE)` 来强制执行您的选择。
 
 
 
 [[web.reactive.webflux.auto-configuration]]
-=== Spring WebFlux Auto-configuration
+=== Spring WebFlux 自动配置
 
-Spring Boot provides auto-configuration for Spring WebFlux that works well with most applications.
+Spring Boot 为 Spring WebFlux 提供了自动配置，适用于大多数应用程序。
 
-The auto-configuration adds the following features on top of Spring's defaults:
+自动配置在 Spring 默认值的基础上添加了以下功能：
 
-* Configuring codecs for javadoc:org.springframework.http.codec.HttpMessageReader[] and javadoc:org.springframework.http.codec.HttpMessageWriter[] instances (described xref:web/reactive.adoc#web.reactive.webflux.httpcodecs[later in this document]).
-* Support for serving static resources, including support for WebJars (described xref:web/servlet.adoc#web.servlet.spring-mvc.static-content[later in this document]).
+* 配置 javadoc:org.springframework.http.codec.HttpMessageReader[] 和 javadoc:org.springframework.http.codec.HttpMessageWriter[] 实例的编解码器（在本文档后面描述）。
+* 支持提供静态资源，包括 WebJars 支持（在本文档后面描述）。
 
-If you want to keep Spring Boot WebFlux features and you want to add additional {url-spring-framework-docs}/web/webflux/config.html[WebFlux configuration], you can add your own javadoc:org.springframework.context.annotation.Configuration[format=annotation] class of type javadoc:org.springframework.web.reactive.config.WebFluxConfigurer[] but *without* javadoc:org.springframework.web.reactive.config.EnableWebFlux[format=annotation].
+如果您想保留 Spring Boot WebFlux 功能并添加额外的 {url-spring-framework-docs}/web/webflux/config.html[WebFlux 配置]，您可以添加自己的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类，类型为 javadoc:org.springframework.web.reactive.config.WebFluxConfigurer[]，但*不*使用 javadoc:org.springframework.web.reactive.config.EnableWebFlux[format=annotation]。
 
-If you want to add additional customization to the auto-configured javadoc:org.springframework.http.server.reactive.HttpHandler[], you can define beans of type javadoc:org.springframework.boot.autoconfigure.web.reactive.WebHttpHandlerBuilderCustomizer[] and use them to modify the javadoc:org.springframework.web.server.adapter.WebHttpHandlerBuilder[].
+如果您想对自动配置的 javadoc:org.springframework.http.server.reactive.HttpHandler[] 进行额外的自定义，您可以定义类型为 javadoc:org.springframework.boot.autoconfigure.web.reactive.WebHttpHandlerBuilderCustomizer[] 的 beans，并使用它们来修改 javadoc:org.springframework.web.server.adapter.WebHttpHandlerBuilder[]。
 
-If you want to take complete control of Spring WebFlux, you can add your own javadoc:org.springframework.context.annotation.Configuration[format=annotation] annotated with javadoc:org.springframework.web.reactive.config.EnableWebFlux[format=annotation].
+如果您想完全控制 Spring WebFlux，您可以添加自己的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类，并使用 javadoc:org.springframework.web.reactive.config.EnableWebFlux[format=annotation] 进行注解。
 
 
 
 [[web.reactive.webflux.conversion-service]]
-=== Spring WebFlux Conversion Service
+=== Spring WebFlux 转换服务
 
-If you want to customize the javadoc:org.springframework.core.convert.ConversionService[] used by Spring WebFlux, you can provide a javadoc:org.springframework.web.reactive.config.WebFluxConfigurer[] bean with an `addFormatters` method.
+如果您想自定义 Spring WebFlux 使用的 javadoc:org.springframework.core.convert.ConversionService[]，您可以提供一个带有 `addFormatters` 方法的 javadoc:org.springframework.web.reactive.config.WebFluxConfigurer[] bean。
 
-Conversion can also be customized using the `spring.webflux.format.*` configuration properties.
-When not configured, the following defaults are used:
+也可以使用 `spring.webflux.format.*` 配置属性来自定义转换。
+未配置时，使用以下默认值：
 
 |===
-|Property |`DateTimeFormatter` |Formats
+|属性 |`DateTimeFormatter` |格式
 
 |configprop:spring.webflux.format.date[]
 |`ofLocalizedDate(FormatStyle.SHORT)`
-|`java.util.Date` and javadoc:java.time.LocalDate[]
+|`java.util.Date` 和 javadoc:java.time.LocalDate[]
 
 |configprop:spring.webflux.format.time[]
 |`ofLocalizedTime(FormatStyle.SHORT)`
-|java.time's javadoc:java.time.LocalTime[] and javadoc:java.time.OffsetTime[]
+|java.time 的 javadoc:java.time.LocalTime[] 和 javadoc:java.time.OffsetTime[]
 
 |configprop:spring.webflux.format.date-time[]
 |`ofLocalizedDateTime(FormatStyle.SHORT)`
-|java.time's javadoc:java.time.LocalDateTime[], javadoc:java.time.OffsetDateTime[], and javadoc:java.time.ZonedDateTime[]
+|java.time 的 javadoc:java.time.LocalDateTime[]、javadoc:java.time.OffsetDateTime[] 和 javadoc:java.time.ZonedDateTime[]
 |===
 
 
 
 [[web.reactive.webflux.httpcodecs]]
-=== HTTP Codecs with HttpMessageReaders and HttpMessageWriters
+=== 使用 HttpMessageReaders 和 HttpMessageWriters 的 HTTP 编解码器
 
-Spring WebFlux uses the javadoc:org.springframework.http.codec.HttpMessageReader[] and javadoc:org.springframework.http.codec.HttpMessageWriter[] interfaces to convert HTTP requests and responses.
-They are configured with javadoc:org.springframework.http.codec.CodecConfigurer[] to have sensible defaults by looking at the libraries available in your classpath.
+Spring WebFlux 使用 javadoc:org.springframework.http.codec.HttpMessageReader[] 和 javadoc:org.springframework.http.codec.HttpMessageWriter[] 接口来转换 HTTP 请求和响应。
+它们通过 javadoc:org.springframework.http.codec.CodecConfigurer[] 进行配置，通过查看类路径中可用的库来设置合理的默认值。
 
-Spring Boot provides dedicated configuration properties for codecs, `+spring.http.codecs.*+`.
-It also applies further customization by using javadoc:org.springframework.boot.web.codec.CodecCustomizer[] instances.
-For example, `+spring.jackson.*+` configuration keys are applied to the Jackson codec.
+Spring Boot 为编解码器提供了专门的配置属性 `+spring.http.codecs.*+`。
+它还通过使用 javadoc:org.springframework.boot.web.codec.CodecCustomizer[] 实例来应用进一步的自定义。
+例如，`+spring.jackson.*+` 配置键应用于 Jackson 编解码器。
 
-If you need to add or customize codecs, you can create a custom javadoc:org.springframework.boot.web.codec.CodecCustomizer[] component, as shown in the following example:
+如果需要添加或自定义编解码器，可以创建自定义的 javadoc:org.springframework.boot.web.codec.CodecCustomizer[] 组件，如下例所示：
 
 include-code::MyCodecsConfiguration[]
 
-You can also leverage xref:features/json.adoc#features.json.jackson.custom-serializers-and-deserializers[Boot's custom JSON serializers and deserializers].
+您还可以利用 xref:features/json.adoc#features.json.jackson.custom-serializers-and-deserializers[Boot 的自定义 JSON 序列化器和反序列化器]。
 
 
 
 [[web.reactive.webflux.static-content]]
-=== Static Content
+=== 静态内容
 
-By default, Spring Boot serves static content from a directory called `/static` (or `/public` or `/resources` or `/META-INF/resources`) in the classpath.
-It uses the javadoc:org.springframework.web.reactive.resource.ResourceWebHandler[] from Spring WebFlux so that you can modify that behavior by adding your own javadoc:org.springframework.web.reactive.config.WebFluxConfigurer[] and overriding the `addResourceHandlers` method.
+默认情况下，Spring Boot 从类路径中名为 `/static`（或 `/public` 或 `/resources` 或 `/META-INF/resources`）的目录提供静态内容。
+它使用来自 Spring WebFlux 的 javadoc:org.springframework.web.reactive.resource.ResourceWebHandler[]，因此您可以通过添加自己的 javadoc:org.springframework.web.reactive.config.WebFluxConfigurer[] 并覆盖 `addResourceHandlers` 方法来修改该行为。
 
-By default, resources are mapped on `+/**+`, but you can tune that by setting the configprop:spring.webflux.static-path-pattern[] property.
-For instance, relocating all resources to `/resources/**` can be achieved as follows:
+默认情况下，资源映射到 `+/**+`，但您可以通过设置 configprop:spring.webflux.static-path-pattern[] 属性来调整。
+例如，可以通过以下方式将所有资源重新定位到 `/resources/**`：
 
 [configprops,yaml]
 ----
@@ -115,74 +115,74 @@ spring:
     static-path-pattern: "/resources/**"
 ----
 
-You can also customize the static resource locations by using `spring.web.resources.static-locations`.
-Doing so replaces the default values with a list of directory locations.
-If you do so, the default welcome page detection switches to your custom locations.
-So, if there is an `index.html` in any of your locations on startup, it is the home page of the application.
+您还可以使用 `spring.web.resources.static-locations` 来自定义静态资源位置。
+这样做会用目录位置列表替换默认值。
+如果这样做，默认欢迎页面检测将切换到您的自定义位置。
+因此，如果在启动时您的任何位置中有 `index.html`，它就是应用程序的主页。
 
-In addition to the "`standard`" static resource locations listed earlier, a special case is made for https://www.webjars.org/[Webjars content].
-By default, any resources with a path in `+/webjars/**+` are served from jar files if they are packaged in the Webjars format.
-The path can be customized with the configprop:spring.webflux.webjars-path-pattern[] property.
+除了前面列出的"标准"静态资源位置外，还对 https://www.webjars.org/[Webjars 内容] 进行了特殊处理。
+默认情况下，如果资源以 Webjars 格式打包，则从 jar 文件中提供路径为 `+/webjars/**+` 的任何资源。
+可以使用 configprop:spring.webflux.webjars-path-pattern[] 属性自定义路径。
 
-TIP: Spring WebFlux applications do not strictly depend on the servlet API, so they cannot be deployed as war files and do not use the `src/main/webapp` directory.
+TIP: Spring WebFlux 应用程序不严格依赖 servlet API，因此它们不能作为 war 文件部署，也不使用 `src/main/webapp` 目录。
 
 
 
 [[web.reactive.webflux.welcome-page]]
-=== Welcome Page
+=== 欢迎页面
 
-Spring Boot supports both static and templated welcome pages.
-It first looks for an `index.html` file in the configured static content locations.
-If one is not found, it then looks for an `index` template.
-If either is found, it is automatically used as the welcome page of the application.
+Spring Boot 支持静态和模板化的欢迎页面。
+它首先在配置的静态内容位置中查找 `index.html` 文件。
+如果未找到，则查找 `index` 模板。
+如果找到其中任何一个，它将自动用作应用程序的欢迎页面。
 
-This only acts as a fallback for actual index routes defined by the application.
-The ordering is defined by the order of javadoc:org.springframework.web.reactive.HandlerMapping[] beans which is by default the following:
+这仅作为应用程序定义的实际索引路由的后备。
+顺序由 javadoc:org.springframework.web.reactive.HandlerMapping[] beans 的顺序定义，默认顺序如下：
 
 [cols="1,1"]
 |===
 |`org.springframework.web.reactive.function.server.support.RouterFunctionMapping`
-|Endpoints declared with javadoc:org.springframework.web.reactive.function.server.RouterFunction[] beans
+|使用 javadoc:org.springframework.web.reactive.function.server.RouterFunction[] beans 声明的端点
 
 |`org.springframework.web.reactive.result.method.annotation.RequestMappingHandlerMapping`
-|Endpoints declared in javadoc:org.springframework.stereotype.Controller[format=annotation] beans
+|在 javadoc:org.springframework.stereotype.Controller[format=annotation] beans 中声明的端点
 
 |`RouterFunctionMapping` for the Welcome Page
-|The welcome page support
+|欢迎页面支持
 |===
 
 
 
 [[web.reactive.webflux.template-engines]]
-=== Template Engines
+=== 模板引擎
 
-As well as REST web services, you can also use Spring WebFlux to serve dynamic HTML content.
-Spring WebFlux supports a variety of templating technologies, including Thymeleaf, FreeMarker, and Mustache.
+除了 REST Web 服务外，您还可以使用 Spring WebFlux 来提供动态 HTML 内容。
+Spring WebFlux 支持多种模板技术，包括 Thymeleaf、FreeMarker 和 Mustache。
 
-Spring Boot includes auto-configuration support for the following templating engines:
+Spring Boot 包含以下模板引擎的自动配置支持：
 
 * https://freemarker.apache.org/docs/[FreeMarker]
 * https://www.thymeleaf.org[Thymeleaf]
 * https://mustache.github.io/[Mustache]
 
-NOTE: Not all FreeMarker features are supported with WebFlux.
-For more details, check the description of each property.
+NOTE: 并非所有 FreeMarker 功能都支持 WebFlux。
+有关更多详细信息，请查看每个属性的描述。
 
-When you use one of these templating engines with the default configuration, your templates are picked up automatically from `src/main/resources/templates`.
+当您使用这些模板引擎之一并采用默认配置时，您的模板会自动从 `src/main/resources/templates` 中获取。
 
 
 
 [[web.reactive.webflux.error-handling]]
-=== Error Handling
+=== 错误处理
 
-Spring Boot provides a javadoc:org.springframework.web.server.WebExceptionHandler[] that handles all errors in a sensible way.
-Its position in the processing order is immediately before the handlers provided by WebFlux, which are considered last.
-For machine clients, it produces a JSON response with details of the error, the HTTP status, and the exception message.
-For browser clients, there is a "`whitelabel`" error handler that renders the same data in HTML format.
-You can also provide your own HTML templates to display errors (see the xref:web/reactive.adoc#web.reactive.webflux.error-handling.error-pages[next section]).
+Spring Boot 提供了一个 javadoc:org.springframework.web.server.WebExceptionHandler[]，它以合理的方式处理所有错误。
+它在处理顺序中的位置紧接在 WebFlux 提供的处理程序之前，这些处理程序被视为最后。
+对于机器客户端，它生成一个包含错误详情、HTTP 状态和异常消息的 JSON 响应。
+对于浏览器客户端，有一个"白标"错误处理程序，它以 HTML 格式呈现相同的数据。
+您还可以提供自己的 HTML 模板来显示错误（请参阅 xref:web/reactive.adoc#web.reactive.webflux.error-handling.error-pages[下一节]）。
 
-Before customizing error handling in Spring Boot directly, you can leverage the {url-spring-framework-docs}/web/webflux/ann-rest-exceptions.html[RFC 9457 Problem Details] support in Spring WebFlux.
-Spring WebFlux can produce custom error messages with the `application/problem+json` media type, like:
+在直接在 Spring Boot 中自定义错误处理之前，您可以利用 Spring WebFlux 中的 {url-spring-framework-docs}/web/webflux/ann-rest-exceptions.html[RFC 9457 Problem Details] 支持。
+Spring WebFlux 可以生成带有 `application/problem+json` 媒体类型的自定义错误消息，例如：
 
 [source,json]
 ----
@@ -195,33 +195,32 @@ Spring WebFlux can produce custom error messages with the `application/problem+j
 }
 ----
 
-This support can be enabled by setting configprop:spring.webflux.problemdetails.enabled[] to `true`.
+可以通过将 configprop:spring.webflux.problemdetails.enabled[] 设置为 `true` 来启用此支持。
 
+自定义此功能的第一步通常涉及使用现有机制但替换或增强错误内容。
+为此，您可以添加一个类型为 javadoc:org.springframework.boot.web.reactive.error.ErrorAttributes[] 的 bean。
 
-The first step to customizing this feature often involves using the existing mechanism but replacing or augmenting the error contents.
-For that, you can add a bean of type javadoc:org.springframework.boot.web.reactive.error.ErrorAttributes[].
-
-To change the error handling behavior, you can implement javadoc:org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler[] and register a bean definition of that type.
-Because an javadoc:org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler[] is quite low-level, Spring Boot also provides a convenient javadoc:org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler[] to let you handle errors in a WebFlux functional way, as shown in the following example:
+要更改错误处理行为，您可以实现 javadoc:org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler[] 并注册该类型的 bean 定义。
+因为 javadoc:org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler[] 相当底层，Spring Boot 还提供了一个方便的 javadoc:org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler[]，让您以 WebFlux 函数式方式处理错误，如下例所示：
 
 include-code::MyErrorWebExceptionHandler[]
 
-For a more complete picture, you can also subclass javadoc:org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler[] directly and override specific methods.
+为了更完整的了解，您还可以直接子类化 javadoc:org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler[] 并覆盖特定方法。
 
-In some cases, errors handled at the controller level are not recorded by web observations or the xref:actuator/metrics.adoc#actuator.metrics.supported.spring-webflux[metrics infrastructure].
-Applications can ensure that such exceptions are recorded with the observations by {url-spring-framework-docs}/integration/observability.html#observability.http-server.reactive[setting the handled exception on the observation context].
+在某些情况下，控制器级别处理的错误不会被 Web 观察或 xref:actuator/metrics.adoc#actuator.metrics.supported.spring-webflux[指标基础设施]记录。
+应用程序可以通过 {url-spring-framework-docs}/integration/observability.html#observability.http-server.reactive[在观察上下文中设置已处理的异常]来确保此类异常被记录。
 
 
 
 [[web.reactive.webflux.error-handling.error-pages]]
-==== Custom Error Pages
+==== 自定义错误页面
 
-If you want to display a custom HTML error page for a given status code, you can add views that resolve from `error/*`, for example by adding files to a `/error` directory.
-Error pages can either be static HTML (that is, added under any of the static resource directories) or built with templates.
-The name of the file should be the exact status code, a status code series mask, or `error` for a default if nothing else matches.
-Note that the path to the default error view is `error/error`, whereas with Spring MVC the default error view is `error`.
+如果您想为给定的状态码显示自定义 HTML 错误页面，您可以添加从 `error/*` 解析的视图，例如通过将文件添加到 `/error` 目录。
+错误页面可以是静态 HTML（即添加在任何静态资源目录下）或使用模板构建。
+文件名应该是确切的状态码、状态码系列掩码，或者如果没有其他匹配项，则为 `error`。
+请注意，默认错误视图的路径是 `error/error`，而 Spring MVC 的默认错误视图是 `error`。
 
-For example, to map `404` to a static HTML file, your directory structure would be as follows:
+例如，要将 `404` 映射到静态 HTML 文件，您的目录结构如下：
 
 [source]
 ----
@@ -236,7 +235,7 @@ src/
              +- <other public assets>
 ----
 
-To map all `5xx` errors by using a Mustache template, your directory structure would be as follows:
+要使用 Mustache 模板映射所有 `5xx` 错误，您的目录结构如下：
 
 [source]
 ----
@@ -254,17 +253,17 @@ src/
 
 
 [[web.reactive.webflux.web-filters]]
-=== Web Filters
+=== Web 过滤器
 
-Spring WebFlux provides a javadoc:org.springframework.web.server.WebFilter[] interface that can be implemented to filter HTTP request-response exchanges.
-javadoc:org.springframework.web.server.WebFilter[] beans found in the application context will be automatically used to filter each exchange.
+Spring WebFlux 提供了一个 javadoc:org.springframework.web.server.WebFilter[] 接口，可以实现该接口来过滤 HTTP 请求-响应交换。
+在应用程序上下文中找到的 javadoc:org.springframework.web.server.WebFilter[] beans 将自动用于过滤每个交换。
 
-Where the order of the filters is important they can implement javadoc:org.springframework.core.Ordered[] or be annotated with javadoc:org.springframework.core.annotation.Order[format=annotation].
-Spring Boot auto-configuration may configure web filters for you.
-When it does so, the orders shown in the following table will be used:
+当过滤器的顺序很重要时，它们可以实现 javadoc:org.springframework.core.Ordered[] 或使用 javadoc:org.springframework.core.annotation.Order[format=annotation] 进行注解。
+Spring Boot 自动配置可能会为您配置 Web 过滤器。
+当它这样做时，将使用下表中显示的顺序：
 
 |===
-| Web Filter | Order
+| Web 过滤器 | 顺序
 
 | javadoc:org.springframework.security.web.server.WebFilterChainProxy[] (Spring Security)
 | `-100`
@@ -276,75 +275,75 @@ When it does so, the orders shown in the following table will be used:
 
 
 [[web.reactive.reactive-server]]
-== Embedded Reactive Server Support
+== 嵌入式响应式服务器支持
 
-Spring Boot includes support for the following embedded reactive web servers: Reactor Netty, Tomcat, Jetty, and Undertow.
-Most developers use the appropriate starter to obtain a fully configured instance.
-By default, the embedded server listens for HTTP requests on port 8080.
+Spring Boot 包括对以下嵌入式响应式 Web 服务器的支持：Reactor Netty、Tomcat、Jetty 和 Undertow。
+大多数开发人员使用适当的 starter 来获取完全配置的实例。
+默认情况下，嵌入式服务器在端口 8080 上监听 HTTP 请求。
 
 
 
 [[web.reactive.reactive-server.customizing]]
-=== Customizing Reactive Servers
+=== 自定义响应式服务器
 
-Common reactive web server settings can be configured by using Spring javadoc:org.springframework.core.env.Environment[] properties.
-Usually, you would define the properties in your `application.properties` or `application.yaml` file.
+可以通过使用 Spring javadoc:org.springframework.core.env.Environment[] 属性来配置常见的响应式 Web 服务器设置。
+通常，您会在 `application.properties` 或 `application.yaml` 文件中定义这些属性。
 
-Common server settings include:
+常见的服务器设置包括：
 
-* Network settings: Listen port for incoming HTTP requests (`server.port`), interface address to bind to (`server.address`), and so on.
-* Error management: Location of the error page (`server.error.path`) and so on.
+* 网络设置：传入 HTTP 请求的监听端口（`server.port`）、要绑定的接口地址（`server.address`）等。
+* 错误管理：错误页面的位置（`server.error.path`）等。
 * xref:how-to:webserver.adoc#howto.webserver.configure-ssl[SSL]
-* xref:how-to:webserver.adoc#howto.webserver.enable-response-compression[HTTP compression]
+* xref:how-to:webserver.adoc#howto.webserver.enable-response-compression[HTTP 压缩]
 
-Spring Boot tries as much as possible to expose common settings, but this is not always possible.
-For those cases, dedicated namespaces such as `server.netty.*` offer server-specific customizations.
+Spring Boot 尽可能多地暴露常见设置，但这并不总是可能的。
+对于这些情况，`server.netty.*` 等专用命名空间提供了服务器特定的自定义。
 
-TIP: See the javadoc:org.springframework.boot.autoconfigure.web.ServerProperties[] class for a complete list.
+TIP: 有关完整列表，请参阅 javadoc:org.springframework.boot.autoconfigure.web.ServerProperties[] 类。
 
 
 
 [[web.reactive.reactive-server.customizing.programmatic]]
-==== Programmatic Customization
+==== 编程式自定义
 
-If you need to programmatically configure your reactive web server, you can register a Spring bean that implements the javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] interface.
-javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] provides access to the javadoc:org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory[], which includes numerous customization setter methods.
-The following example shows programmatically setting the port:
+如果需要以编程方式配置响应式 Web 服务器，可以注册一个实现 javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] 接口的 Spring bean。
+javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] 提供对 javadoc:org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory[] 的访问，其中包含许多自定义 setter 方法。
+以下示例显示了以编程方式设置端口：
 
 include-code::MyWebServerFactoryCustomizer[]
 
-javadoc:org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory[], javadoc:org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory[], javadoc:org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory[], and javadoc:org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory[] are dedicated variants of javadoc:org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory[] that have additional customization setter methods for Jetty, Reactor Netty, Tomcat, and Undertow respectively.
-The following example shows how to customize javadoc:org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory[] that provides access to Reactor Netty-specific configuration options:
+javadoc:org.springframework.boot.web.embedded.jetty.JettyReactiveWebServerFactory[]、javadoc:org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory[]、javadoc:org.springframework.boot.web.embedded.tomcat.TomcatReactiveWebServerFactory[] 和 javadoc:org.springframework.boot.web.embedded.undertow.UndertowReactiveWebServerFactory[] 是 javadoc:org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory[] 的专用变体，它们分别为 Jetty、Reactor Netty、Tomcat 和 Undertow 提供了额外的自定义 setter 方法。
+以下示例显示了如何自定义 javadoc:org.springframework.boot.web.embedded.netty.NettyReactiveWebServerFactory[]，它提供对 Reactor Netty 特定配置选项的访问：
 
 include-code::MyNettyWebServerFactoryCustomizer[]
 
 
 
 [[web.reactive.reactive-server.customizing.direct]]
-==== Customizing ConfigurableReactiveWebServerFactory Directly
+==== 直接自定义 ConfigurableReactiveWebServerFactory
 
-For more advanced use cases that require you to extend from javadoc:org.springframework.boot.web.reactive.server.ReactiveWebServerFactory[], you can expose a bean of such type yourself.
+对于需要从 javadoc:org.springframework.boot.web.reactive.server.ReactiveWebServerFactory[] 扩展的更高级用例，您可以自己暴露该类型的 bean。
 
-Setters are provided for many configuration options.
-Several protected method "`hooks`" are also provided should you need to do something more exotic.
-See the javadoc:org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory[] API documentation for details.
+为许多配置选项提供了 setter。
+如果您需要做一些更奇特的事情，还提供了几个受保护的"钩子"方法。
+有关详细信息，请参阅 javadoc:org.springframework.boot.web.reactive.server.ConfigurableReactiveWebServerFactory[] API 文档。
 
-NOTE: Auto-configured customizers are still applied on your custom factory, so use that option carefully.
+NOTE: 自动配置的自定义器仍然应用于您的自定义工厂，因此请谨慎使用该选项。
 
 
 
 [[web.reactive.reactive-server-resources-configuration]]
-== Reactive Server Resources Configuration
+== 响应式服务器资源配置
 
-When auto-configuring a Reactor Netty or Jetty server, Spring Boot will create specific beans that will provide HTTP resources to the server instance: javadoc:org.springframework.http.client.ReactorResourceFactory[] or javadoc:org.springframework.http.client.reactive.JettyResourceFactory[].
+在自动配置 Reactor Netty 或 Jetty 服务器时，Spring Boot 将创建特定的 beans，这些 beans 将为服务器实例提供 HTTP 资源：javadoc:org.springframework.http.client.ReactorResourceFactory[] 或 javadoc:org.springframework.http.client.reactive.JettyResourceFactory[]。
 
-By default, those resources will be also shared with the Reactor Netty and Jetty clients for optimal performances, given:
+默认情况下，这些资源也将与 Reactor Netty 和 Jetty 客户端共享，以实现最佳性能，前提是：
 
-* the same technology is used for server and client
-* the client instance is built using the javadoc:org.springframework.web.reactive.function.client.WebClient$Builder[] bean auto-configured by Spring Boot
+* 服务器和客户端使用相同的技术
+* 客户端实例是使用 Spring Boot 自动配置的 javadoc:org.springframework.web.reactive.function.client.WebClient$Builder[] bean 构建的
 
-Developers can override the resource configuration for Jetty and Reactor Netty by providing a custom javadoc:org.springframework.http.client.ReactorResourceFactory[] or javadoc:org.springframework.http.client.reactive.JettyResourceFactory[] bean - this will be applied to both clients and servers.
+开发人员可以通过提供自定义的 javadoc:org.springframework.http.client.ReactorResourceFactory[] 或 javadoc:org.springframework.http.client.reactive.JettyResourceFactory[] bean 来覆盖 Jetty 和 Reactor Netty 的资源配置 - 这将同时应用于客户端和服务器。
 
-You can learn more about the resource configuration on the client side in the xref:io/rest-client.adoc#io.rest-client.webclient.runtime[] section.
+您可以在 xref:io/rest-client.adoc#io.rest-client.webclient.runtime[] 部分了解有关客户端资源配置的更多信息。
 
 

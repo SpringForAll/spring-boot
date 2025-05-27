@@ -1,79 +1,79 @@
 [[data.sql]]
-= SQL Databases
+= SQL 数据库
 
-The {url-spring-framework-site}[Spring Framework] provides extensive support for working with SQL databases, from direct JDBC access using javadoc:org.springframework.jdbc.core.simple.JdbcClient[] or javadoc:org.springframework.jdbc.core.JdbcTemplate[] to complete "`object relational mapping`" technologies such as Hibernate.
-{url-spring-data-site}[Spring Data] provides an additional level of functionality: creating javadoc:org.springframework.data.repository.Repository[] implementations directly from interfaces and using conventions to generate queries from your method names.
+{url-spring-framework-site}[Spring Framework] 为处理 SQL 数据库提供了广泛的支持，从使用 javadoc:org.springframework.jdbc.core.simple.JdbcClient[] 或 javadoc:org.springframework.jdbc.core.JdbcTemplate[] 进行直接 JDBC 访问，到像 Hibernate 这样的完整“对象关系映射”技术。
+{url-spring-data-site}[Spring Data] 提供了额外的功能：直接从接口创建 javadoc:org.springframework.data.repository.Repository[] 实现，并使用约定从方法名称生成查询。
 
 
 
 [[data.sql.datasource]]
-== Configure a DataSource
+== 配置 DataSource
 
-Java's javadoc:javax.sql.DataSource[] interface provides a standard method of working with database connections.
-Traditionally, a javadoc:javax.sql.DataSource[] uses a `URL` along with some credentials to establish a database connection.
+Java 的 javadoc:javax.sql.DataSource[] 接口提供了一种使用数据库连接的标准方法。
+传统上，javadoc:javax.sql.DataSource[] 使用 `URL` 和一些凭据来建立数据库连接。
 
-TIP: See the xref:how-to:data-access.adoc#howto.data-access.configure-custom-datasource[] section of the "`How-to Guides`" for more advanced examples, typically to take full control over the configuration of the DataSource.
+TIP: 请参阅“操作指南”中的 xref:how-to:data-access.adoc#howto.data-access.configure-custom-datasource[] 部分，了解更高级的示例，通常用于完全控制 DataSource 的配置。
 
 
 
 [[data.sql.datasource.embedded]]
-=== Embedded Database Support
+=== 嵌入式数据库支持
 
-It is often convenient to develop applications by using an in-memory embedded database.
-Obviously, in-memory databases do not provide persistent storage.
-You need to populate your database when your application starts and be prepared to throw away data when your application ends.
+使用内存嵌入式数据库开发应用程序通常很方便。
+显然，内存数据库不提供持久存储。
+您需要在应用程序启动时填充数据库，并准备在应用程序结束时丢弃数据。
 
-TIP: The "`How-to Guides`" section includes a xref:how-to:data-initialization.adoc[section on how to initialize a database].
+TIP: “操作指南”部分包括一个 xref:how-to:data-initialization.adoc[关于如何初始化数据库的部分]。
 
-Spring Boot can auto-configure embedded https://www.h2database.com[H2], https://hsqldb.org/[HSQL], and https://db.apache.org/derby/[Derby] databases.
-You need not provide any connection URLs.
-You need only include a build dependency to the embedded database that you want to use.
-If there are multiple embedded databases on the classpath, set the configprop:spring.datasource.embedded-database-connection[] configuration property to control which one is used.
-Setting the property to `none` disables auto-configuration of an embedded database.
+Spring Boot 可以自动配置嵌入式 https://www.h2database.com[H2]、 https://hsqldb.org/[HSQL] 和 https://db.apache.org/derby/[Derby] 数据库。
+您无需提供任何连接 URL。
+只需在构建依赖中包含您想使用的嵌入式数据库即可。
+如果类路径上有多个嵌入式数据库，请设置 configprop:spring.datasource.embedded-database-connection[] 配置属性以控制使用哪个数据库。
+将该属性设置为 `none` 将禁用嵌入式数据库的自动配置。
 
 [NOTE]
 ====
-If you are using this feature in your tests, you may notice that the same database is reused by your whole test suite regardless of the number of application contexts that you use.
-If you want to make sure that each context has a separate embedded database, you should set `spring.datasource.generate-unique-name` to `true`.
+如果您在测试中使用此功能，您可能会注意到，无论使用多少个应用程序上下文，整个测试套件都会重用同一个数据库。
+如果您想确保每个上下文都有一个独立的嵌入式数据库，应将 `spring.datasource.generate-unique-name` 设置为 `true`。
 ====
 
-For example, the typical POM dependencies would be as follows:
+例如，典型的 POM 依赖如下：
 
 [source,xml]
 ----
 <dependency>
-	<groupId>org.springframework.boot</groupId>
-	<artifactId>spring-boot-starter-data-jpa</artifactId>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
 </dependency>
 <dependency>
-	<groupId>org.hsqldb</groupId>
-	<artifactId>hsqldb</artifactId>
-	<scope>runtime</scope>
+    <groupId>org.hsqldb</groupId>
+    <artifactId>hsqldb</artifactId>
+    <scope>runtime</scope>
 </dependency>
 ----
 
-NOTE: You need a dependency on `spring-jdbc` for an embedded database to be auto-configured.
-In this example, it is pulled in transitively through `spring-boot-starter-data-jpa`.
+NOTE: 要使嵌入式数据库自动配置，需要依赖 `spring-jdbc`。
+在此示例中，它通过 `spring-boot-starter-data-jpa` 间接引入。
 
-TIP: If, for whatever reason, you do configure the connection URL for an embedded database, take care to ensure that the database's automatic shutdown is disabled.
-If you use H2, you should use `DB_CLOSE_ON_EXIT=FALSE` to do so.
-If you use HSQLDB, you should ensure that `shutdown=true` is not used.
-Disabling the database's automatic shutdown lets Spring Boot control when the database is closed, thereby ensuring that it happens once access to the database is no longer needed.
+TIP: 如果出于某种原因，您为嵌入式数据库配置了连接 URL，请注意确保禁用数据库的自动关闭。
+如果使用 H2，应使用 `DB_CLOSE_ON_EXIT=FALSE`。
+如果使用 HSQLDB，应确保不使用 `shutdown=true`。
+禁用数据库的自动关闭让 Spring Boot 控制数据库的关闭时间，从而确保在不再需要访问数据库时进行关闭。
 
 
 
 [[data.sql.datasource.production]]
-=== Connection to a Production Database
+=== 连接到生产数据库
 
-Production database connections can also be auto-configured by using a pooling javadoc:javax.sql.DataSource[].
+生产数据库连接也可以通过使用池化 javadoc:javax.sql.DataSource[] 自动配置。
 
 
 
 [[data.sql.datasource.configuration]]
-=== DataSource Configuration
+=== DataSource 配置
 
-DataSource configuration is controlled by external configuration properties in `+spring.datasource.*+`.
-For example, you might declare the following section in `application.properties`:
+DataSource 配置由 `+spring.datasource.*+` 中的外部配置属性控制。
+例如，您可以在 `application.properties` 中声明以下部分：
 
 [configprops,yaml]
 ----
@@ -84,21 +84,21 @@ spring:
     password: "dbpass"
 ----
 
-NOTE: You should at least specify the URL by setting the configprop:spring.datasource.url[] property.
-Otherwise, Spring Boot tries to auto-configure an embedded database.
+NOTE: 您至少应通过设置 configprop:spring.datasource.url[] 属性指定 URL。
+否则，Spring Boot 会尝试自动配置嵌入式数据库。
 
-TIP: Spring Boot can deduce the JDBC driver class for most databases from the URL.
-If you need to specify a specific class, you can use the configprop:spring.datasource.driver-class-name[] property.
+TIP: Spring Boot 可以从 URL 中推断大多数数据库的 JDBC 驱动类。
+如果需要指定特定类，可以使用 configprop:spring.datasource.driver-class-name[] 属性。
 
-NOTE: For a pooling javadoc:javax.sql.DataSource[] to be created, we need to be able to verify that a valid javadoc:java.sql.Driver[] class is available, so we check for that before doing anything.
-In other words, if you set `spring.datasource.driver-class-name=com.mysql.jdbc.Driver`, then that class has to be loadable.
+NOTE: 要创建池化 javadoc:javax.sql.DataSource[]，我们需要验证是否存在有效的 javadoc:java.sql.Driver[] 类，因此在执行任何操作之前会进行检查。
+换句话说，如果您设置 `spring.datasource.driver-class-name=com.mysql.jdbc.Driver`，则该类必须可加载。
 
-See javadoc:org.springframework.boot.autoconfigure.jdbc.DataSourceProperties[] API documentation for more of the supported options.
-These are the standard options that work regardless of xref:data/sql.adoc#data.sql.datasource.connection-pool[the actual implementation].
-It is also possible to fine-tune implementation-specific settings by using their respective prefix (`+spring.datasource.hikari.*+`, `+spring.datasource.tomcat.*+`, `+spring.datasource.dbcp2.*+`, and `+spring.datasource.oracleucp.*+`).
-See the documentation of the connection pool implementation you are using for more details.
+有关更多支持的选项，请参阅 javadoc:org.springframework.boot.autoconfigure.jdbc.DataSourceProperties[] API 文档。
+这些是标准选项，无论 xref:data/sql.adoc#data.sql.datasource.connection-pool[实际实现] 如何都适用。
+还可以通过各自的前缀（`+spring.datasource.hikari.*+`、`+spring.datasource.tomcat.*+`、`+spring.datasource.dbcp2.*+` 和 `+spring.datasource.oracleucp.*+`）微调特定于实现的设置。
+有关更多详细信息，请参阅您使用的连接池实现的文档。
 
-For instance, if you use the {url-tomcat-docs}/jdbc-pool.html#Common_Attributes[Tomcat connection pool], you could customize many additional settings, as shown in the following example:
+例如，如果您使用 {url-tomcat-docs}/jdbc-pool.html#Common_Attributes[Tomcat 连接池]，可以自定义许多额外的设置，如下例所示：
 
 [configprops,yaml]
 ----
@@ -110,35 +110,35 @@ spring:
       test-on-borrow: true
 ----
 
-This will set the pool to wait 10000ms before throwing an exception if no connection is available, limit the maximum number of connections to 50 and validate the connection before borrowing it from the pool.
+这将设置池在没有可用连接时等待 10000 毫秒后抛出异常，将最大连接数限制为 50，并在从池中借用连接之前验证连接。
 
 
 
 [[data.sql.datasource.connection-pool]]
-=== Supported Connection Pools
+=== 支持的连接池
 
-Spring Boot uses the following algorithm for choosing a specific implementation:
+Spring Boot 使用以下算法选择特定的实现：
 
-. We prefer https://github.com/brettwooldridge/HikariCP[HikariCP] for its performance and concurrency.
-If HikariCP is available, we always choose it.
-. Otherwise, if the Tomcat pooling javadoc:javax.sql.DataSource[] is available, we use it.
-. Otherwise, if https://commons.apache.org/proper/commons-dbcp/[Commons DBCP2] is available, we use it.
-. If none of HikariCP, Tomcat, and DBCP2 are available and if Oracle UCP is available, we use it.
+. 我们偏好 https://github.com/brettwooldridge/HikariCP[HikariCP]，因为其性能和并发性。
+如果 HikariCP 可用，我们总是选择它。
+. 否则，如果 Tomcat 池化 javadoc:javax.sql.DataSource[] 可用，我们使用它。
+. 否则，如果 https://commons.apache.org/proper/commons-dbcp/[Commons DBCP2] 可用，我们使用它。
+. 如果 HikariCP、Tomcat 和 DBCP2 均不可用，且 Oracle UCP 可用，我们使用它。
 
-NOTE: If you use the `spring-boot-starter-jdbc` or `spring-boot-starter-data-jpa` starters, you automatically get a dependency to HikariCP.
+NOTE: 如果您使用 `spring-boot-starter-jdbc` 或 `spring-boot-starter-data-jpa` starter，您将自动获得对 HikariCP 的依赖。
 
-You can bypass that algorithm completely and specify the connection pool to use by setting the configprop:spring.datasource.type[] property.
-This is especially important if you run your application in a Tomcat container, as `tomcat-jdbc` is provided by default.
+您可以通过设置 configprop:spring.datasource.type[] 属性完全绕过该算法并指定要使用的连接池。
+如果您在 Tomcat 容器中运行应用程序，这尤其重要，因为默认提供 `tomcat-jdbc`。
 
-Additional connection pools can always be configured manually, using javadoc:org.springframework.boot.jdbc.DataSourceBuilder[].
-If you define your own javadoc:javax.sql.DataSource[] bean, auto-configuration does not occur.
-The following connection pools are supported by javadoc:org.springframework.boot.jdbc.DataSourceBuilder[]:
+始终可以使用 javadoc:org.springframework.boot.jdbc.DataSourceBuilder[] 手动配置额外的连接池。
+如果您定义了自己的 javadoc:javax.sql.DataSource[] bean，自动配置不会发生。
+javadoc:org.springframework.boot.jdbc.DataSourceBuilder[] 支持以下连接池：
 
 * HikariCP
-* Tomcat pooling javadoc:javax.sql.DataSource[]
+* Tomcat 池化 javadoc:javax.sql.DataSource[]
 * Commons DBCP2
 * Oracle UCP & `OracleDataSource`
-* Spring Framework's javadoc:org.springframework.jdbc.datasource.SimpleDriverDataSource[]
+* Spring Framework 的 javadoc:org.springframework.jdbc.datasource.SimpleDriverDataSource[]
 * H2 javadoc:org.h2.jdbcx.JdbcDataSource[]
 * PostgreSQL javadoc:org.postgresql.ds.PGSimpleDataSource[]
 * C3P0
@@ -147,12 +147,12 @@ The following connection pools are supported by javadoc:org.springframework.boot
 
 
 [[data.sql.datasource.jndi]]
-=== Connection to a JNDI DataSource
+=== 连接到 JNDI DataSource
 
-If you deploy your Spring Boot application to an Application Server, you might want to configure and manage your DataSource by using your Application Server's built-in features and access it by using JNDI.
+如果您将 Spring Boot 应用程序部署到应用程序服务器，您可能希望使用应用程序服务器的内置功能配置和管理 DataSource，并通过 JNDI 访问它。
 
-The configprop:spring.datasource.jndi-name[] property can be used as an alternative to the configprop:spring.datasource.url[], configprop:spring.datasource.username[], and configprop:spring.datasource.password[] properties to access the javadoc:javax.sql.DataSource[] from a specific JNDI location.
-For example, the following section in `application.properties` shows how you can access a JBoss AS defined javadoc:javax.sql.DataSource[]:
+configprop:spring.datasource.jndi-name[] 属性可以作为 configprop:spring.datasource.url[]、configprop:spring.datasource.username[] 和 configprop:spring.datasource.password[] 属性的替代方法，用于从特定 JNDI 位置访问 javadoc:javax.sql.DataSource[]。
+例如，以下 `application.properties` 中的部分展示了如何访问 JBoss AS 定义的 javadoc:javax.sql.DataSource[]：
 
 [configprops,yaml]
 ----
@@ -164,13 +164,13 @@ spring:
 
 
 [[data.sql.jdbc-template]]
-== Using JdbcTemplate
+== 使用 JdbcTemplate
 
-Spring's javadoc:org.springframework.jdbc.core.JdbcTemplate[] and javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[] classes are auto-configured, and you can autowire them directly into your own beans, as shown in the following example:
+Spring 的 javadoc:org.springframework.jdbc.core.JdbcTemplate[] 和 javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[] 类是自动配置的，您可以直接将它们自动注入到自己的 bean 中，如下例所示：
 
 include-code::MyBean[]
 
-You can customize some properties of the template by using the `spring.jdbc.template.*` properties, as shown in the following example:
+您可以使用 `spring.jdbc.template.*` 属性自定义模板的某些属性，如下例所示：
 
 [configprops,yaml]
 ----
@@ -180,112 +180,112 @@ spring:
       max-rows: 500
 ----
 
-If tuning of SQL exceptions is required, you can define your own `SQLExceptionTranslator` bean so that it is associated with the auto-configured `JdbcTemplate`.
+如果需要调整 SQL 异常的处理，可以定义自己的 `SQLExceptionTranslator` bean，以便与自动配置的 `JdbcTemplate` 关联。
 
-NOTE: The javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[] reuses the same javadoc:org.springframework.jdbc.core.JdbcTemplate[] instance behind the scenes.
-If more than one javadoc:org.springframework.jdbc.core.JdbcTemplate[] is defined and no primary candidate exists, the javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[] is not auto-configured.
+NOTE: javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[] 在幕后重用同一个 javadoc:org.springframework.jdbc.core.JdbcTemplate[] 实例。
+如果定义了多个 javadoc:org.springframework.jdbc.core.JdbcTemplate[] 且没有主要候选者，javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[] 不会自动配置。
 
 
 
 [[data.sql.jdbc-client]]
-== Using JdbcClient
+== 使用 JdbcClient
 
-Spring's javadoc:org.springframework.jdbc.core.simple.JdbcClient[] is auto-configured based on the presence of a javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[].
-You can inject it directly in your own beans as well, as shown in the following example:
+Spring 的 javadoc:org.springframework.jdbc.core.simple.JdbcClient[] 根据 javadoc:org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate[] 的存在自动配置。
+您也可以直接将其注入到自己的 bean 中，如下例所示：
 
 include-code::MyBean[]
 
-If you rely on auto-configuration to create the underlying javadoc:org.springframework.jdbc.core.JdbcTemplate[], any customization using `spring.jdbc.template.*` properties is taken into account in the client as well.
+如果您依赖自动配置来创建底层的 javadoc:org.springframework.jdbc.core.JdbcTemplate[]，使用 `spring.jdbc.template.*` 属性进行的任何自定义也会在客户端中生效。
 
 
 
 [[data.sql.jpa-and-spring-data]]
-== JPA and Spring Data JPA
+== JPA 和 Spring Data JPA
 
-The Java Persistence API is a standard technology that lets you "`map`" objects to relational databases.
-The `spring-boot-starter-data-jpa` POM provides a quick way to get started.
-It provides the following key dependencies:
+Java Persistence API 是一种标准技术，允许您将对象“映射”到关系数据库。
+`spring-boot-starter-data-jpa` POM 提供了一种快速入门的方式。
+它提供了以下关键依赖：
 
-* Hibernate: One of the most popular JPA implementations.
-* Spring Data JPA: Helps you to implement JPA-based repositories.
-* Spring ORM: Core ORM support from the Spring Framework.
+* Hibernate：最流行的 JPA 实现之一。
+* Spring Data JPA：帮助您实现基于 JPA 的存储库。
+* Spring ORM：Spring Framework 的核心 ORM 支持。
 
-TIP: We do not go into too many details of JPA or {url-spring-data-site}[Spring Data] here.
-You can follow the https://spring.io/guides/gs/accessing-data-jpa/[Accessing Data with JPA] guide from https://spring.io and read the {url-spring-data-jpa-site}[Spring Data JPA] and https://hibernate.org/orm/documentation/[Hibernate] reference documentation.
+TIP: 我们不会在这里深入探讨 JPA 或 {url-spring-data-site}[Spring Data] 的太多细节。
+您可以参考 https://spring.io 的 https://spring.io/guides/gs/accessing-data-jpa/[Accessing Data with JPA] 指南，并阅读 {url-spring-data-jpa-site}[Spring Data JPA] 和 https://hibernate.org/orm/documentation/[Hibernate] 参考文档。
 
 
 
 [[data.sql.jpa-and-spring-data.entity-classes]]
-=== Entity Classes
+=== 实体类
 
-Traditionally, JPA "`Entity`" classes are specified in a `persistence.xml` file.
-With Spring Boot, this file is not necessary and "`Entity Scanning`" is used instead.
-By default the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are scanned.
+传统上，JPA“实体”类在 `persistence.xml` 文件中指定。
+在 Spring Boot 中，这个文件不是必需的，而是使用“实体扫描”。
+默认情况下，扫描 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包]。
 
-Any classes annotated with javadoc:jakarta.persistence.Entity[format=annotation], javadoc:jakarta.persistence.Embeddable[format=annotation], or javadoc:jakarta.persistence.MappedSuperclass[format=annotation] are considered.
-A typical entity class resembles the following example:
+任何使用 javadoc:jakarta.persistence.Entity[format=annotation]、javadoc:jakarta.persistence.Embeddable[format=annotation] 或 javadoc:jakarta.persistence.MappedSuperclass[format=annotation] 注解的类都会被考虑。
+一个典型的实体类如下例所示：
 
 include-code::City[]
 
-TIP: You can customize entity scanning locations by using the javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] annotation.
-See the xref:how-to:data-access.adoc#howto.data-access.separate-entity-definitions-from-spring-configuration[] section of the "`How-to Guides`".
+TIP: 您可以使用 javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 注解自定义实体扫描位置。
+请参阅“操作指南”中的 xref:how-to:data-access.adoc#howto.data-access.separate-entity-definitions-from-spring-configuration[] 部分。
 
 
 
 [[data.sql.jpa-and-spring-data.repositories]]
-=== Spring Data JPA Repositories
+=== Spring Data JPA 存储库
 
-{url-spring-data-jpa-site}[Spring Data JPA] repositories are interfaces that you can define to access data.
-JPA queries are created automatically from your method names.
-For example, a `CityRepository` interface might declare a `findAllByState(String state)` method to find all the cities in a given state.
+{url-spring-data-jpa-site}[Spring Data JPA] 存储库是您可以定义的接口，用于访问数据。
+JPA 查询会根据您的方法名称自动创建。
+例如，`CityRepository` 接口可能声明一个 `findAllByState(String state)` 方法来查找给定州的所有城市。
 
-For more complex queries, you can annotate your method with Spring Data's javadoc:org.springframework.data.jpa.repository.Query[] annotation.
+对于更复杂的查询，您可以使用 Spring Data 的 javadoc:org.springframework.data.jpa.repository.Query[] 注解来注解您的方法。
 
-Spring Data repositories usually extend from the javadoc:org.springframework.data.repository.Repository[] or javadoc:org.springframework.data.repository.CrudRepository[] interfaces.
-If you use auto-configuration, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are searched for repositories.
+Spring Data 存储库通常从 javadoc:org.springframework.data.repository.Repository[] 或 javadoc:org.springframework.data.repository.CrudRepository[] 接口扩展。
+如果您使用自动配置，会搜索 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包] 中的存储库。
 
-TIP: You can customize the locations to look for repositories using javadoc:org.springframework.data.jpa.repository.config.EnableJpaRepositories[format=annotation].
+TIP: 您可以使用 javadoc:org.springframework.data.jpa.repository.config.EnableJpaRepositories[format=annotation] 自定义查找存储库的位置。
 
-The following example shows a typical Spring Data repository interface definition:
+以下示例显示了一个典型的 Spring Data 存储库接口定义：
 
 include-code::CityRepository[]
 
-Spring Data JPA repositories support three different modes of bootstrapping: default, deferred, and lazy.
-To enable deferred or lazy bootstrapping, set the configprop:spring.data.jpa.repositories.bootstrap-mode[] property to `deferred` or `lazy` respectively.
-When using deferred or lazy bootstrapping, the auto-configured javadoc:org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder[] will use the context's javadoc:org.springframework.core.task.AsyncTaskExecutor[], if any, as the bootstrap executor.
-If more than one exists, the one named `applicationTaskExecutor` will be used.
+Spring Data JPA 存储库支持三种不同的引导模式：默认、延迟和惰性。
+要启用延迟或惰性引导，请分别将 configprop:spring.data.jpa.repositories.bootstrap-mode[] 属性设置为 `deferred` 或 `lazy`。
+使用延迟或惰性引导时，自动配置的 javadoc:org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder[] 将使用上下文的 javadoc:org.springframework.core.task.AsyncTaskExecutor[]（如果有）作为引导执行器。
+如果存在多个执行器，将使用名为 `applicationTaskExecutor` 的执行器。
 
 [NOTE]
 ====
-When using deferred or lazy bootstrapping, make sure to defer any access to the JPA infrastructure after the application context bootstrap phase.
-You can use javadoc:org.springframework.beans.factory.SmartInitializingSingleton[] to invoke any initialization that requires the JPA infrastructure.
-For JPA components (such as converters) that are created as Spring beans, use javadoc:org.springframework.beans.factory.ObjectProvider[] to delay the resolution of dependencies, if any.
+使用延迟或惰性引导时，请确保在应用程序上下文引导阶段之后延迟对 JPA 基础设施的任何访问。
+您可以使用 javadoc:org.springframework.beans.factory.SmartInitializingSingleton[] 来调用需要 JPA 基础设施的任何初始化。
+对于作为 Spring bean 创建的 JPA 组件（如转换器），使用 javadoc:org.springframework.beans.factory.ObjectProvider[] 来延迟依赖的解析（如果有）。
 ====
 
-TIP: We have barely scratched the surface of Spring Data JPA.
-For complete details, see the {url-spring-data-jpa-docs}[Spring Data JPA reference documentation].
+TIP: 我们只是浅谈了 Spring Data JPA 的表面。
+有关完整详情，请参阅 {url-spring-data-jpa-docs}[Spring Data JPA 参考文档]。
 
 
 
 [[data.sql.jpa-and-spring-data.envers-repositories]]
-=== Spring Data Envers Repositories
+=== Spring Data Envers 存储库
 
-If {url-spring-data-envers-site}[Spring Data Envers] is available, JPA repositories are auto-configured to support typical Envers queries.
+如果 {url-spring-data-envers-site}[Spring Data Envers] 可用，JPA 存储库会自动配置以支持典型的 Envers 查询。
 
-To use Spring Data Envers, make sure your repository extends from javadoc:org.springframework.data.repository.history.RevisionRepository[] as shown in the following example:
+要使用 Spring Data Envers，请确保您的存储库扩展自 javadoc:org.springframework.data.repository.history.RevisionRepository[]，如下例所示：
 
 include-code::CountryRepository[]
 
-NOTE: For more details, check the {url-spring-data-jpa-docs}/envers.html[Spring Data Envers reference documentation].
+NOTE: 有关更多详情，请查看 {url-spring-data-jpa-docs}/envers.html[Spring Data Envers 参考文档]。
 
 
 
 [[data.sql.jpa-and-spring-data.creating-and-dropping]]
-=== Creating and Dropping JPA Databases
+=== 创建和删除 JPA 数据库
 
-By default, JPA databases are automatically created *only* if you use an embedded database (H2, HSQL, or Derby).
-You can explicitly configure JPA settings by using `+spring.jpa.*+` properties.
-For example, to create and drop tables you can add the following line to your `application.properties`:
+默认情况下，仅当您使用嵌入式数据库（H2、HSQL 或 Derby）时，JPA 数据库才会自动创建。
+您可以使用 `+spring.jpa.*+` 属性显式配置 JPA 设置。
+例如，要创建和删除表，您可以在 `application.properties` 中添加以下行：
 
 [configprops,yaml]
 ----
@@ -294,9 +294,9 @@ spring:
     hibernate.ddl-auto: "create-drop"
 ----
 
-NOTE: Hibernate's own internal property name for this (if you happen to remember it better) is `hibernate.hbm2ddl.auto`.
-You can set it, along with other Hibernate native properties, by using `+spring.jpa.properties.*+` (the prefix is stripped before adding them to the entity manager).
-The following line shows an example of setting JPA properties for Hibernate:
+NOTE: Hibernate 自身的内部属性名称（如果您更熟悉）是 `hibernate.hbm2ddl.auto`。
+您可以通过 `+spring.jpa.properties.*+` 设置它以及其他 Hibernate 原生属性（前缀在添加到实体管理器之前会被剥离）。
+以下示例展示了为 Hibernate 设置 JPA 属性的一个例子：
 
 [configprops,yaml]
 ----
@@ -307,172 +307,172 @@ spring:
         "globally_quoted_identifiers": "true"
 ----
 
-The line in the preceding example passes a value of `true` for the `hibernate.globally_quoted_identifiers` property to the Hibernate entity manager.
+上述示例中的行将 `hibernate.globally_quoted_identifiers` 属性的值 `true` 传递给 Hibernate 实体管理器。
 
-By default, the DDL execution (or validation) is deferred until the javadoc:org.springframework.context.ApplicationContext[] has started.
+默认情况下，DDL 执行（或验证）会推迟到 javadoc:org.springframework.context.ApplicationContext[] 启动时。
 
 
 
 [[data.sql.jpa-and-spring-data.open-entity-manager-in-view]]
-=== Open EntityManager in View
+=== 打开视图中的 EntityManager
 
-If you are running a web application, Spring Boot by default registers javadoc:org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor[] to apply the "`Open EntityManager in View`" pattern, to allow for lazy loading in web views.
-If you do not want this behavior, you should set `spring.jpa.open-in-view` to `false` in your `application.properties`.
+如果您运行的是 Web 应用程序，Spring Boot 默认注册 javadoc:org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor[]，以应用“视图中打开 EntityManager”模式，从而允许在 Web 视图中进行延迟加载。
+如果您不希望这种行为，应在 `application.properties` 中将 `spring.jpa.open-in-view` 设置为 `false`。
 
 
 
 [[data.sql.jdbc]]
 == Spring Data JDBC
 
-Spring Data includes repository support for JDBC and will automatically generate SQL for the methods on javadoc:org.springframework.data.repository.CrudRepository[].
-For more advanced queries, a javadoc:org.springframework.data.jdbc.repository.query.Query[format=annotation] annotation is provided.
+Spring Data 为 JDBC 提供了存储库支持，并会为 javadoc:org.springframework.data.repository.CrudRepository[] 上的方法自动生成 SQL。
+对于更高级的查询，提供了 javadoc:org.springframework.data.jdbc.repository.query.Query[format=annotation] 注解。
 
-Spring Boot will auto-configure Spring Data's JDBC repositories when the necessary dependencies are on the classpath.
-They can be added to your project with a single dependency on `spring-boot-starter-data-jdbc`.
-If necessary, you can take control of Spring Data JDBC's configuration by adding the javadoc:org.springframework.data.jdbc.repository.config.EnableJdbcRepositories[format=annotation] annotation or an javadoc:org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration[] subclass to your application.
+当类路径上有必要的依赖时，Spring Boot 会自动配置 Spring Data 的 JDBC 存储库。
+只需对 `spring-boot-starter-data-jdbc` 的单一依赖即可将它们添加到您的项目中。
+如有必要，您可以通过在应用程序中添加 javadoc:org.springframework.data.jdbc.repository.config.EnableJdbcRepositories[format=annotation] 注解或 javadoc:org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration[] 子类来控制 Spring Data JDBC 的配置。
 
-TIP: For complete details of Spring Data JDBC, see the {url-spring-data-jdbc-docs}[reference documentation].
+TIP: 有关 Spring Data JDBC 的完整详情，请参阅 {url-spring-data-jdbc-docs}[参考文档]。
 
 
 
 [[data.sql.h2-web-console]]
-== Using H2's Web Console
+== 使用 H2 的 Web 控制台
 
-The https://www.h2database.com[H2 database] provides a https://www.h2database.com/html/quickstart.html#h2_console[browser-based console] that Spring Boot can auto-configure for you.
-The console is auto-configured when the following conditions are met:
+https://www.h2database.com[H2 数据库] 提供了 https://www.h2database.com/html/quickstart.html#h2_console[基于浏览器的控制台]，Spring Boot 可以为您自动配置。
+当满足以下条件时，控制台会自动配置：
 
-* You are developing a servlet-based web application.
-* `com.h2database:h2` is on the classpath.
-* You are using xref:using/devtools.adoc[Spring Boot's developer tools].
+* 您正在开发基于 servlet 的 Web 应用程序。
+* `com.h2database:h2` 在类路径上。
+* 您正在使用 xref:using/devtools.adoc[Spring Boot 的开发者工具]。
 
-TIP: If you are not using Spring Boot's developer tools but would still like to make use of H2's console, you can configure the configprop:spring.h2.console.enabled[] property with a value of `true`.
+TIP: 如果您不使用 Spring Boot 的开发者工具，但仍想使用 H2 的控制台，可以将 configprop:spring.h2.console.enabled[] 属性配置为 `true`。
 
-NOTE: The H2 console is only intended for use during development, so you should take care to ensure that `spring.h2.console.enabled` is not set to `true` in production.
+NOTE: H2 控制台仅用于开发期间，因此应注意确保在生产环境中 `spring.h2.console.enabled` 不设置为 `true`。
 
 
 
 [[data.sql.h2-web-console.custom-path]]
-=== Changing the H2 Console's Path
+=== 更改 H2 控制台的路径
 
-By default, the console is available at `/h2-console`.
-You can customize the console's path by using the configprop:spring.h2.console.path[] property.
+默认情况下，控制台位于 `/h2-console`。
+您可以使用 configprop:spring.h2.console.path[] 属性自定义控制台的路径。
 
 
 
 [[data.sql.h2-web-console.spring-security]]
-=== Accessing the H2 Console in a Secured Application
+=== 在受保护的应用程序中访问 H2 控制台
 
-H2 Console uses frames and, as it is intended for development only, does not implement CSRF protection measures.
-If your application uses Spring Security, you need to configure it to
+H2 控制台使用框架，并且仅用于开发，不实现 CSRF 保护措施。
+如果您的应用程序使用 Spring Security，您需要配置它以：
 
-* disable CSRF protection for requests against the console,
-* set the header `X-Frame-Options` to `SAMEORIGIN` on responses from the console.
+* 对控制台的请求禁用 CSRF 保护，
+* 在控制台的响应中将 `X-Frame-Options` 头设置为 `SAMEORIGIN`。
 
-More information on {url-spring-security-docs}/features/exploits/csrf.html[CSRF] and the header {url-spring-security-docs}/features/exploits/headers.html#headers-frame-options[X-Frame-Options] can be found in the Spring Security Reference Guide.
+有关 {url-spring-security-docs}/features/exploits/csrf.html[CSRF] 和 {url-spring-security-docs}/features/exploits/headers.html#headers-frame-options[X-Frame-Options] 头的更多信息，请参阅 Spring Security 参考指南。
 
-In simple setups, a javadoc:org.springframework.security.web.SecurityFilterChain[] like the following can be used:
+在简单设置中，可以使用如下 javadoc:org.springframework.security.web.SecurityFilterChain[]：
 
 include-code::DevProfileSecurityConfiguration[tag=!customizer]
 
-WARNING: The H2 console is only intended for use during development.
-In production, disabling CSRF protection or allowing frames for a website may create severe security risks.
+WARNING: H2 控制台仅用于开发期间。
+在生产环境中，禁用 CSRF 保护或允许网站框架可能导致严重的安全风险。
 
-TIP: `PathRequest.toH2Console()` returns the correct request matcher also when the console's path has been customized.
+TIP: `PathRequest.toH2Console()` 返回正确的请求匹配器，即使控制台路径已被自定义。
 
 
 
 [[data.sql.jooq]]
-== Using jOOQ
+== 使用 jOOQ
 
-jOOQ Object Oriented Querying (https://www.jooq.org/[jOOQ]) is a popular product from https://www.datageekery.com/[Data Geekery] which generates Java code from your database and lets you build type-safe SQL queries through its fluent API.
-Both the commercial and open source editions can be used with Spring Boot.
+jOOQ 对象导向查询（ https://www.jooq.org/[jOOQ]）是 https://www.datageekery.com/[Data Geekery] 的一个流行产品，它从您的数据库生成 Java 代码，并通过其流畅的 API 让您构建类型安全的 SQL 查询。
+Spring Boot 支持商业版和开源版的 jOOQ。
 
 
 
 [[data.sql.jooq.codegen]]
-=== Code Generation
+=== 代码生成
 
-In order to use jOOQ type-safe queries, you need to generate Java classes from your database schema.
-You can follow the instructions in the {url-jooq-docs}/#jooq-in-7-steps-step3[jOOQ user manual].
-If you use the `jooq-codegen-maven` plugin and you also use the `spring-boot-starter-parent` "`parent POM`", you can safely omit the plugin's `<version>` tag.
-You can also use Spring Boot-defined version variables (such as `h2.version`) to declare the plugin's database dependency.
-The following listing shows an example:
+要使用 jOOQ 类型安全的查询，您需要从数据库模式生成 Java 类。
+您可以按照 {url-jooq-docs}/#jooq-in-7-steps-step3[jOOQ 用户手册] 中的说明进行操作。
+如果您使用 `jooq-codegen-maven` 插件，并且还使用 `spring-boot-starter-parent`“父 POM”，可以安全地省略插件的 `<version>` 标签。
+您还可以使用 Spring Boot 定义的版本变量（例如 `h2.version`）来声明插件的数据库依赖。
+以下列表显示了一个示例：
 
 [source,xml]
 ----
 <plugin>
-	<groupId>org.jooq</groupId>
-	<artifactId>jooq-codegen-maven</artifactId>
-	<executions>
-		...
-	</executions>
-	<dependencies>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<version>${h2.version}</version>
-		</dependency>
-	</dependencies>
-	<configuration>
-		<jdbc>
-			<driver>org.h2.Driver</driver>
-			<url>jdbc:h2:~/yourdatabase</url>
-		</jdbc>
-		<generator>
-			...
-		</generator>
-	</configuration>
+    <groupId>org.jooq</groupId>
+    <artifactId>jooq-codegen-maven</artifactId>
+    <executions>
+        ...
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+        </dependency>
+    </dependencies>
+    <configuration>
+        <jdbc>
+            <driver>org.h2.Driver</driver>
+            <url>jdbc:h2:~/yourdatabase</url>
+        </jdbc>
+        <generator>
+            ...
+        </generator>
+    </configuration>
 </plugin>
 ----
 
 
 
 [[data.sql.jooq.dslcontext]]
-=== Using DSLContext
+=== 使用 DSLContext
 
-The fluent API offered by jOOQ is initiated through the javadoc:org.jooq.DSLContext[] interface.
-Spring Boot auto-configures a javadoc:org.jooq.DSLContext[] as a Spring Bean and connects it to your application javadoc:javax.sql.DataSource[].
-To use the javadoc:org.jooq.DSLContext[], you can inject it, as shown in the following example:
+jOOQ 提供的流畅 API 通过 javadoc:org.jooq.DSLContext[] 接口启动。
+Spring Boot 自动配置一个 javadoc:org.jooq.DSLContext[] 作为 Spring Bean，并将其连接到您的应用程序 javadoc:javax.sql.DataSource[]。
+要使用 javadoc:org.jooq.DSLContext[]，您可以注入它，如下例所示：
 
 include-code::MyBean[tag=!method]
 
-TIP: The jOOQ manual tends to use a variable named `create` to hold the javadoc:org.jooq.DSLContext[].
+TIP: jOOQ 手册倾向于使用名为 `create` 的变量来持有 javadoc:org.jooq.DSLContext[]。
 
-You can then use the javadoc:org.jooq.DSLContext[] to construct your queries, as shown in the following example:
+然后，您可以使用 javadoc:org.jooq.DSLContext[] 构建查询，如下例所示：
 
 include-code::MyBean[tag=method]
 
 
 
 [[data.sql.jooq.sqldialect]]
-=== jOOQ SQL Dialect
+=== jOOQ SQL 方言
 
-Unless the configprop:spring.jooq.sql-dialect[] property has been configured, Spring Boot determines the SQL dialect to use for your datasource.
-If Spring Boot could not detect the dialect, it uses `DEFAULT`.
+除非配置了 configprop:spring.jooq.sql-dialect[] 属性，否则 Spring Boot 会为您的 DataSource 确定要使用的 SQL 方言。
+如果 Spring Boot 无法检测到方言，它会使用 `DEFAULT`。
 
-NOTE: Spring Boot can only auto-configure dialects supported by the open source version of jOOQ.
+NOTE: Spring Boot 只能自动配置 jOOQ 开源版支持的方言。
 
 
 
 [[data.sql.jooq.customizing]]
-=== Customizing jOOQ
+=== 自定义 jOOQ
 
-More advanced customizations can be achieved by defining your own javadoc:org.springframework.boot.autoconfigure.jooq.DefaultConfigurationCustomizer[] bean that will be invoked prior to creating the javadoc:org.jooq.Configuration[] javadoc:org.springframework.context.annotation.Bean[format=annotation].
-This takes precedence to anything that is applied by the auto-configuration.
+更高级的自定义可以通过定义您自己的 javadoc:org.springframework.boot.autoconfigure.jooq.DefaultConfigurationCustomizer[] bean 实现，该 bean 将在创建 javadoc:org.jooq.Configuration[] javadoc:org.springframework.context.annotation.Bean[format=annotation] 之前调用。
+这优先于自动配置应用的任何内容。
 
-You can also create your own javadoc:org.jooq.Configuration[] javadoc:org.springframework.context.annotation.Bean[format=annotation] if you want to take complete control of the jOOQ configuration.
+如果您想完全控制 jOOQ 配置，还可以创建自己的 javadoc:org.jooq.Configuration[] javadoc:org.springframework.context.annotation.Bean[format=annotation]。
 
 
 
 [[data.sql.r2dbc]]
-== Using R2DBC
+== 使用 R2DBC
 
-The Reactive Relational Database Connectivity (https://r2dbc.io[R2DBC]) project brings reactive programming APIs to relational databases.
-R2DBC's javadoc:io.r2dbc.spi.Connection[] provides a standard method of working with non-blocking database connections.
-Connections are provided by using a javadoc:io.r2dbc.spi.ConnectionFactory[], similar to a javadoc:javax.sql.DataSource[] with jdbc.
+反应式关系数据库连接（ https://r2dbc.io[R2DBC]）项目将反应式编程 API 引入关系数据库。
+R2DBC 的 javadoc:io.r2dbc.spi.Connection[] 提供了一种使用非阻塞数据库连接的标准方法。
+通过使用 javadoc:io.r2dbc.spi.ConnectionFactory[] 提供连接，类似于使用 javadoc:javax.sql.DataSource[] 的 JDBC。
 
-javadoc:io.r2dbc.spi.ConnectionFactory[] configuration is controlled by external configuration properties in `+spring.r2dbc.*+`.
-For example, you might declare the following section in `application.properties`:
+javadoc:io.r2dbc.spi.ConnectionFactory[] 配置由 `+spring.r2dbc.*+` 中的外部配置属性控制。
+例如，您可以在 `application.properties` 中声明以下部分：
 
 [configprops,yaml]
 ----
@@ -483,74 +483,74 @@ spring:
     password: "dbpass"
 ----
 
-TIP: You do not need to specify a driver class name, since Spring Boot obtains the driver from R2DBC's Connection Factory discovery.
+TIP: 您无需指定驱动类名称，因为 Spring Boot 从 R2DBC 的 Connection Factory 发现机制中获取驱动。
 
-NOTE: At least the url should be provided.
-Information specified in the URL takes precedence over individual properties, that is `name`, `username`, `password` and pooling options.
+NOTE: 至少应提供 URL。
+URL 中指定的信息优先于单独的属性，即 `name`、`username`、`password` 和池化选项。
 
-TIP: The "`How-to Guides`" section includes a xref:how-to:data-initialization.adoc#howto.data-initialization.using-basic-sql-scripts[section on how to initialize a database].
+TIP: “操作指南”部分包括一个 xref:how-to:data-initialization.adoc#howto.data-initialization.using-basic-sql-scripts[关于如何初始化数据库的部分]。
 
-To customize the connections created by a javadoc:io.r2dbc.spi.ConnectionFactory[], that is, set specific parameters that you do not want (or cannot) configure in your central database configuration, you can use a javadoc:org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryOptionsBuilderCustomizer[] javadoc:org.springframework.context.annotation.Bean[format=annotation].
-The following example shows how to manually override the database port while the rest of the options are taken from the application configuration:
+要自定义由 javadoc:io.r2dbc.spi.ConnectionFactory[] 创建的连接，例如设置您不希望（或无法）在中央数据库配置中配置的特定参数，可以使用 javadoc:org.springframework.boot.autoconfigure.r2dbc.ConnectionFactoryOptionsBuilderCustomizer[] javadoc:org.springframework.context.annotation.Bean[format=annotation]。
+以下示例展示了如何手动覆盖数据库端口，同时其余选项从应用程序配置中获取：
 
 include-code::MyR2dbcConfiguration[]
 
-The following examples show how to set some PostgreSQL connection options:
+以下示例展示了如何设置一些 PostgreSQL 连接选项：
 
 include-code::MyPostgresR2dbcConfiguration[]
 
-When a javadoc:io.r2dbc.spi.ConnectionFactory[] bean is available, the regular JDBC javadoc:javax.sql.DataSource[] auto-configuration backs off.
-If you want to retain the JDBC javadoc:javax.sql.DataSource[] auto-configuration, and are comfortable with the risk of using the blocking JDBC API in a reactive application, add `@Import(DataSourceAutoConfiguration.class)` on a javadoc:org.springframework.context.annotation.Configuration[format=annotation] class in your application to re-enable it.
+当 javadoc:io.r2dbc.spi.ConnectionFactory[] bean 可用时，常规 JDBC javadoc:javax.sql.DataSource[] 自动配置会回退。
+如果您想保留 JDBC javadoc:javax.sql.DataSource[] 自动配置，并且能够接受在反应式应用程序中使用阻塞 JDBC API 的风险，请在应用程序的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类上添加 `@Import(DataSourceAutoConfiguration.class)`，以重新启用它。
 
 
 
 [[data.sql.r2dbc.embedded]]
-=== Embedded Database Support
+=== 嵌入式数据库支持
 
-Similarly to xref:data/sql.adoc#data.sql.datasource.embedded[the JDBC support], Spring Boot can automatically configure an embedded database for reactive usage.
-You need not provide any connection URLs.
-You need only include a build dependency to the embedded database that you want to use, as shown in the following example:
+与 xref:data/sql.adoc#data.sql.datasource.embedded[JDBC 支持] 类似，Spring Boot 可以为反应式使用自动配置嵌入式数据库。
+您无需提供任何连接 URL。
+只需在构建依赖中包含您想使用的嵌入式数据库，如下例所示：
 
 [source,xml]
 ----
 <dependency>
-	<groupId>io.r2dbc</groupId>
-	<artifactId>r2dbc-h2</artifactId>
-	<scope>runtime</scope>
+    <groupId>io.r2dbc</groupId>
+    <artifactId>r2dbc-h2</artifactId>
+    <scope>runtime</scope>
 </dependency>
 ----
 
 [NOTE]
 ====
-If you are using this feature in your tests, you may notice that the same database is reused by your whole test suite regardless of the number of application contexts that you use.
-If you want to make sure that each context has a separate embedded database, you should set `spring.r2dbc.generate-unique-name` to `true`.
+如果您在测试中使用此功能，您可能会注意到，无论使用多少个应用程序上下文，整个测试套件都会重用同一个数据库。
+如果您想确保每个上下文都有一个独立的嵌入式数据库，应将 `spring.r2dbc.generate-unique-name` 设置为 `true`。
 ====
 
 
 
 [[data.sql.r2dbc.using-database-client]]
-=== Using DatabaseClient
+=== 使用 DatabaseClient
 
-A javadoc:org.springframework.r2dbc.core.DatabaseClient[] bean is auto-configured, and you can autowire it directly into your own beans, as shown in the following example:
+javadoc:org.springframework.r2dbc.core.DatabaseClient[] bean 是自动配置的，您可以直接将其自动注入到自己的 bean 中，如下例所示：
 
 include-code::MyBean[]
 
 
 
 [[data.sql.r2dbc.repositories]]
-=== Spring Data R2DBC Repositories
+=== Spring Data R2DBC 存储库
 
-https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC] repositories are interfaces that you can define to access data.
-Queries are created automatically from your method names.
-For example, a `CityRepository` interface might declare a `findAllByState(String state)` method to find all the cities in a given state.
+https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC] 存储库是您可以定义的接口，用于访问数据。
+查询会根据您的方法名称自动创建。
+例如，`CityRepository` 接口可能声明一个 `findAllByState(String state)` 方法来查找给定州的所有城市。
 
-For more complex queries, you can annotate your method with Spring Data's javadoc:org.springframework.data.r2dbc.repository.Query[format=annotation] annotation.
+对于更复杂的查询，您可以使用 Spring Data 的 javadoc:org.springframework.data.r2dbc.repository.Query[format=annotation] 注解来注解您的方法。
 
-Spring Data repositories usually extend from the javadoc:org.springframework.data.repository.Repository[] or javadoc:org.springframework.data.repository.CrudRepository[] interfaces.
-If you use auto-configuration, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are searched for repositories.
+Spring Data 存储库通常从 javadoc:org.springframework.data.repository.Repository[] 或 javadoc:org.springframework.data.repository.CrudRepository[] 接口扩展。
+如果您使用自动配置，会搜索 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包] 中的存储库。
 
-The following example shows a typical Spring Data repository interface definition:
+以下示例显示了一个典型的 Spring Data 存储库接口定义：
 
 include-code::CityRepository[]
 
-TIP: We have barely scratched the surface of Spring Data R2DBC. For complete details, see the {url-spring-data-r2dbc-docs}[Spring Data R2DBC reference documentation].
+TIP: 我们只是浅谈了 Spring Data R2DBC 的表面。有关完整详情，请参阅 {url-spring-data-r2dbc-docs}[Spring Data R2DBC 参考文档]。

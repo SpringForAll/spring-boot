@@ -1,35 +1,34 @@
 [[packaging.aot]]
-= Ahead-of-Time Processing With the JVM
+= JVM 的提前处理（AOT）
 
-It's beneficial for the startup time to run your application using the AOT generated initialization code.
-First, you need to ensure that the jar you are building includes AOT generated code.
+使用 AOT 生成的初始化代码运行应用有助于提升启动速度。
+首先需确保构建的 jar 包包含 AOT 生成的代码。
 
-NOTE: CDS and AOT can be combined to further improve startup time.
+NOTE: CDS 与 AOT 可结合使用，进一步提升启动速度。
 
-For Maven, this means that you should build with `-Pnative` to activate the `native` profile:
+Maven 用户需使用 `-Pnative` 激活 `native` profile 进行构建：
 
 [source,shell]
 ----
 $ mvn -Pnative package
 ----
 
-For Gradle, you need to ensure that your build includes the `org.springframework.boot.aot` plugin.
+Gradle 用户需确保构建中包含 `org.springframework.boot.aot` 插件。
 
-When the JAR has been built, run it with `spring.aot.enabled` system property set to `true`. For example:
+构建完成后，运行 jar 时需设置 `spring.aot.enabled` 系统属性为 `true`，例如：
 
 [source,shell]
 ----
 $ java -Dspring.aot.enabled=true -jar myapplication.jar
 
-........ Starting AOT-processed MyApplication ...
+........ 启动 AOT 处理后的 MyApplication ...
 ----
 
-Beware that using the ahead-of-time processing has drawbacks.
-It implies the following restrictions:
+请注意，使用提前处理存在一定限制：
 
-* The classpath is fixed and fully defined at build time
-* The beans defined in your application cannot change at runtime, meaning:
-- The Spring javadoc:org.springframework.context.annotation.Profile[format=annotation] annotation and profile-specific configuration xref:how-to:aot.adoc#howto.aot.conditions[have limitations].
-- Properties that change if a bean is created are not supported (for example, javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnProperty[format=annotation] and `.enabled` properties).
+* 类路径在构建时已固定且完整定义
+* 应用中定义的 bean 运行时不可变，意味着：
+- Spring javadoc:org.springframework.context.annotation.Profile[format=annotation] 注解及基于 profile 的配置 xref:how-to:aot.adoc#howto.aot.conditions[存在限制]。
+- 依赖 bean 是否创建而变化的属性不被支持（如 javadoc:org.springframework.boot.autoconfigure.condition.ConditionalOnProperty[format=annotation] 及 `.enabled` 属性）。
 
-To learn more about ahead-of-time processing, please see the xref:packaging/native-image/introducing-graalvm-native-images.adoc#packaging.native-image.introducing-graalvm-native-images.understanding-aot-processing[] section.
+如需了解更多提前处理内容，请参见 xref:packaging/native-image/introducing-graalvm-native-images.adoc#packaging.native-image.introducing-graalvm-native-images.understanding-aot-processing[]。

@@ -1,19 +1,19 @@
 [[packaging.container-images.buildpacks]]
 = Cloud Native Buildpacks
 
-Docker images can be built directly from your Maven or Gradle plugin using https://buildpacks.io[Cloud Native Buildpacks].
-If you’ve ever used an application platform such as Cloud Foundry or Heroku then you’ve probably used a buildpack.
-Buildpacks are the part of the platform that takes your application and converts it into something that the platform can actually run.
-For example, Cloud Foundry’s Java buildpack will notice that you’re pushing a `.jar` file and automatically add a relevant JRE.
+可以直接通过 Maven 或 Gradle 插件，利用 https://buildpacks.io[Cloud Native Buildpacks] 构建 Docker 镜像。
+如果你曾使用过 Cloud Foundry 或 Heroku 等应用平台，那么你很可能已经用过 buildpack。
+Buildpack 是平台中负责将你的应用转换为平台可实际运行内容的部分。
+例如，Cloud Foundry 的 Java buildpack 会检测你推送的是 `.jar` 文件，并自动添加合适的 JRE。
 
-With Cloud Native Buildpacks, you can create Docker compatible images that you can run anywhere.
-Spring Boot includes buildpack support directly for both Maven and Gradle.
-This means you can just type a single command and quickly get a sensible image into your locally running Docker daemon.
+借助 Cloud Native Buildpacks，你可以创建可在任意环境运行的 Docker 兼容镜像。
+Spring Boot 对 Maven 和 Gradle 都内置了 buildpack 支持。
+这意味着你只需一条命令，就能快速将合理的镜像加载到本地 Docker 守护进程。
 
-See the individual plugin documentation on how to use buildpacks with xref:maven-plugin:build-image.adoc#build-image[Maven] and xref:gradle-plugin:packaging-oci-image.adoc[Gradle].
+关于如何在 xref:maven-plugin:build-image.adoc#build-image[Maven] 和 xref:gradle-plugin:packaging-oci-image.adoc[Gradle] 中使用 buildpacks，请参见各自插件文档。
 
-NOTE: The https://github.com/paketo-buildpacks/spring-boot[Paketo Spring Boot buildpack] supports the `layers.idx` file, so any xref:packaging/container-images/efficient-images.adoc#packaging.container-images.efficient-images.layering[layer customization] that is applied to it will be reflected in the image created by the buildpacks.
+NOTE: https://github.com/paketo-buildpacks/spring-boot[Paketo Spring Boot buildpack] 支持 `layers.idx` 文件，因此对其应用的任何 xref:packaging/container-images/efficient-images.adoc#packaging.container-images.efficient-images.layering[分层自定义] 都会反映到 buildpacks 创建的镜像中。
 
-NOTE: In order to achieve reproducible builds and container image caching, buildpacks can manipulate the application resources metadata (such as the file "last modified" information).
-You should ensure that your application does not rely on that metadata at runtime.
-Spring Boot can use that information when serving static resources, but this can be disabled with configprop:spring.web.resources.cache.use-last-modified[].
+NOTE: 为实现可复现构建和容器镜像缓存，buildpacks 可能会操作应用资源元数据（如文件“最后修改”信息）。
+你应确保应用运行时不依赖这些元数据。
+Spring Boot 在提供静态资源时可利用这些信息，但可通过 configprop:spring.web.resources.cache.use-last-modified[] 禁用。

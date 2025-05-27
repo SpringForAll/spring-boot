@@ -1,12 +1,12 @@
 [[messaging.websockets]]
 = WebSockets
 
-Spring Boot provides WebSockets auto-configuration for embedded Tomcat, Jetty, and Undertow.
-If you deploy a war file to a standalone container, Spring Boot assumes that the container is responsible for the configuration of its WebSocket support.
+Spring Boot 为嵌入式 Tomcat、Jetty 和 Undertow 提供了 WebSockets 自动配置。
+如果你将 war 包部署到独立容器，Spring Boot 会假定容器自身负责 WebSocket 支持的配置。
 
-Spring Framework provides {url-spring-framework-docs}/web/websocket.html[rich WebSocket support] for MVC web applications that can be easily accessed through the `spring-boot-starter-websocket` module.
+Spring Framework 为 MVC Web 应用提供了 {url-spring-framework-docs}/web/websocket.html[丰富的 WebSocket 支持]，可通过 `spring-boot-starter-websocket` 模块轻松访问。
 
-WebSocket support is also available for {url-spring-framework-docs}/web/webflux-websocket.html[reactive web applications] and requires to include the WebSocket API alongside `spring-boot-starter-webflux`:
+WebSocket 支持同样适用于 {url-spring-framework-docs}/web/webflux-websocket.html[响应式 Web 应用]，此时需在 `spring-boot-starter-webflux` 之外引入 WebSocket API：
 
 [source,xml]
 ----

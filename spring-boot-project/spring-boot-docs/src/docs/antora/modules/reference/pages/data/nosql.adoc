@@ -1,7 +1,7 @@
 [[data.nosql]]
-= Working with NoSQL Technologies
+= 使用 NoSQL 技术
 
-Spring Data provides additional projects that help you access a variety of NoSQL technologies, including:
+Spring Data 提供了多个附加项目，帮助您访问各种 NoSQL 技术，包括：
 
 * {url-spring-data-cassandra-site}[Cassandra]
 * {url-spring-data-couchbase-site}[Couchbase]
@@ -12,39 +12,39 @@ Spring Data provides additional projects that help you access a variety of NoSQL
 * {url-spring-data-neo4j-site}[Neo4J]
 * {url-spring-data-redis-site}[Redis]
 
-Of these, Spring Boot provides auto-configuration for Cassandra, Couchbase, Elasticsearch, LDAP, MongoDB, Neo4J and Redis.
-Additionally, {url-spring-boot-for-apache-geode-site}[Spring Boot for Apache Geode] provides {url-spring-boot-for-apache-geode-docs}#geode-repositories[auto-configuration for Apache Geode].
-You can make use of the other projects, but you must configure them yourself.
-See the appropriate reference documentation at {url-spring-data-site}.
+其中，Spring Boot 为 Cassandra、Couchbase、Elasticsearch、LDAP、MongoDB、Neo4J 和 Redis 提供了自动配置。
+此外， {url-spring-boot-for-apache-geode-site}[Spring Boot for Apache Geode] 提供了 {url-spring-boot-for-apache-geode-docs}#geode-repositories[Apache Geode 的自动配置]。
+您可以使用其他项目，但必须自行配置。
+请参阅 {url-spring-data-site} 上的相应参考文档。
 
-Spring Boot also provides auto-configuration for the InfluxDB client but it is deprecated in favor of https://github.com/influxdata/influxdb-client-java[the new InfluxDB Java client] that provides its own Spring Boot integration.
+Spring Boot 还为 InfluxDB 客户端提供了自动配置，但已弃用，推荐使用 https://github.com/influxdata/influxdb-client-java[新的 InfluxDB Java 客户端]，它提供了自己的 Spring Boot 集成。
 
 
 
 [[data.nosql.redis]]
 == Redis
 
-https://redis.io/[Redis] is a cache, message broker, and richly-featured key-value store.
-Spring Boot offers basic auto-configuration for the https://github.com/lettuce-io/lettuce-core/[Lettuce] and https://github.com/xetorthio/jedis/[Jedis] client libraries and the abstractions on top of them provided by https://github.com/spring-projects/spring-data-redis[Spring Data Redis].
+https://redis.io/[Redis] 是一个缓存、消息代理和功能丰富的键值存储。
+Spring Boot 为 https://github.com/lettuce-io/lettuce-core/[Lettuce] 和 https://github.com/xetorthio/jedis/[Jedis] 客户端库以及 https://github.com/spring-projects/spring-data-redis[Spring Data Redis] 提供的抽象层提供了基本的自动配置。
 
-There is a `spring-boot-starter-data-redis` starter for collecting the dependencies in a convenient way.
-By default, it uses https://github.com/lettuce-io/lettuce-core/[Lettuce].
-That starter handles both traditional and reactive applications.
+有一个 `spring-boot-starter-data-redis` starter，方便地收集依赖项。
+默认情况下，它使用 https://github.com/lettuce-io/lettuce-core/[Lettuce]。
+该 starter 支持传统和响应式应用程序。
 
-TIP: We also provide a `spring-boot-starter-data-redis-reactive` starter for consistency with the other stores with reactive support.
+TIP: 我们还提供了一个 `spring-boot-starter-data-redis-reactive` starter，以与其他支持响应式的存储保持一致。
 
 
 
 [[data.nosql.redis.connecting]]
-=== Connecting to Redis
+=== 连接到 Redis
 
-You can inject an auto-configured javadoc:org.springframework.data.redis.connection.RedisConnectionFactory[], javadoc:org.springframework.data.redis.core.StringRedisTemplate[], or vanilla javadoc:org.springframework.data.redis.core.RedisTemplate[] instance as you would any other Spring Bean.
-The following listing shows an example of such a bean:
+您可以像注入其他 Spring Bean 一样注入自动配置的 javadoc:org.springframework.data.redis.connection.RedisConnectionFactory[]、javadoc:org.springframework.data.redis.core.StringRedisTemplate[] 或原生的 javadoc:org.springframework.data.redis.core.RedisTemplate[] 实例。
+以下列表显示了一个这样的 bean 示例：
 
 include-code::MyBean[]
 
-By default, the instance tries to connect to a Redis server at `localhost:6379`.
-You can specify custom connection details using `spring.data.redis.*` properties, as shown in the following example:
+默认情况下，实例尝试连接到 `localhost:6379` 的 Redis 服务器。
+您可以使用 `spring.data.redis.*` 属性指定自定义连接细节，如下例所示：
 
 [configprops,yaml]
 ----
@@ -58,9 +58,9 @@ spring:
       password: "secret"
 ----
 
-You can also specify the url of the Redis server directly.
-When setting the url, the host, port, username and password properties are ignored.
-This is shown in the following example:
+您还可以直接指定 Redis 服务器的 URL。
+设置 URL 时，host、port、username 和 password 属性将被忽略。
+如下例所示：
 
 [configprops,yaml]
 ----
@@ -72,16 +72,16 @@ spring:
 ----
 
 
-TIP: You can also register an arbitrary number of beans that implement javadoc:org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer[] for more advanced customizations.
-javadoc:io.lettuce.core.resource.ClientResources[] can also be customized using javadoc:org.springframework.boot.autoconfigure.data.redis.ClientResourcesBuilderCustomizer[].
-If you use Jedis, javadoc:org.springframework.boot.autoconfigure.data.redis.JedisClientConfigurationBuilderCustomizer[] is also available.
-Alternatively, you can register a bean of type javadoc:org.springframework.data.redis.connection.RedisStandaloneConfiguration[], javadoc:org.springframework.data.redis.connection.RedisSentinelConfiguration[], or javadoc:org.springframework.data.redis.connection.RedisClusterConfiguration[] to take full control over the configuration.
+TIP: 您还可以注册任意数量的实现 javadoc:org.springframework.boot.autoconfigure.data.redis.LettuceClientConfigurationBuilderCustomizer[] 的 bean，以进行更高级的自定义。
+javadoc:io.lettuce.core.resource.ClientResources[] 也可以使用 javadoc:org.springframework.boot.autoconfigure.data.redis.ClientResourcesBuilderCustomizer[] 进行自定义。
+如果您使用 Jedis，也可以使用 javadoc:org.springframework.boot.autoconfigure.data.redis.JedisClientConfigurationBuilderCustomizer[]。
+或者，您可以注册 javadoc:org.springframework.data.redis.connection.RedisStandaloneConfiguration[]、javadoc:org.springframework.data.redis.connection.RedisSentinelConfiguration[] 或 javadoc:org.springframework.data.redis.connection.RedisClusterConfiguration[] 类型的 bean，以完全控制配置。
 
-If you add your own javadoc:org.springframework.context.annotation.Bean[format=annotation] of any of the auto-configured types, it replaces the default (except in the case of javadoc:org.springframework.data.redis.core.RedisTemplate[], when the exclusion is based on the bean name, `redisTemplate`, not its type).
+如果您添加了自己的任何自动配置类型的 javadoc:org.springframework.context.annotation.Bean[format=annotation]，它将替换默认配置（除了 javadoc:org.springframework.data.redis.core.RedisTemplate[] 的情况，排除基于 bean 名称 `redisTemplate`，而不是其类型）。
 
-By default, a pooled connection factory is auto-configured if `commons-pool2` is on the classpath.
+默认情况下，如果类路径上有 `commons-pool2`，会自动配置一个池化连接工厂。
 
-The auto-configured javadoc:org.springframework.data.redis.connection.RedisConnectionFactory[] can be configured to use SSL for communication with the server by setting the properties as shown in this example:
+通过设置以下属性，可以配置自动配置的 javadoc:org.springframework.data.redis.connection.RedisConnectionFactory[] 使用 SSL 与服务器通信，如下例所示：
 
 [configprops,yaml]
 ----
@@ -92,7 +92,7 @@ spring:
         enabled: true
 ----
 
-Custom SSL trust material can be configured in an xref:features/ssl.adoc[SSL bundle] and applied to the javadoc:org.springframework.data.redis.connection.RedisConnectionFactory[] as shown in this example:
+可以在 xref:features/ssl.adoc[SSL bundle] 中配置自定义 SSL 信任材料，并将其应用于 javadoc:org.springframework.data.redis.connection.RedisConnectionFactory[]，如下例所示：
 
 [configprops,yaml]
 ----
@@ -108,29 +108,29 @@ spring:
 [[data.nosql.mongodb]]
 == MongoDB
 
-https://www.mongodb.com/[MongoDB] is an open-source NoSQL document database that uses a JSON-like schema instead of traditional table-based relational data.
-Spring Boot offers several conveniences for working with MongoDB, including the `spring-boot-starter-data-mongodb` and `spring-boot-starter-data-mongodb-reactive` starters.
+https://www.mongodb.com/[MongoDB] 是一个开源的 NoSQL 文档数据库，使用类似 JSON 的模式，而不是传统的基于表格的关系数据。
+Spring Boot 为使用 MongoDB 提供了多种便利，包括 `spring-boot-starter-data-mongodb` 和 `spring-boot-starter-data-mongodb-reactive` starter。
 
 
 
 [[data.nosql.mongodb.connecting]]
-=== Connecting to a MongoDB Database
+=== 连接到 MongoDB 数据库
 
-To access MongoDB databases, you can inject an auto-configured javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[].
-By default, the instance tries to connect to a MongoDB server at `mongodb://localhost/test`.
-The following example shows how to connect to a MongoDB database:
+要访问 MongoDB 数据库，您可以注入一个自动配置的 javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[]。
+默认情况下，实例尝试连接到 `mongodb://localhost/test` 的 MongoDB 服务器。
+以下示例显示如何连接到 MongoDB 数据库：
 
 include-code::MyBean[]
 
-If you have defined your own javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[], it will be used to auto-configure a suitable javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[].
+如果您定义了自己的 javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[]，它将被用来自动配置一个合适的 javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[]。
 
-The auto-configured javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] is created using a javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[] bean.
-If you have defined your own javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[], it will be used without modification and the `spring.data.mongodb` properties will be ignored.
-Otherwise a javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[] will be auto-configured and will have the `spring.data.mongodb` properties applied to it.
-In either case, you can declare one or more javadoc:org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer[] beans to fine-tune the javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[] configuration.
-Each will be called in order with the javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings$Builder[] that is used to build the javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[].
+自动配置的 javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] 使用 javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[] bean 创建。
+如果您定义了自己的 javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[]，它将不加修改地使用，`spring.data.mongodb` 属性将被忽略。
+否则，将自动配置一个 javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[]，并应用 `spring.data.mongodb` 属性。
+在任一情况下，您可以声明一个或多个 javadoc:org.springframework.boot.autoconfigure.mongo.MongoClientSettingsBuilderCustomizer[] bean，以微调 javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[] 配置。
+每个 bean 将按顺序与用于构建 javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings[] 的 javadoc:{url-mongodb-driver-core-javadoc}/com.mongodb.MongoClientSettings$Builder[] 一起调用。
 
-You can set the configprop:spring.data.mongodb.uri[] property to change the URL and configure additional settings such as the _replica set_, as shown in the following example:
+您可以设置 configprop:spring.data.mongodb.uri[] 属性来更改 URL 并配置其他设置，例如 _副本集_，如下例所示：
 
 [configprops,yaml]
 ----
@@ -140,8 +140,8 @@ spring:
       uri: "mongodb://user:secret@mongoserver1.example.com:27017,mongoserver2.example.com:23456/test"
 ----
 
-Alternatively, you can specify connection details using discrete properties.
-For example, you might declare the following settings in your `application.properties`:
+或者，您可以使用单独的属性指定连接细节。
+例如，您可以在 `application.properties` 中声明以下设置：
 
 [configprops,yaml]
 ----
@@ -157,7 +157,7 @@ spring:
       password: "secret"
 ----
 
-The auto-configured javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] can be configured to use SSL for communication with the server by setting the properties as shown in this example:
+通过设置以下属性，可以配置自动配置的 javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] 使用 SSL 与服务器通信，如下例所示：
 
 [configprops,yaml]
 ----
@@ -169,7 +169,7 @@ spring:
         enabled: true
 ----
 
-Custom SSL trust material can be configured in an xref:features/ssl.adoc[SSL bundle] and applied to the javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] as shown in this example:
+可以在 xref:features/ssl.adoc[SSL bundle] 中配置自定义 SSL 信任材料，并将其应用于 javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[]，如下例所示：
 
 [configprops,yaml]
 ----
@@ -184,71 +184,71 @@ spring:
 
 [TIP]
 ====
-If `spring.data.mongodb.port` is not specified, the default of `27017` is used.
-You could delete this line from the example shown earlier.
+如果未指定 `spring.data.mongodb.port`，将使用默认值 `27017`。
+您可以从前面的示例中删除此行。
 
-You can also specify the port as part of the host address by using the `host:port` syntax.
-This format should be used if you need to change the port of an `additional-hosts` entry.
+您还可以使用 `host:port` 语法格式作为主机地址的一部分指定端口。
+如果需要更改 `additional-hosts` 条目的端口，应使用此格式。
 ====
 
-TIP: If you do not use Spring Data MongoDB, you can inject a javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] bean instead of using javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[].
-If you want to take complete control of establishing the MongoDB connection, you can also declare your own javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[] or javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] bean.
+TIP: 如果您不使用 Spring Data MongoDB，可以注入 javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] bean，而不是使用 javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[]。
+如果您想完全控制建立 MongoDB 连接，还可以声明自己的 javadoc:org.springframework.data.mongodb.MongoDatabaseFactory[] 或 javadoc:{url-mongodb-driver-sync-javadoc}/com.mongodb.client.MongoClient[] bean。
 
-NOTE: If you are using the reactive driver, Netty is required for SSL.
-The auto-configuration configures this factory automatically if Netty is available and the factory to use has not been customized already.
+NOTE: 如果使用响应式驱动程序，SSL 需要 Netty。
+如果 Netty 可用且未自定义工厂，自动配置会自动配置此工厂。
 
 
 
 [[data.nosql.mongodb.template]]
 === MongoTemplate
 
-{url-spring-data-mongodb-site}[Spring Data MongoDB] provides a javadoc:org.springframework.data.mongodb.core.MongoTemplate[] class that is very similar in its design to Spring's javadoc:org.springframework.jdbc.core.JdbcTemplate[].
-As with javadoc:org.springframework.jdbc.core.JdbcTemplate[], Spring Boot auto-configures a bean for you to inject the template, as follows:
+{url-spring-data-mongodb-site}[Spring Data MongoDB] 提供了 javadoc:org.springframework.data.mongodb.core.MongoTemplate[] 类，其设计与 Spring 的 javadoc:org.springframework.jdbc.core.JdbcTemplate[] 非常相似。
+与 javadoc:org.springframework.jdbc.core.JdbcTemplate[] 一样，Spring Boot 为您自动配置一个 bean 以注入模板，如下所示：
 
 include-code::MyBean[]
 
-See the javadoc:org.springframework.data.mongodb.core.MongoOperations[] API documentation for complete details.
+有关完整详情，请参阅 javadoc:org.springframework.data.mongodb.core.MongoOperations[] API 文档。
 
 
 
 [[data.nosql.mongodb.repositories]]
-=== Spring Data MongoDB Repositories
+=== Spring Data MongoDB 存储库
 
-Spring Data includes repository support for MongoDB.
-As with the JPA repositories discussed earlier, the basic principle is that queries are constructed automatically, based on method names.
+Spring Data 为 MongoDB 提供了存储库支持。
+与前面讨论的 JPA 存储库一样，其基本原理是根据方法名称自动构建查询。
 
-In fact, both Spring Data JPA and Spring Data MongoDB share the same common infrastructure.
-You could take the JPA example from earlier and, assuming that `City` is now a MongoDB data class rather than a JPA javadoc:jakarta.persistence.Entity[format=annotation], it works in the same way, as shown in the following example:
+事实上，Spring Data JPA 和 Spring Data MongoDB 共享相同的基础设施。
+您可以拿前面的 JPA 示例，假设 `City` 现在是一个 MongoDB 数据类，而不是 JPA javadoc:jakarta.persistence.Entity[format=annotation]，它以相同的方式工作，如下例所示：
 
 include-code::CityRepository[]
 
-Repositories and documents are found through scanning.
-By default, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are scanned.
-You can customize the locations to look for repositories and documents by using javadoc:org.springframework.data.mongodb.repository.config.EnableMongoRepositories[format=annotation] and javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] respectively.
+通过扫描发现存储库和文档。
+默认情况下，扫描 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包]。
+您可以分别使用 javadoc:org.springframework.data.mongodb.repository.config.EnableMongoRepositories[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 自定义查找存储库和文档的位置。
 
-TIP: For complete details of Spring Data MongoDB, including its rich object mapping technologies, see its {url-spring-data-mongodb-docs}[reference documentation].
+TIP: 有关 Spring Data MongoDB 的完整详情，包括其丰富的对象映射技术，请参阅其 {url-spring-data-mongodb-docs}[参考文档]。
 
 
 
 [[data.nosql.neo4j]]
 == Neo4j
 
-https://neo4j.com/[Neo4j] is an open-source NoSQL graph database that uses a rich data model of nodes connected by first class relationships, which is better suited for connected big data than traditional RDBMS approaches.
-Spring Boot offers several conveniences for working with Neo4j, including the `spring-boot-starter-data-neo4j` starter.
+https://neo4j.com/[Neo4j] 是一个开源的 NoSQL 图数据库，使用节点通过一流关系连接的丰富数据模型，相比传统的 RDBMS 方法更适合处理连接的大数据。
+Spring Boot 为使用 Neo4j 提供了多种便利，包括 `spring-boot-starter-data-neo4j` starter。
 
 
 
 [[data.nosql.neo4j.connecting]]
-=== Connecting to a Neo4j Database
+=== 连接到 Neo4j 数据库
 
-To access a Neo4j server, you can inject an auto-configured javadoc:org.neo4j.driver.Driver[].
-By default, the instance tries to connect to a Neo4j server at `localhost:7687` using the Bolt protocol.
-The following example shows how to inject a Neo4j javadoc:org.neo4j.driver.Driver[] that gives you access, amongst other things, to a javadoc:org.neo4j.driver.Session[]:
+要访问 Neo4j 服务器，您可以注入一个自动配置的 javadoc:org.neo4j.driver.Driver[]。
+默认情况下，实例尝试使用 Bolt 协议连接到 `localhost:7687` 的 Neo4j 服务器。
+以下示例显示如何注入一个 Neo4j javadoc:org.neo4j.driver.Driver[]，它提供了对 javadoc:org.neo4j.driver.Session[] 等内容的访问：
 
 include-code::MyBean[]
 
-You can configure various aspects of the driver using `spring.neo4j.*` properties.
-The following example shows how to configure the uri and credentials to use:
+您可以使用 `spring.neo4j.*` 属性配置驱动程序的各个方面。
+以下示例显示如何配置要使用的 URI 和凭据：
 
 [configprops,yaml]
 ----
@@ -260,35 +260,35 @@ spring:
       password: "secret"
 ----
 
-The auto-configured javadoc:org.neo4j.driver.Driver[] is created using `org.neo4j.driver.Config$ConfigBuilder`.
-To fine-tune its configuration, declare one or more javadoc:org.springframework.boot.autoconfigure.neo4j.ConfigBuilderCustomizer[] beans.
-Each will be called in order with the `org.neo4j.driver.Config$ConfigBuilder` that is used to build the javadoc:org.neo4j.driver.Driver[].
+自动配置的 javadoc:org.neo4j.driver.Driver[] 使用 `org.neo4j.driver.Config$ConfigBuilder` 创建。
+要微调其配置，声明一个或多个 javadoc:org.springframework.boot.autoconfigure.neo4j.ConfigBuilderCustomizer[] bean。
+每个 bean 将按顺序与用于构建 javadoc:org.neo4j.driver.Driver[] 的 `org.neo4j.driver.Config$ConfigBuilder` 一起调用。
 
 
 
 [[data.nosql.neo4j.repositories]]
-=== Spring Data Neo4j Repositories
+=== Spring Data Neo4j 存储库
 
-Spring Data includes repository support for Neo4j.
-For complete details of Spring Data Neo4j, see the {url-spring-data-neo4j-docs}[reference documentation].
+Spring Data 为 Neo4j 提供了存储库支持。
+有关 Spring Data Neo4j 的完整详情，请参阅 {url-spring-data-neo4j-docs}[参考文档]。
 
-Spring Data Neo4j shares the common infrastructure with Spring Data JPA as many other Spring Data modules do.
-You could take the JPA example from earlier and define `City` as Spring Data Neo4j javadoc:org.springframework.data.neo4j.core.schema.Node[format=annotation] rather than JPA javadoc:jakarta.persistence.Entity[format=annotation] and the repository abstraction works in the same way, as shown in the following example:
+Spring Data Neo4j 与 Spring Data JPA 等许多其他 Spring Data 模块共享相同的基础设施。
+您可以拿前面的 JPA 示例，将 `City` 定义为 Spring Data Neo4j javadoc:org.springframework.data.neo4j.core.schema.Node[format=annotation]，而不是 JPA javadoc:jakarta.persistence.Entity[format=annotation]，存储库抽象以相同的方式工作，如下例所示：
 
 include-code::CityRepository[]
 
-The `spring-boot-starter-data-neo4j` starter enables the repository support as well as transaction management.
-Spring Boot supports both classic and reactive Neo4j repositories, using the javadoc:org.springframework.data.neo4j.core.Neo4jTemplate[] or javadoc:org.springframework.data.neo4j.core.ReactiveNeo4jTemplate[] beans.
-When Project Reactor is available on the classpath, the reactive style is also auto-configured.
+`spring-boot-starter-data-neo4j` starter 启用存储库支持以及事务管理。
+Spring Boot 支持使用 javadoc:org.springframework.data.neo4j.core.Neo4jTemplate[] 或 javadoc:org.springframework.data.neo4j.core.ReactiveNeo4jTemplate[] bean 的经典和响应式 Neo4j 存储库。
+当类路径上有 Project Reactor 时，也会自动配置响应式风格。
 
-Repositories and entities are found through scanning.
-By default, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are scanned.
-You can customize the locations to look for repositories and entities by using javadoc:org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories[format=annotation] and javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] respectively.
+通过扫描发现存储库和实体。
+默认情况下，扫描 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包]。
+您可以分别使用 javadoc:org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 自定义查找存储库和实体的位置。
 
 [NOTE]
 ====
-In an application using the reactive style, a javadoc:org.springframework.transaction.ReactiveTransactionManager[] is not auto-configured.
-To enable transaction management, the following bean must be defined in your configuration:
+在使用响应式风格的应用程序中，不会自动配置 javadoc:org.springframework.transaction.ReactiveTransactionManager[]。
+要启用事务管理，必须在配置中定义以下 bean：
 
 include-code::MyNeo4jConfiguration[]
 ====
@@ -298,26 +298,26 @@ include-code::MyNeo4jConfiguration[]
 [[data.nosql.elasticsearch]]
 == Elasticsearch
 
-https://www.elastic.co/products/elasticsearch[Elasticsearch] is an open source, distributed, RESTful search and analytics engine.
-Spring Boot offers basic auto-configuration for Elasticsearch clients.
+https://www.elastic.co/products/elasticsearch[Elasticsearch] 是一个开源的分布式 RESTful 搜索和分析引擎。
+Spring Boot 为 Elasticsearch 客户端提供了基本的自动配置。
 
-Spring Boot supports several clients:
+Spring Boot 支持多个客户端：
 
-* The official low-level REST client
-* The official Java API client
-* The javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[] provided by Spring Data Elasticsearch
+* 官方低级 REST 客户端
+* 官方 Java API 客户端
+* Spring Data Elasticsearch 提供的 javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[]
 
-Spring Boot provides a dedicated starter, `spring-boot-starter-data-elasticsearch`.
+Spring Boot 提供了一个专用的 starter，`spring-boot-starter-data-elasticsearch`。
 
 
 
 [[data.nosql.elasticsearch.connecting-using-rest]]
-=== Connecting to Elasticsearch Using REST clients
+=== 使用 REST 客户端连接到 Elasticsearch
 
-Elasticsearch ships two different REST clients that you can use to query a cluster: the https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/java-rest-low.html[low-level client] from the `org.elasticsearch.client:elasticsearch-rest-client` module and the https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/index.html[Java API client] from the `co.elastic.clients:elasticsearch-java` module.
-Additionally, Spring Boot provides support for a reactive client from the `org.springframework.data:spring-data-elasticsearch` module.
-By default, the clients will target `http://localhost:9200`.
-You can use `spring.elasticsearch.*` properties to further tune how the clients are configured, as shown in the following example:
+Elasticsearch 提供了两个不同的 REST 客户端，您可以用来查询集群：来自 `org.elasticsearch.client:elasticsearch-rest-client` 模块的 https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/java-rest-low.html[低级客户端] 和来自 `co.elastic.clients:elasticsearch-java` 模块的 https://www.elastic.co/guide/en/elasticsearch/client/java-api-client/current/index.html[Java API 客户端]。
+此外，Spring Boot 支持来自 `org.springframework.data:spring-data-elasticsearch` 模块的响应式客户端。
+默认情况下，客户端的目标是 `http://localhost:9200`。
+您可以使用 `spring.elasticsearch.*` 属性进一步调整客户端的配置，如下例所示：
 
 [configprops,yaml]
 ----
@@ -332,16 +332,16 @@ spring:
 
 
 [[data.nosql.elasticsearch.connecting-using-rest.restclient]]
-==== Connecting to Elasticsearch Using RestClient
+==== 使用 RestClient 连接到 Elasticsearch
 
-If you have `elasticsearch-rest-client` on the classpath, Spring Boot will auto-configure and register a javadoc:org.springframework.web.client.RestClient[] bean.
-In addition to the properties described previously, to fine-tune the javadoc:org.springframework.web.client.RestClient[] you can register an arbitrary number of beans that implement javadoc:org.springframework.boot.autoconfigure.elasticsearch.RestClientBuilderCustomizer[] for more advanced customizations.
-To take full control over the clients' configuration, define a javadoc:org.elasticsearch.client.RestClientBuilder[] bean.
+如果类路径上有 `elasticsearch-rest-client`，Spring Boot 将自动配置并注册一个 javadoc:org.springframework.web.client.RestClient[] bean。
+除了前面描述的属性外，要微调 javadoc:org.springframework.web.client.RestClient[]，您可以注册任意数量的实现 javadoc:org.springframework.boot.autoconfigure.elasticsearch.RestClientBuilderCustomizer[] 的 bean，以进行更高级的自定义。
+要完全控制客户端的配置，定义一个 javadoc:org.elasticsearch.client.RestClientBuilder[] bean。
 
 
 
-Additionally, if `elasticsearch-rest-client-sniffer` is on the classpath, a javadoc:org.elasticsearch.client.sniff.Sniffer[] is auto-configured to automatically discover nodes from a running Elasticsearch cluster and set them on the javadoc:org.springframework.web.client.RestClient[] bean.
-You can further tune how javadoc:org.elasticsearch.client.sniff.Sniffer[] is configured, as shown in the following example:
+此外，如果类路径上有 `elasticsearch-rest-client-sniffer`，将自动配置一个 javadoc:org.elasticsearch.client.sniff.Sniffer[]，以从运行中的 Elasticsearch 集群自动发现节点并将其设置到 javadoc:org.springframework.web.client.RestClient[] bean 上。
+您可以进一步调整 javadoc:org.elasticsearch.client.sniff.Sniffer[] 的配置，如下例所示：
 
 [configprops,yaml]
 ----
@@ -356,66 +356,63 @@ spring:
 
 
 [[data.nosql.elasticsearch.connecting-using-rest.javaapiclient]]
-==== Connecting to Elasticsearch Using ElasticsearchClient
+==== 使用 ElasticsearchClient 连接到 Elasticsearch
 
-If you have `co.elastic.clients:elasticsearch-java` on the classpath, Spring Boot will auto-configure and register an javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[] bean.
+如果类路径上有 `co.elastic.clients:elasticsearch-java`，Spring Boot 将自动配置并注册一个 javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[] bean。
 
-The javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[] uses a transport that depends upon the previously described javadoc:org.springframework.web.client.RestClient[].
-Therefore, the properties described previously can be used to configure the javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[].
-Furthermore, you can define a javadoc:co.elastic.clients.transport.rest_client.RestClientOptions[] bean to take further control of the behavior of the transport.
+javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[] 使用依赖于前面描述的 javadoc:org.springframework.web.client.RestClient[] 的传输。
+因此，前面描述的属性可用于配置 javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[]。
+此外，您可以定义一个 javadoc:co.elastic.clients.transport.rest_client.RestClientOptions[] bean，以进一步控制传输的行为。
 
 
 
 [[data.nosql.elasticsearch.connecting-using-rest.reactiveclient]]
-==== Connecting to Elasticsearch using ReactiveElasticsearchClient
+==== 使用 ReactiveElasticsearchClient 连接到 Elasticsearch
 
-{url-spring-data-elasticsearch-site}[Spring Data Elasticsearch] ships javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[] for querying Elasticsearch instances in a reactive fashion.
-If you have Spring Data Elasticsearch and Reactor on the classpath, Spring Boot will auto-configure and register a javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[].
+{url-spring-data-elasticsearch-site}[Spring Data Elasticsearch] 提供了 javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[]，以响应式方式查询 Elasticsearch 实例。
+如果类路径上有 Spring Data Elasticsearch 和 Reactor，Spring Boot 将自动配置并注册一个 javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[]。
 
-The javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[] uses a transport that depends upon the previously described javadoc:org.springframework.web.client.RestClient[].
-Therefore, the properties described previously can be used to configure the javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[].
-Furthermore, you can define a javadoc:co.elastic.clients.transport.rest_client.RestClientOptions[] bean to take further control of the behavior of the transport.
+javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[] 使用依赖于前面描述的 javadoc:org.springframework.web.client.RestClient[] 的传输。
+因此，前面描述的属性可用于配置 javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchClient[]。
+此外，您可以定义一个 javadoc:co.elastic.clients.transport.rest_client.RestClientOptions[] bean，以进一步控制传输的行为。
 
 
 
 [[data.nosql.elasticsearch.connecting-using-spring-data]]
-=== Connecting to Elasticsearch by Using Spring Data
+=== 使用 Spring Data 连接到 Elasticsearch
 
-To connect to Elasticsearch, an javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[] bean must be defined,
-auto-configured by Spring Boot or manually provided by the application (see previous sections).
-With this configuration in place, an
-javadoc:org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate[] can be injected like any other Spring bean,
-as shown in the following example:
+要连接到 Elasticsearch，必须定义一个 javadoc:co.elastic.clients.elasticsearch.ElasticsearchClient[] bean，由 Spring Boot 自动配置或由应用程序手动提供（参见前几节）。
+在这种配置下，可以像注入其他 Spring bean 一样注入 javadoc:org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate[]，如下例所示：
 
 include-code::MyBean[]
 
-In the presence of `spring-data-elasticsearch` and Reactor, Spring Boot can also auto-configure a xref:data/nosql.adoc#data.nosql.elasticsearch.connecting-using-rest.reactiveclient[`ReactiveElasticsearchClient`] and a javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchTemplate[] as beans.
-They are the reactive equivalent of the other REST clients.
+如果类路径上有 `spring-data-elasticsearch` 和 Reactor，Spring Boot 还可以自动配置一个 xref:data/nosql.adoc#data.nosql.elasticsearch.connecting-using-rest.reactiveclient[`ReactiveElasticsearchClient`] 和 javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchTemplate[] 作为 bean。
+它们是其他 REST 客户端的响应式等价物。
 
 
 
 [[data.nosql.elasticsearch.repositories]]
-=== Spring Data Elasticsearch Repositories
+=== Spring Data Elasticsearch 存储库
 
-Spring Data includes repository support for Elasticsearch.
-As with the JPA repositories discussed earlier, the basic principle is that queries are constructed for you automatically based on method names.
+Spring Data 为 Elasticsearch 提供了存储库支持。
+与前面讨论的 JPA 存储库一样，其基本原理是根据方法名称自动构建查询。
 
-In fact, both Spring Data JPA and Spring Data Elasticsearch share the same common infrastructure.
-You could take the JPA example from earlier and, assuming that `City` is now an Elasticsearch javadoc:org.springframework.data.elasticsearch.annotations.Document[format=annotation] class rather than a JPA javadoc:jakarta.persistence.Entity[format=annotation], it works in the same way.
+事实上，Spring Data JPA 和 Spring Data Elasticsearch 共享相同的基础设施。
+您可以拿前面的 JPA 示例，假设 `City` 现在是一个 Elasticsearch javadoc:org.springframework.data.elasticsearch.annotations.Document[format=annotation] 类，而不是 JPA javadoc:jakarta.persistence.Entity[format=annotation]，它以相同的方式工作。
 
-Repositories and documents are found through scanning.
-By default, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are scanned.
-You can customize the locations to look for repositories and documents by using javadoc:org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories[format=annotation] and javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] respectively.
+通过扫描发现存储库和文档。
+默认情况下，扫描 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包]。
+您可以分别使用 javadoc:org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 自定义查找存储库和文档的位置。
 
-TIP: For complete details of Spring Data Elasticsearch, see the {url-spring-data-elasticsearch-docs}[reference documentation].
+TIP: 有关 Spring Data Elasticsearch 的完整详情，请参阅 {url-spring-data-elasticsearch-docs}[参考文档]。
 
-Spring Boot supports both classic and reactive Elasticsearch repositories, using the javadoc:org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate[] or javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchTemplate[] beans.
-Most likely those beans are auto-configured by Spring Boot given the required dependencies are present.
+Spring Boot 支持使用 javadoc:org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate[] 或 javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchTemplate[] bean 的经典和响应式 Elasticsearch 存储库。
+如果存在所需的依赖项，这些 bean 很可能是由 Spring Boot 自动配置的。
 
-If you wish to use your own template for backing the Elasticsearch repositories, you can add your own javadoc:org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate[] or javadoc:org.springframework.data.elasticsearch.core.ElasticsearchOperations[] javadoc:org.springframework.context.annotation.Bean[format=annotation], as long as it is named `"elasticsearchTemplate"`.
-Same applies to javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchTemplate[] and javadoc:org.springframework.data.elasticsearch.core.ReactiveElasticsearchOperations[], with the bean name `"reactiveElasticsearchTemplate"`.
+如果您希望为支持 Elasticsearch 存储库使用自己的模板，可以添加自己的 javadoc:org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate[] 或 javadoc:org.springframework.data.elasticsearch.core.ElasticsearchOperations[] javadoc:org.springframework.context.annotation.Bean[format=annotation]，只要其名称为 `"elasticsearchTemplate"`。
+对于 javadoc:org.springframework.data.elasticsearch.client.elc.ReactiveElasticsearchTemplate[] 和 javadoc:org.springframework.data.elasticsearch.core.ReactiveElasticsearchOperations[]，bean 名称为 `"reactiveElasticsearchTemplate"`，同样适用。
 
-You can choose to disable the repositories support with the following property:
+您可以选择通过以下属性禁用存储库支持：
 
 [configprops,yaml]
 ----
@@ -431,18 +428,18 @@ You can choose to disable the repositories support with the following property:
 [[data.nosql.cassandra]]
 == Cassandra
 
-https://cassandra.apache.org/[Cassandra] is an open source, distributed database management system designed to handle large amounts of data across many commodity servers.
-Spring Boot offers auto-configuration for Cassandra and the abstractions on top of it provided by {url-spring-data-cassandra-site}[Spring Data Cassandra].
-There is a `spring-boot-starter-data-cassandra` starter for collecting the dependencies in a convenient way.
+https://cassandra.apache.org/[Cassandra] 是一个开源的分布式数据库管理系统，设计用于处理跨多个商用服务器的大量数据。
+Spring Boot 为 Cassandra 提供了自动配置以及 {url-spring-data-cassandra-site}[Spring Data Cassandra] 提供的抽象层。
+有一个 `spring-boot-starter-data-cassandra` starter，方便地收集依赖项。
 
 
 
 [[data.nosql.cassandra.connecting]]
-=== Connecting to Cassandra
+=== 连接到 Cassandra
 
-You can inject an auto-configured javadoc:org.springframework.data.cassandra.core.cql.CqlTemplate[], javadoc:org.springframework.data.cassandra.core.CassandraTemplate[], or a Cassandra `CqlSession` instance as you would with any other Spring Bean.
-The `spring.cassandra.*` properties can be used to customize the connection.
-Generally, you provide `keyspace-name` and `contact-points` as well the local datacenter name, as shown in the following example:
+您可以像注入其他 Spring Bean 一样注入自动配置的 javadoc:org.springframework.data.cassandra.core.cql.CqlTemplate[]、javadoc:org.springframework.data.cassandra.core.CassandraTemplate[] 或 Cassandra `CqlSession` 实例。
+`spring.cassandra.*` 属性可用于自定义连接。
+通常，您需要提供 `keyspace-name` 和 `contact-points` 以及本地数据中心名称，如下例所示：
 
 [configprops,yaml]
 ----
@@ -453,7 +450,7 @@ spring:
     local-datacenter: "datacenter1"
 ----
 
-If the port is the same for all your contact points you can use a shortcut and only specify the host names, as shown in the following example:
+如果所有联系点的端口相同，您可以使用快捷方式，仅指定主机名，如下例所示：
 
 [configprops,yaml]
 ----
@@ -464,10 +461,10 @@ spring:
     local-datacenter: "datacenter1"
 ----
 
-TIP: Those two examples are identical as the port default to `9042`.
-If you need to configure the port, use `spring.cassandra.port`.
+TIP: 这两个示例是相同的，因为端口默认为 `9042`。
+如果需要配置端口，请使用 `spring.cassandra.port`。
 
-The auto-configured `CqlSession` can be configured to use SSL for communication with the server by setting the properties as shown in this example:
+通过设置以下属性，可以配置自动配置的 `CqlSession` 使用 SSL 与服务器通信，如下例所示：
 
 [configprops,yaml]
 ----
@@ -480,7 +477,7 @@ spring:
       enabled: true
 ----
 
-Custom SSL trust material can be configured in an xref:features/ssl.adoc[SSL bundle] and applied to the `CqlSession` as shown in this example:
+可以在 xref:features/ssl.adoc[SSL bundle] 中配置自定义 SSL 信任材料，并将其应用于 `CqlSession`，如下例所示：
 
 [configprops,yaml]
 ----
@@ -496,54 +493,54 @@ spring:
 
 [NOTE]
 ====
-The Cassandra driver has its own configuration infrastructure that loads an `application.conf` at the root of the classpath.
+Cassandra 驱动程序有自己的配置基础设施，会加载类路径根目录下的 `application.conf` 文件。
 
-Spring Boot does not look for such a file by default but can load one using `spring.cassandra.config`.
-If a property is both present in `+spring.cassandra.*+` and the configuration file, the value in `+spring.cassandra.*+` takes precedence.
+Spring Boot 默认不查找此类文件，但可以使用 `spring.cassandra.config` 加载一个。
+如果 `spring.cassandra.*` 和配置文件中都存在某个属性，`spring.cassandra.*` 中的值优先。
 
-For more advanced driver customizations, you can register an arbitrary number of beans that implement javadoc:org.springframework.boot.autoconfigure.cassandra.DriverConfigLoaderBuilderCustomizer[].
-The `CqlSession` can be customized with a bean of type javadoc:org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomizer[].
+要进行更高级的驱动程序自定义，可以注册任意数量的实现 javadoc:org.springframework.boot.autoconfigure.cassandra.DriverConfigLoaderBuilderCustomizer[] 的 bean。
+可以使用 javadoc:org.springframework.boot.autoconfigure.cassandra.CqlSessionBuilderCustomizer[] 类型的 bean 自定义 `CqlSession`。
 ====
 
-NOTE: If you use `CqlSessionBuilder` to create multiple `CqlSession` beans, keep in mind the builder is mutable so make sure to inject a fresh copy for each session.
+NOTE: 如果您使用 `CqlSessionBuilder` 创建多个 `CqlSession` bean，请注意该构建器是可变的，因此请确保为每个会话注入一个新的副本。
 
-The following code listing shows how to inject a Cassandra bean:
+以下代码列表显示如何注入 Cassandra bean：
 
 include-code::MyBean[]
 
-If you add your own javadoc:org.springframework.context.annotation.Bean[format=annotation] of type javadoc:org.springframework.data.cassandra.core.CassandraTemplate[], it replaces the default.
+如果您添加了自己的 javadoc:org.springframework.context.annotation.Bean[format=annotation] 类型为 javadoc:org.springframework.data.cassandra.core.CassandraTemplate[]，它将替换默认配置。
 
 
 
 [[data.nosql.cassandra.repositories]]
-=== Spring Data Cassandra Repositories
+=== Spring Data Cassandra 存储库
 
-Spring Data includes basic repository support for Cassandra.
-Currently, this is more limited than the JPA repositories discussed earlier and needs javadoc:org.springframework.data.cassandra.repository.Query[format=annotation] annotated finder methods.
+Spring Data 为 Cassandra 提供了基本的存储库支持。
+目前，这比前面讨论的 JPA 存储库更有限，需要使用 javadoc:org.springframework.data.cassandra.repository.Query[format=annotation] 注解的查找方法。
 
-Repositories and entities are found through scanning.
-By default, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are scanned.
-You can customize the locations to look for repositories and entities by using javadoc:org.springframework.data.cassandra.repository.config.EnableCassandraRepositories[format=annotation] and javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] respectively.
+通过扫描发现存储库和实体。
+默认情况下，扫描 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包]。
+您可以分别使用 javadoc:org.springframework.data.cassandra.repository.config.EnableCassandraRepositories[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 自定义查找存储库和实体的位置。
 
-TIP: For complete details of Spring Data Cassandra, see the {url-spring-data-cassandra-docs}[reference documentation].
+TIP: 有关 Spring Data Cassandra 的完整详情，请参阅 {url-spring-data-cassandra-docs}[参考文档]。
 
 
 
 [[data.nosql.couchbase]]
 == Couchbase
 
-https://www.couchbase.com/[Couchbase] is an open-source, distributed, multi-model NoSQL document-oriented database that is optimized for interactive applications.
-Spring Boot offers auto-configuration for Couchbase and the abstractions on top of it provided by https://github.com/spring-projects/spring-data-couchbase[Spring Data Couchbase].
-There are `spring-boot-starter-data-couchbase` and `spring-boot-starter-data-couchbase-reactive` starters for collecting the dependencies in a convenient way.
+https://www.couchbase.com/[Couchbase] 是一个开源的分布式多模型 NoSQL 面向文档的数据库，优化用于交互式应用程序。
+Spring Boot 为 Couchbase 提供了自动配置以及 https://github.com/spring-projects/spring-data-couchbase[Spring Data Couchbase] 提供的抽象层。
+有 `spring-boot-starter-data-couchbase` 和 `spring-boot-starter-data-couchbase-reactive` starter，方便地收集依赖项。
 
 
 
 [[data.nosql.couchbase.connecting]]
-=== Connecting to Couchbase
+=== 连接到 Couchbase
 
-You can get a javadoc:com.couchbase.client.java.Cluster[] by adding the Couchbase SDK and some configuration.
-The `spring.couchbase.*` properties can be used to customize the connection.
-Generally, you provide the https://docs.couchbase.com/dotnet-sdk/current/howtos/managing-connections.html[connection string] and credentials for authentication. Basic authentication with username and password can be configured as shown in the following example:
+通过添加 Couchbase SDK 和一些配置，您可以获得一个 javadoc:com.couchbase.client.java.Cluster[]。
+`spring.couchbase.*` 属性可用于自定义连接。
+通常，您需要提供 https://docs.couchbase.com/dotnet-sdk/current/howtos/managing-connections.html[连接字符串] 和用于认证的凭据。可以使用用户名和密码进行基本认证，如下例所示：
 
 [configprops,yaml]
 ----
@@ -554,8 +551,8 @@ spring:
     password: "secret"
 ----
 
-https://docs.couchbase.com/server/current/manage/manage-security/configure-client-certificates.html[Client certificates] can be used for authentication instead of username and password.
-The location and password for a Java KeyStore containing client certificates can be configured as shown in the following example:
+https://docs.couchbase.com/server/current/manage/manage-security/configure-client-certificates.html[客户端证书] 可用于代替用户名和密码进行认证。
+包含客户端证书的 Java KeyStore 的位置和密码可以按以下示例配置：
 
 [configprops,yaml]
 ----
@@ -571,7 +568,7 @@ spring:
         password: "secret"
 ----
 
-PEM-encoded certificates and a private key can be configured as shown in the following example:
+PEM 编码的证书和私钥可以按以下示例配置：
 
 [configprops,yaml]
 ----
@@ -587,8 +584,8 @@ spring:
         private-key: "classpath:client.key"
 ----
 
-It is also possible to customize some of the javadoc:com.couchbase.client.java.env.ClusterEnvironment[] settings.
-For instance, the following configuration changes the timeout to open a new javadoc:com.couchbase.client.java.Bucket[] and enables SSL support with a reference to a configured xref:features/ssl.adoc[SSL bundle]:
+还可以自定义 javadoc:com.couchbase.client.java.env.ClusterEnvironment[] 的一些设置。
+例如，以下配置更改了打开新 javadoc:com.couchbase.client.java.Bucket[] 的超时时间，并启用对配置的 xref:features/ssl.adoc[SSL bundle] 的引用以支持 SSL：
 
 [configprops,yaml]
 ----
@@ -601,24 +598,24 @@ spring:
         bundle: "example"
 ----
 
-TIP: Check the `spring.couchbase.env.*` properties for more details.
-To take more control, one or more javadoc:org.springframework.boot.autoconfigure.couchbase.ClusterEnvironmentBuilderCustomizer[] beans can be used.
+TIP: 请查看 `spring.couchbase.env.*` 属性以获取更多详情。
+要获得更多控制，可以使用一个或多个 javadoc:org.springframework.boot.autoconfigure.couchbase.ClusterEnvironmentBuilderCustomizer[] bean。
 
 
 
 [[data.nosql.couchbase.repositories]]
-=== Spring Data Couchbase Repositories
+=== Spring Data Couchbase 存储库
 
-Spring Data includes repository support for Couchbase.
+Spring Data 为 Couchbase 提供了存储库支持。
 
-Repositories and documents are found through scanning.
-By default, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are scanned.
-You can customize the locations to look for repositories and documents by using javadoc:org.springframework.data.couchbase.repository.config.EnableCouchbaseRepositories[format=annotation] and javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] respectively.
+通过扫描发现存储库和文档。
+默认情况下，扫描 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包]。
+您可以分别使用 javadoc:org.springframework.data.couchbase.repository.config.EnableCouchbaseRepositories[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 自定义查找存储库和文档的位置。
 
-For complete details of Spring Data Couchbase, see the {url-spring-data-couchbase-docs}[reference documentation].
+有关 Spring Data Couchbase 的完整详情，请参阅 {url-spring-data-couchbase-docs}[参考文档]。
 
-You can inject an auto-configured javadoc:org.springframework.data.couchbase.core.CouchbaseTemplate[] instance as you would with any other Spring Bean, provided a javadoc:org.springframework.data.couchbase.CouchbaseClientFactory[] bean is available.
-This happens when a javadoc:com.couchbase.client.java.Cluster[] is available, as described above, and a bucket name has been specified:
+只要 javadoc:org.springframework.data.couchbase.CouchbaseClientFactory[] bean 可用，您就可以像注入其他 Spring Bean 一样注入自动配置的 javadoc:org.springframework.data.couchbase.core.CouchbaseTemplate[] 实例。
+当 javadoc:com.couchbase.client.java.Cluster[] 可用（如上所述）且已指定桶名称时，会发生这种情况：
 
 [configprops,yaml]
 ----
@@ -628,18 +625,18 @@ spring:
       bucket-name: "my-bucket"
 ----
 
-The following examples shows how to inject a javadoc:org.springframework.data.couchbase.core.CouchbaseTemplate[] bean:
+以下示例显示如何注入 javadoc:org.springframework.data.couchbase.core.CouchbaseTemplate[] bean：
 
 include-code::MyBean[]
 
-There are a few beans that you can define in your own configuration to override those provided by the auto-configuration:
+您可以在自己的配置中定义一些 bean，以覆盖自动配置提供的 bean：
 
-* A javadoc:org.springframework.data.couchbase.core.mapping.CouchbaseMappingContext[] javadoc:org.springframework.context.annotation.Bean[format=annotation] with a name of `couchbaseMappingContext`.
-* A javadoc:org.springframework.data.convert.CustomConversions[] javadoc:org.springframework.context.annotation.Bean[format=annotation] with a name of `couchbaseCustomConversions`.
-* A javadoc:org.springframework.data.couchbase.core.CouchbaseTemplate[] javadoc:org.springframework.context.annotation.Bean[format=annotation] with a name of `couchbaseTemplate`.
+* 名称为 `couchbaseMappingContext` 的 javadoc:org.springframework.data.couchbase.core.mapping.CouchbaseMappingContext[] javadoc:org.springframework.context.annotation.Bean[format=annotation]。
+* 名称为 `couchbaseCustomConversions` 的 javadoc:org.springframework.data.convert.CustomConversions[] javadoc:org.springframework.context.annotation.Bean[format=annotation]。
+* 名称为 `couchbaseTemplate` 的 javadoc:org.springframework.data.couchbase.core.CouchbaseTemplate[] javadoc:org.springframework.context.annotation.Bean[format=annotation]。
 
-To avoid hard-coding those names in your own config, you can reuse javadoc:org.springframework.data.couchbase.config.BeanNames[] provided by Spring Data Couchbase.
-For instance, you can customize the converters to use, as follows:
+为了避免在自己的配置中硬编码这些名称，您可以重用 Spring Data Couchbase 提供的 javadoc:org.springframework.data.couchbase.config.BeanNames[]。
+例如，您可以按以下方式自定义要使用的转换器：
 
 include-code::MyCouchbaseConfiguration[]
 
@@ -648,18 +645,18 @@ include-code::MyCouchbaseConfiguration[]
 [[data.nosql.ldap]]
 == LDAP
 
-https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol[LDAP] (Lightweight Directory Access Protocol) is an open, vendor-neutral, industry standard application protocol for accessing and maintaining distributed directory information services over an IP network.
-Spring Boot offers auto-configuration for any compliant LDAP server as well as support for the embedded in-memory LDAP server from https://ldap.com/unboundid-ldap-sdk-for-java/[UnboundID].
+https://en.wikipedia.org/wiki/Lightweight_Directory_Access_Protocol[LDAP]（轻量级目录访问协议）是一个开放的、供应商中立的行业标准应用程序协议，用于通过 IP 网络访问和维护分布式目录信息服务。
+Spring Boot 为任何符合标准的 LDAP 服务器提供自动配置，并支持来自 https://ldap.com/unboundid-ldap-sdk-for-java/[UnboundID] 的嵌入式内存 LDAP 服务器。
 
-LDAP abstractions are provided by https://github.com/spring-projects/spring-data-ldap[Spring Data LDAP].
-There is a `spring-boot-starter-data-ldap` starter for collecting the dependencies in a convenient way.
+https://github.com/spring-projects/spring-data-ldap[Spring Data LDAP] 提供了 LDAP 抽象。
+有一个 `spring-boot-starter-data-ldap` starter，方便地收集依赖项。
 
 
 
 [[data.nosql.ldap.connecting]]
-=== Connecting to an LDAP Server
+=== 连接到 LDAP 服务器
 
-To connect to an LDAP server, make sure you declare a dependency on the `spring-boot-starter-data-ldap` starter or `spring-ldap-core` and then declare the URLs of your server in your application.properties, as shown in the following example:
+要连接到 LDAP 服务器，请确保声明对 `spring-boot-starter-data-ldap` starter 或 `spring-ldap-core` 的依赖，然后在 `application.properties` 中声明服务器的 URL，如下例所示：
 
 [configprops,yaml]
 ----
@@ -670,38 +667,37 @@ spring:
     password: "secret"
 ----
 
-If you need to customize connection settings, you can use the `spring.ldap.base` and `spring.ldap.base-environment` properties.
+如果需要自定义连接设置，可以使用 `spring.ldap.base` 和 `spring.ldap.base-environment` 属性。
 
-An javadoc:org.springframework.ldap.core.support.LdapContextSource[] is auto-configured based on these settings.
-If a javadoc:org.springframework.ldap.core.support.DirContextAuthenticationStrategy[] bean is available, it is associated to the auto-configured javadoc:org.springframework.ldap.core.support.LdapContextSource[].
-If you need to customize it, for instance to use a javadoc:org.springframework.ldap.pool2.factory.PooledContextSource[], you can still inject the auto-configured javadoc:org.springframework.ldap.core.support.LdapContextSource[].
-Make sure to flag your customized javadoc:org.springframework.ldap.core.ContextSource[] as javadoc:org.springframework.context.annotation.Primary[format=annotation] so that the auto-configured javadoc:org.springframework.ldap.core.LdapTemplate[] uses it.
+根据这些设置自动配置一个 javadoc:org.springframework.ldap.core.support.LdapContextSource[]。
+如果有 javadoc:org.springframework.ldap.core.support.DirContextAuthenticationStrategy[] bean 可用，它将关联到自动配置的 javadoc:org.springframework.ldap.core.support.LdapContextSource[]。
+如果需要自定义它，例如使用 javadoc:org.springframework.ldap.pool2.factory.PooledContextSource[]，您仍然可以注入自动配置的 javadoc:org.springframework.ldap.core.support.LdapContextSource[]。
+请确保将自定义的 javadoc:org.springframework.ldap.core.ContextSource[] 标记为 javadoc:org.springframework.context.annotation.Primary[format=annotation]，以便自动配置的 javadoc:org.springframework.ldap.core.LdapTemplate[] 使用它。
 
 
 
 [[data.nosql.ldap.repositories]]
-=== Spring Data LDAP Repositories
+=== Spring Data LDAP 存储库
 
-Spring Data includes repository support for LDAP.
+Spring Data 为 LDAP 提供了存储库支持。
 
-Repositories and documents are found through scanning.
-By default, the xref:using/auto-configuration.adoc#using.auto-configuration.packages[auto-configuration packages] are scanned.
-You can customize the locations to look for repositories and documents by using javadoc:org.springframework.data.ldap.repository.config.EnableLdapRepositories[format=annotation] and javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] respectively.
+通过扫描发现存储库和文档。
+默认情况下，扫描 xref:using/auto-configuration.adoc#using.auto-configuration.packages[自动配置包]。
+您可以分别使用 javadoc:org.springframework.data.ldap.repository.config.EnableLdapRepositories[format=annotation] 和 javadoc:org.springframework.boot.autoconfigure.domain.EntityScan[format=annotation] 自定义查找存储库和文档的位置。
 
-TIP: For complete details of Spring Data LDAP, see the {url-spring-data-ldap-docs}[reference documentation].
+TIP: 有关 Spring Data LDAP 的完整详情，请参阅 {url-spring-data-ldap-docs}[参考文档]。
 
-You can also inject an auto-configured javadoc:org.springframework.ldap.core.LdapTemplate[] instance as you would with any other Spring Bean, as shown in the following example:
-
+您还可以像注入其他 Spring Bean 一样注入自动配置的 javadoc:org.springframework.ldap.core.LdapTemplate[] 实例，如下例所示：
 
 include-code::MyBean[]
 
 
 
 [[data.nosql.ldap.embedded]]
-=== Embedded In-memory LDAP Server
+=== 嵌入式内存 LDAP 服务器
 
-For testing purposes, Spring Boot supports auto-configuration of an in-memory LDAP server from https://ldap.com/unboundid-ldap-sdk-for-java/[UnboundID].
-To configure the server, add a dependency to `com.unboundid:unboundid-ldapsdk` and declare a configprop:spring.ldap.embedded.base-dn[] property, as follows:
+为了测试目的，Spring Boot 支持来自 https://ldap.com/unboundid-ldap-sdk-for-java/[UnboundID] 的嵌入式内存 LDAP 服务器的自动配置。
+要配置服务器，添加对 `com.unboundid:unboundid-ldapsdk` 的依赖，并声明 configprop:spring.ldap.embedded.base-dn[] 属性，如下所示：
 
 [configprops,yaml]
 ----
@@ -713,9 +709,9 @@ spring:
 
 [NOTE]
 ====
-It is possible to define multiple base-dn values, however, since distinguished names usually contain commas, they must be defined using the correct notation.
+可以定义多个 base-dn 值，但是，由于区分名称通常包含逗号，必须使用正确的表示法定义它们。
 
-In yaml files, you can use the yaml list notation. In properties files, you must include the index as part of the property name:
+在 YAML 文件中，您可以使用 YAML 列表表示法。在属性文件中，必须将索引作为属性名称的一部分包含：
 
 [configprops,yaml]
 ----
@@ -725,12 +721,12 @@ spring.ldap.embedded.base-dn:
 ----
 ====
 
-By default, the server starts on a random port and triggers the regular LDAP support.
-There is no need to specify a configprop:spring.ldap.urls[] property.
+默认情况下，服务器在随机端口上启动，并触发常规 LDAP 支持。
+无需指定 configprop:spring.ldap.urls[] 属性。
 
-If there is a `schema.ldif` file on your classpath, it is used to initialize the server.
-If you want to load the initialization script from a different resource, you can also use the configprop:spring.ldap.embedded.ldif[] property.
+如果类路径上有 `schema.ldif` 文件，它将用于初始化服务器。
+如果您想从其他资源加载初始化脚本，还可以使用 configprop:spring.ldap.embedded.ldif[] 属性。
 
-By default, a standard schema is used to validate `LDIF` files.
-You can turn off validation altogether by setting the configprop:spring.ldap.embedded.validation.enabled[] property.
-If you have custom attributes, you can use configprop:spring.ldap.embedded.validation.schema[] to define your custom attribute types or object classes.
+默认情况下，使用标准模式验证 `LDIF` 文件。
+您可以通过设置 configprop:spring.ldap.embedded.validation.enabled[] 属性完全关闭验证。
+如果您有自定义属性，可以使用 configprop:spring.ldap.embedded.validation.schema[] 定义自定义属性类型或对象类。

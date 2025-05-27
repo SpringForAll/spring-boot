@@ -1,9 +1,9 @@
 [[web]]
 = Web
 
-Spring Boot is well suited for web application development.
-You can create a self-contained HTTP server by using embedded Tomcat, Jetty, Undertow, or Netty.
-Most web applications use the `spring-boot-starter-web` module to get up and running quickly.
-You can also choose to build reactive web applications by using the `spring-boot-starter-webflux` module.
+Spring Boot 非常适合 Web 应用程序开发。
+您可以使用嵌入式 Tomcat、Jetty、Undertow 或 Netty 创建独立的 HTTP 服务器。
+大多数 Web 应用程序使用 `spring-boot-starter-web` 模块来快速启动和运行。
+您也可以选择使用 `spring-boot-starter-webflux` 模块来构建响应式 Web 应用程序。
 
-If you have not yet developed a Spring Boot web application, you can follow the "`Hello World!`" example in the xref:tutorial:first-application/index.adoc[Getting started] section.
+如果您还没有开发过 Spring Boot Web 应用程序，可以按照 xref:tutorial:first-application/index.adoc[入门] 部分的 "`Hello World!`" 示例进行操作。

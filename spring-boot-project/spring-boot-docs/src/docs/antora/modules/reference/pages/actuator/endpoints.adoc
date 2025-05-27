@@ -277,7 +277,7 @@ NOTE: 在上述两个示例中，配置仅适用于 Actuator 端点。
 
 NOTE: 我们建议仅在创建由非浏览器客户端使用的服务时完全禁用 CSRF 保护。
 
-有关 CSRF 保护的更多信息，请参阅 {url spring-security-docs}/features/exploits/csrf.html[Spring Security 参考指南]。
+有关 CSRF 保护的更多信息，请参阅 {url-spring-security-docs}/features/exploits/csrf.html[Spring Security 参考指南]。
 
 
 
@@ -434,7 +434,7 @@ TIP: 因为端点是技术无关的，方法签名中只能指定简单类型。
 特别是，声明一个具有 `name` 和 `counter` 属性的 javadoc:liquibase.report.CustomData[] 类型的单一参数不受支持。
 
 NOTE: 要让输入映射到操作方法的参数，Java 代码实现端点时应使用 `-parameters` 编译。
-对于 Kotlin 代码，请参阅 Spring Framework 参考文档中的 {url spring-framework-docs}/languages/kotlin/classes-interfaces.html[建议]。
+对于 Kotlin 代码，请参阅 Spring Framework 参考文档中的 {url-spring-framework-docs}/languages/kotlin/classes-interfaces.html[建议]。
 如果您使用 Spring Boot 的 Gradle 插件或 Maven 和 `spring-boot-starter-parent`，这将自动发生。
 
 

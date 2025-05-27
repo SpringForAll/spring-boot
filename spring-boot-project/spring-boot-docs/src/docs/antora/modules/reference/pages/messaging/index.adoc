@@ -1,8 +1,8 @@
 [[messaging]]
-= Messaging
+= 消息
 
-The Spring Framework provides extensive support for integrating with messaging systems, from simplified use of the JMS API using javadoc:org.springframework.jms.core.JmsTemplate[] to a complete infrastructure to receive messages asynchronously.
-Spring AMQP provides a similar feature set for the Advanced Message Queuing Protocol.
-Spring Boot also provides auto-configuration options for javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[] and RabbitMQ.
-Spring WebSocket natively includes support for STOMP messaging, and Spring Boot has support for that through starters and a small amount of auto-configuration.
-Spring Boot also has support for Apache Kafka and Apache Pulsar.
+Spring Framework 提供了丰富的功能以集成各类消息系统，从简化 JMS API 使用的 javadoc:org.springframework.jms.core.JmsTemplate[]，到支持异步接收消息的完整基础设施。
+Spring AMQP 为高级消息队列协议（AMQP）提供了类似的功能集。
+Spring Boot 还为 javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[] 和 RabbitMQ 提供了自动配置选项。
+Spring WebSocket 原生支持 STOMP 消息传递，Spring Boot 通过 starter 和少量自动配置也支持该功能。
+Spring Boot 还支持 Apache Kafka 和 Apache Pulsar。

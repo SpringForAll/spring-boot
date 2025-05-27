@@ -1,11 +1,10 @@
 [[web.graphql]]
 = Spring for GraphQL
 
-If you want to build GraphQL applications, you can take advantage of Spring Boot's auto-configuration for {url-spring-graphql-site}[Spring for GraphQL].
-The Spring for GraphQL project is based on https://github.com/graphql-java/graphql-java[GraphQL Java].
-You'll need the `spring-boot-starter-graphql` starter at a minimum.
-Because GraphQL is transport-agnostic, you'll also need to have one or more additional starters in your application to expose your GraphQL API over the web:
-
+如果你希望构建 GraphQL 应用，可以利用 Spring Boot 针对 {url-spring-graphql-site}[Spring for GraphQL] 的自动配置。
+Spring for GraphQL 项目基于 https://github.com/graphql-java/graphql-java[GraphQL Java]。
+你至少需要引入 `spring-boot-starter-graphql` starter。
+由于 GraphQL 与传输层无关，你还需在应用中引入一个或多个额外 starter，以通过 Web 暴露 GraphQL API：
 
 [cols="1,1,1"]
 |===
@@ -33,86 +32,85 @@ Because GraphQL is transport-agnostic, you'll also need to have one or more addi
 [[web.graphql.schema]]
 == GraphQL Schema
 
-A Spring GraphQL application requires a defined schema at startup.
-By default, you can write ".graphqls" or ".gqls" schema files under `src/main/resources/graphql/**` and Spring Boot will pick them up automatically.
-You can customize the locations with configprop:spring.graphql.schema.locations[] and the file extensions with configprop:spring.graphql.schema.file-extensions[].
+Spring GraphQL 应用在启动时需要定义 schema。
+默认情况下，你可以将 ".graphqls" 或 ".gqls" schema 文件放在 `src/main/resources/graphql/**` 下，Spring Boot 会自动加载。
+你可以通过 configprop:spring.graphql.schema.locations[] 自定义位置，通过 configprop:spring.graphql.schema.file-extensions[] 自定义文件扩展名。
 
-NOTE: If you want Spring Boot to detect schema files in all your application modules and dependencies for that location,
-you can set configprop:spring.graphql.schema.locations[] to `+"classpath*:graphql/**/"+` (note the `classpath*:` prefix).
+NOTE: 若希望 Spring Boot 能在所有应用模块及依赖中检测该位置下的 schema 文件，可将 configprop:spring.graphql.schema.locations[] 设为 `+\"classpath*:graphql/**/+\"`（注意 `classpath*:` 前缀）。
 
-In the following sections, we'll consider this sample GraphQL schema, defining two types and two queries:
+下文将以此示例 GraphQL schema（定义了两个类型和两个查询）为例：
 
 [source,json,subs="verbatim,quotes"]
 ----
 include::ROOT:example$resources/graphql/schema.graphqls[]
 ----
 
-NOTE: By default, https://spec.graphql.org/draft/#sec-Introspection[field introspection] will be allowed on the schema as it is required for tools such as GraphiQL.
-If you wish to not expose information about the schema, you can disable introspection by setting configprop:spring.graphql.schema.introspection.enabled[] to `false`.
+NOTE: 默认情况下， https://spec.graphql.org/draft/#sec-Introspection[字段自省] 在 schema 上是允许的，这对于 GraphiQL 等工具是必须的。
+如不希望暴露 schema 信息，可将 configprop:spring.graphql.schema.introspection.enabled[] 设为 `false`。
 
 
 
 [[web.graphql.runtimewiring]]
 == GraphQL RuntimeWiring
 
-The GraphQL Java javadoc:graphql.schema.idl.RuntimeWiring$Builder[] can be used to register custom scalar types, directives, type resolvers, javadoc:graphql.schema.DataFetcher[], and more.
-You can declare javadoc:org.springframework.graphql.execution.RuntimeWiringConfigurer[] beans in your Spring config to get access to the javadoc:graphql.schema.idl.RuntimeWiring$Builder[].
-Spring Boot detects such beans and adds them to the {url-spring-graphql-docs}/request-execution.html#execution.graphqlsource[GraphQlSource builder].
+GraphQL Java 的 javadoc:graphql.schema.idl.RuntimeWiring$Builder[] 可用于注册自定义标量类型、指令、类型解析器、javadoc:graphql.schema.DataFetcher[] 等。
+你可以在 Spring 配置中声明 javadoc:org.springframework.graphql.execution.RuntimeWiringConfigurer[] bean，以获取 javadoc:graphql.schema.idl.RuntimeWiring$Builder[]。
+Spring Boot 会自动检测这些 bean，并将其添加到 {url-spring-graphql-docs}/request-execution.html#execution.graphqlsource[GraphQlSource builder]。
 
-Typically, however, applications will not implement javadoc:graphql.schema.DataFetcher[] directly and will instead create {url-spring-graphql-docs}/controllers.html[annotated controllers].
-Spring Boot will automatically detect javadoc:org.springframework.stereotype.Controller[format=annotation] classes with annotated handler methods and register those as ``DataFetcher``s.
-Here's a sample implementation for our greeting query with a javadoc:org.springframework.stereotype.Controller[format=annotation] class:
+但通常应用不会直接实现 javadoc:graphql.schema.DataFetcher[]，而是创建 {url-spring-graphql-docs}/controllers.html[带注解的控制器]。
+Spring Boot 会自动检测带注解处理方法的 javadoc:org.springframework.stereotype.Controller[format=annotation] 类，并将其注册为 ``DataFetcher``。
+以下是 greeting 查询的一个 javadoc:org.springframework.stereotype.Controller[format=annotation] 类实现示例：
 
 include-code::GreetingController[]
 
 
 
 [[web.graphql.data-query]]
-== Querydsl and QueryByExample Repositories Support
+== Querydsl 与 QueryByExample 仓库支持
 
-Spring Data offers support for both Querydsl and QueryByExample repositories.
-Spring GraphQL can {url-spring-graphql-docs}/data.html[configure Querydsl and QueryByExample repositories as javadoc:graphql.schema.DataFetcher[]].
+Spring Data 同时支持 Querydsl 与 QueryByExample 仓库。
+Spring GraphQL 可 {url-spring-graphql-docs}/data.html[将 Querydsl 与 QueryByExample 仓库配置为 javadoc:graphql.schema.DataFetcher[]]。
 
-Spring Data repositories annotated with javadoc:org.springframework.graphql.data.GraphQlRepository[format=annotation] and extending one of:
+被 javadoc:org.springframework.graphql.data.GraphQlRepository[format=annotation] 注解且继承以下任一接口的 Spring Data 仓库：
 
 * javadoc:org.springframework.data.querydsl.QuerydslPredicateExecutor[]
 * javadoc:org.springframework.data.querydsl.ReactiveQuerydslPredicateExecutor[]
 * javadoc:org.springframework.data.repository.query.QueryByExampleExecutor[]
 * javadoc:org.springframework.data.repository.query.ReactiveQueryByExampleExecutor[]
 
-are detected by Spring Boot and considered as candidates for javadoc:graphql.schema.DataFetcher[] for matching top-level queries.
+会被 Spring Boot 检测为顶层查询的 javadoc:graphql.schema.DataFetcher[] 候选。
 
 
 
 [[web.graphql.transports]]
-== Transports
+== 传输方式
 
 
 
 [[web.graphql.transports.http-websocket]]
-=== HTTP and WebSocket
+=== HTTP 与 WebSocket
 
-The GraphQL HTTP endpoint is at HTTP POST `/graphql` by default.
-It also supports the `"text/event-stream"` media type over Server Sent Events for subscriptions only.
-The path can be customized with configprop:spring.graphql.http.path[].
+GraphQL HTTP 端点默认位于 HTTP POST `/graphql`。
+同时支持通过 Server Sent Events 订阅的 "text/event-stream" 媒体类型。
+路径可通过 configprop:spring.graphql.http.path[] 自定义。
 
-TIP: The HTTP endpoint for both Spring MVC and Spring WebFlux is provided by a `RouterFunction` bean with an javadoc:org.springframework.core.annotation.Order[format=annotation] of `0`.
-If you define your own `RouterFunction` beans, you may want to add appropriate javadoc:org.springframework.core.annotation.Order[format=annotation] annotations to ensure that they are sorted correctly.
+TIP: Spring MVC 和 Spring WebFlux 的 HTTP 端点均由 javadoc:org.springframework.core.annotation.Order[format=annotation] 为 `0` 的 `RouterFunction` bean 提供。
+如你自定义了 `RouterFunction` bean，建议添加合适的 javadoc:org.springframework.core.annotation.Order[format=annotation] 注解以确保排序正确。
 
-The GraphQL WebSocket endpoint is off by default. To enable it:
+GraphQL WebSocket 端点默认关闭。启用方法如下：
 
-* For a Servlet application, add the WebSocket starter `spring-boot-starter-websocket`
-* For a WebFlux application, no additional dependency is required
-* For both, the configprop:spring.graphql.websocket.path[] application property must be set
+* 对于 Servlet 应用，添加 WebSocket starter `spring-boot-starter-websocket`
+* 对于 WebFlux 应用，无需额外依赖
+* 二者均需设置 configprop:spring.graphql.websocket.path[] 属性
 
-Spring GraphQL provides a {url-spring-graphql-docs}/transports.html#server.interception[Web Interception] model.
-This is quite useful for retrieving information from an HTTP request header and set it in the GraphQL context or fetching information from the same context and writing it to a response header.
-With Spring Boot, you can declare a javadoc:org.springframework.graphql.server.WebGraphQlInterceptor[] bean to have it registered with the web transport.
+Spring GraphQL 提供了 {url-spring-graphql-docs}/transports.html#server.interception[Web 拦截] 模型。
+这对于从 HTTP 请求头获取信息并设置到 GraphQL 上下文，或从上下文获取信息写入响应头非常有用。
+在 Spring Boot 中，你可以声明 javadoc:org.springframework.graphql.server.WebGraphQlInterceptor[] bean，使其注册到 web 传输中。
 
-{url-spring-framework-docs}/web/webmvc-cors.html[Spring MVC] and {url-spring-framework-docs}/web/webflux-cors.html[Spring WebFlux] support CORS (Cross-Origin Resource Sharing) requests.
-CORS is a critical part of the web config for GraphQL applications that are accessed from browsers using different domains.
+{url-spring-framework-docs}/web/webmvc-cors.html[Spring MVC] 和 {url-spring-framework-docs}/web/webflux-cors.html[Spring WebFlux] 支持 CORS（跨域资源共享）请求。
+CORS 是通过不同域访问的 GraphQL 应用 web 配置中的关键部分。
 
-Spring Boot supports many configuration properties under the `spring.graphql.cors.*` namespace; here's a short configuration sample:
+Spring Boot 支持 `spring.graphql.cors.*` 命名空间下的多项配置属性，以下为简要配置示例：
 
 [configprops,yaml]
 ----
@@ -129,36 +127,35 @@ spring:
 [[web.graphql.transports.rsocket]]
 === RSocket
 
-RSocket is also supported as a transport, on top of WebSocket or TCP.
-Once the xref:messaging/rsocket.adoc#messaging.rsocket.server-auto-configuration[RSocket server is configured], we can configure our GraphQL handler on a particular route using configprop:spring.graphql.rsocket.mapping[].
-For example, configuring that mapping as `"graphql"` means we can use that as a route when sending requests with the javadoc:org.springframework.graphql.client.RSocketGraphQlClient[].
+RSocket 也可作为传输方式，支持 WebSocket 或 TCP。
+一旦 xref:messaging/rsocket.adoc#messaging.rsocket.server-auto-configuration[RSocket 服务器配置] 完成，可通过 configprop:spring.graphql.rsocket.mapping[] 在特定路由上配置 GraphQL 处理器。
+例如，将该映射配置为 "graphql"，即可在使用 javadoc:org.springframework.graphql.client.RSocketGraphQlClient[] 发送请求时作为路由使用。
 
-Spring Boot auto-configures a `RSocketGraphQlClient.Builder<?>` bean that you can inject in your components:
+Spring Boot 会自动配置一个 `RSocketGraphQlClient.Builder<?>` bean，可在组件中注入：
 
 include-code::RSocketGraphQlClientExample[tag=builder]
 
-And then send a request:
+然后发送请求：
 include-code::RSocketGraphQlClientExample[tag=request]
 
 
 
 [[web.graphql.exception-handling]]
-== Exception Handling
+== 异常处理
 
-Spring GraphQL enables applications to register one or more Spring javadoc:org.springframework.graphql.execution.DataFetcherExceptionResolver[] components that are invoked sequentially.
-The Exception must be resolved to a list of javadoc:{url-graphql-java-javadoc}/graphql.GraphQLError[] objects, see {url-spring-graphql-docs}/controllers.html#controllers.exception-handler[Spring GraphQL exception handling documentation].
-Spring Boot will automatically detect javadoc:org.springframework.graphql.execution.DataFetcherExceptionResolver[] beans and register them with the javadoc:org.springframework.graphql.execution.GraphQlSource$Builder[].
+Spring GraphQL 允许应用注册一个或多个 Spring javadoc:org.springframework.graphql.execution.DataFetcherExceptionResolver[] 组件，按顺序调用。
+异常需解析为 javadoc:{url-graphql-java-javadoc}/graphql.GraphQLError[] 对象列表，详见 {url-spring-graphql-docs}/controllers.html#controllers.exception-handler[Spring GraphQL 异常处理文档]。
+Spring Boot 会自动检测 javadoc:org.springframework.graphql.execution.DataFetcherExceptionResolver[] bean，并注册到 javadoc:org.springframework.graphql.execution.GraphQlSource$Builder[]。
 
 
 
 [[web.graphql.graphiql]]
-== GraphiQL and Schema Printer
+== GraphiQL 与 Schema 打印
 
-Spring GraphQL offers infrastructure for helping developers when consuming or developing a GraphQL API.
+Spring GraphQL 提供了便于开发者消费或开发 GraphQL API 的基础设施。
 
-Spring GraphQL ships with a default https://github.com/graphql/graphiql[GraphiQL] page that is exposed at `"/graphiql"` by default.
-This page is disabled by default and can be turned on with the configprop:spring.graphql.graphiql.enabled[] property.
-Many applications exposing such a page will prefer a custom build.
-A default implementation is very useful during development, this is why it is exposed automatically with xref:using/devtools.adoc[`spring-boot-devtools`] during development.
+Spring GraphQL 默认自带 https://github.com/graphql/graphiql[GraphiQL] 页面，默认暴露在 `"/graphiql"`。
+该页面默认关闭，可通过 configprop:spring.graphql.graphiql.enabled[] 属性开启。
+许多应用更倾向于自定义页面，默认实现非常适合开发阶段，因此在开发时会通过 xref:using/devtools.adoc[`spring-boot-devtools`] 自动暴露。
 
-You can also choose to expose the GraphQL schema in text format at `/graphql/schema` when the configprop:spring.graphql.schema.printer.enabled[] property is enabled.
+你还可以在启用 configprop:spring.graphql.schema.printer.enabled[] 属性时，将 GraphQL schema 以文本格式暴露在 `/graphql/schema`。

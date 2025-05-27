@@ -1,24 +1,24 @@
 [[using.using-the-springbootapplication-annotation]]
-= Using the @SpringBootApplication Annotation
+= 使用 @SpringBootApplication 注解
 
-Many Spring Boot developers like their apps to use auto-configuration, component scan and be able to define extra configuration on their "application class".
-A single javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] annotation can be used to enable those three features, that is:
+许多 Spring Boot 开发者喜欢在他们的应用程序中使用自动配置、组件扫描，并能够在他们的"应用程序类"上定义额外的配置。
+可以使用单个 javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] 注解来启用这三个功能，即：
 
-* javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation]: enable xref:using/auto-configuration.adoc[Spring Boot's auto-configuration mechanism]
-* javadoc:org.springframework.context.annotation.ComponentScan[format=annotation]: enable javadoc:org.springframework.stereotype.Component[format=annotation] scan on the package where the application is located (see xref:using/structuring-your-code.adoc[the best practices])
-* javadoc:org.springframework.boot.SpringBootConfiguration[format=annotation]: enable registration of extra beans in the context or the import of additional configuration classes.
-An alternative to Spring's standard javadoc:org.springframework.context.annotation.Configuration[format=annotation] that aids xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.detecting-configuration[configuration detection] in your integration tests.
+* javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation]：启用 xref:using/auto-configuration.adoc[Spring Boot 的自动配置机制]
+* javadoc:org.springframework.context.annotation.ComponentScan[format=annotation]：在应用程序所在的包上启用 javadoc:org.springframework.stereotype.Component[format=annotation] 扫描（参见 xref:using/structuring-your-code.adoc[最佳实践]）
+* javadoc:org.springframework.boot.SpringBootConfiguration[format=annotation]：启用在上下文中注册额外的 bean 或导入其他配置类。
+这是 Spring 标准的 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 的替代方案，有助于在集成测试中进行 xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.detecting-configuration[配置检测]。
 
 include-code::springapplication/MyApplication[]
 
-NOTE: javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] also provides aliases to customize the attributes of javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] and javadoc:org.springframework.context.annotation.ComponentScan[format=annotation].
+注意：javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation] 还提供了别名来自定义 javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] 和 javadoc:org.springframework.context.annotation.ComponentScan[format=annotation] 的属性。
 
 [NOTE]
 ====
-None of these features are mandatory and you may choose to replace this single annotation by any of the features that it enables.
-For instance, you may not want to use component scan or configuration properties scan in your application:
+这些功能都不是强制性的，您可以选择用它所启用的任何功能来替换这个单一注解。
+例如，您可能不想在应用程序中使用组件扫描或配置属性扫描：
 
 include-code::individualannotations/MyApplication[]
 
-In this example, `MyApplication` is just like any other Spring Boot application except that javadoc:org.springframework.stereotype.Component[format=annotation]-annotated classes and javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation]-annotated classes are not detected automatically and the user-defined beans are imported explicitly (see javadoc:org.springframework.context.annotation.Import[format=annotation]).
+在这个例子中，`MyApplication` 与其他 Spring Boot 应用程序一样，只是不会自动检测 javadoc:org.springframework.stereotype.Component[format=annotation] 注解的类和 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 注解的类，并且用户定义的 bean 是显式导入的（参见 javadoc:org.springframework.context.annotation.Import[format=annotation]）。
 ====

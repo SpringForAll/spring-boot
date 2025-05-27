@@ -1,20 +1,20 @@
 [[messaging.amqp]]
 = AMQP
 
-The Advanced Message Queuing Protocol (AMQP) is a platform-neutral, wire-level protocol for message-oriented middleware.
-The Spring AMQP project applies core Spring concepts to the development of AMQP-based messaging solutions.
-Spring Boot offers several conveniences for working with AMQP through RabbitMQ, including the `spring-boot-starter-amqp` starter.
+高级消息队列协议（AMQP）是一种平台无关的、面向消息中间件的线级协议。
+Spring AMQP 项目将核心 Spring 概念应用于基于 AMQP 的消息解决方案开发。
+Spring Boot 通过 RabbitMQ 提供了多种便捷方式来使用 AMQP，包括 `spring-boot-starter-amqp` 启动器。
 
 
 
 [[messaging.amqp.rabbitmq]]
-== RabbitMQ Support
+== RabbitMQ 支持
 
-https://www.rabbitmq.com/[RabbitMQ] is a lightweight, reliable, scalable, and portable message broker based on the AMQP protocol.
-Spring uses RabbitMQ to communicate through the AMQP protocol.
+https://www.rabbitmq.com/[RabbitMQ] 是一个基于 AMQP 协议的轻量级、可靠、可扩展且可移植的消息代理。
+Spring 使用 RabbitMQ 通过 AMQP 协议进行通信。
 
-RabbitMQ configuration is controlled by external configuration properties in `+spring.rabbitmq.*+`.
-For example, you might declare the following section in `application.properties`:
+RabbitMQ 的配置通过外部配置属性 `+spring.rabbitmq.*+` 控制。
+例如，你可以在 `application.properties` 中声明如下配置：
 
 [configprops,yaml]
 ----
@@ -26,7 +26,7 @@ spring:
     password: "secret"
 ----
 
-Alternatively, you could configure the same connection using the `addresses` attribute:
+或者，你也可以通过 `addresses` 属性配置同一个连接：
 
 [configprops,yaml]
 ----
@@ -35,33 +35,33 @@ spring:
     addresses: "amqp://admin:secret@localhost"
 ----
 
-NOTE: When specifying addresses that way, the `host` and `port` properties are ignored.
-If the address uses the `amqps` protocol, SSL support is enabled automatically.
+NOTE: 以这种方式指定 addresses 时，`host` 和 `port` 属性会被忽略。
+如果地址使用 `amqps` 协议，则会自动启用 SSL 支持。
 
-See javadoc:org.springframework.boot.autoconfigure.amqp.RabbitProperties[] for more of the supported property-based configuration options.
-To configure lower-level details of the RabbitMQ javadoc:com.rabbitmq.client.ConnectionFactory[] that is used by Spring AMQP, define a javadoc:org.springframework.boot.autoconfigure.amqp.ConnectionFactoryCustomizer[] bean.
+更多受支持的基于属性的配置选项请参见 javadoc:org.springframework.boot.autoconfigure.amqp.RabbitProperties[]。
+如需配置 Spring AMQP 所用 RabbitMQ javadoc:com.rabbitmq.client.ConnectionFactory[] 的底层细节，可定义 javadoc:org.springframework.boot.autoconfigure.amqp.ConnectionFactoryCustomizer[] bean。
 
-If a javadoc:org.springframework.amqp.rabbit.connection.ConnectionNameStrategy[] bean exists in the context, it will be automatically used to name connections created by the auto-configured javadoc:org.springframework.amqp.rabbit.connection.CachingConnectionFactory[].
+如果上下文中存在 javadoc:org.springframework.amqp.rabbit.connection.ConnectionNameStrategy[] bean，则会自动用于为自动配置的 javadoc:org.springframework.amqp.rabbit.connection.CachingConnectionFactory[] 创建的连接命名。
 
-To make an application-wide, additive customization to the javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[], use a javadoc:org.springframework.boot.autoconfigure.amqp.RabbitTemplateCustomizer[] bean.
+如需对 javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[] 进行全局、增量自定义，可使用 javadoc:org.springframework.boot.autoconfigure.amqp.RabbitTemplateCustomizer[] bean。
 
-TIP: See https://spring.io/blog/2010/06/14/understanding-amqp-the-protocol-used-by-rabbitmq/[Understanding AMQP, the protocol used by RabbitMQ] for more details.
+TIP: 更多详情请参见 https://spring.io/blog/2010/06/14/understanding-amqp-the-protocol-used-by-rabbitmq/[理解 RabbitMQ 所用的 AMQP 协议]。
 
 
 
 [[messaging.amqp.sending]]
-== Sending a Message
+== 发送消息
 
-Spring's javadoc:org.springframework.amqp.core.AmqpTemplate[] and javadoc:org.springframework.amqp.core.AmqpAdmin[] are auto-configured, and you can autowire them directly into your own beans, as shown in the following example:
+Spring 的 javadoc:org.springframework.amqp.core.AmqpTemplate[] 和 javadoc:org.springframework.amqp.core.AmqpAdmin[] 已自动配置，你可以像下面这样直接注入到自己的 bean 中：
 
 include-code::MyBean[]
 
-NOTE: javadoc:org.springframework.amqp.rabbit.core.RabbitMessagingTemplate[] can be injected in a similar manner.
-If a javadoc:org.springframework.amqp.support.converter.MessageConverter[] bean is defined, it is associated automatically to the auto-configured javadoc:org.springframework.amqp.core.AmqpTemplate[].
+NOTE: javadoc:org.springframework.amqp.rabbit.core.RabbitMessagingTemplate[] 也可以以类似方式注入。
+如果定义了 javadoc:org.springframework.amqp.support.converter.MessageConverter[] bean，则会自动关联到自动配置的 javadoc:org.springframework.amqp.core.AmqpTemplate[]。
 
-If necessary, any javadoc:org.springframework.amqp.core.Queue[] that is defined as a bean is automatically used to declare a corresponding queue on the RabbitMQ instance.
+如有需要，任何作为 bean 定义的 javadoc:org.springframework.amqp.core.Queue[] 都会自动用于在 RabbitMQ 实例上声明对应队列。
 
-To retry operations, you can enable retries on the javadoc:org.springframework.amqp.core.AmqpTemplate[] (for example, in the event that the broker connection is lost):
+如需重试操作，可以在 javadoc:org.springframework.amqp.core.AmqpTemplate[] 上启用重试（例如在 broker 连接丢失时）：
 
 [configprops,yaml]
 ----
@@ -73,17 +73,17 @@ spring:
         initial-interval: "2s"
 ----
 
-Retries are disabled by default.
-You can also customize the javadoc:org.springframework.retry.support.RetryTemplate[] programmatically by declaring a javadoc:org.springframework.boot.autoconfigure.amqp.RabbitRetryTemplateCustomizer[] bean.
+重试默认是关闭的。
+你也可以通过声明 javadoc:org.springframework.boot.autoconfigure.amqp.RabbitRetryTemplateCustomizer[] bean，编程方式自定义 javadoc:org.springframework.retry.support.RetryTemplate[]。
 
-If you need to create more javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[] instances or if you want to override the default, Spring Boot provides a javadoc:org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer[] bean that you can use to initialize a javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[] with the same settings as the factories used by the auto-configuration.
+如果你需要创建更多 javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[] 实例，或想覆盖默认配置，Spring Boot 提供了 javadoc:org.springframework.boot.autoconfigure.amqp.RabbitTemplateConfigurer[] bean，可用来以与自动配置工厂相同的设置初始化 javadoc:org.springframework.amqp.rabbit.core.RabbitTemplate[]。
 
 
 
 [[messaging.amqp.sending-stream]]
-== Sending a Message To A Stream
+== 发送消息到流
 
-To send a message to a particular stream, specify the name of the stream, as shown in the following example:
+如需向特定流发送消息，只需指定流的名称，如下例所示：
 
 [configprops,yaml]
 ----
@@ -93,44 +93,44 @@ spring:
       name: "my-stream"
 ----
 
-If a javadoc:org.springframework.amqp.support.converter.MessageConverter[], javadoc:org.springframework.rabbit.stream.support.converter.StreamMessageConverter[], or javadoc:org.springframework.rabbit.stream.producer.ProducerCustomizer[] bean is defined, it is associated automatically to the auto-configured javadoc:org.springframework.rabbit.stream.producer.RabbitStreamTemplate[].
+如果定义了 javadoc:org.springframework.amqp.support.converter.MessageConverter[]、javadoc:org.springframework.rabbit.stream.support.converter.StreamMessageConverter[] 或 javadoc:org.springframework.rabbit.stream.producer.ProducerCustomizer[] bean，则会自动关联到自动配置的 javadoc:org.springframework.rabbit.stream.producer.RabbitStreamTemplate[]。
 
-If you need to create more javadoc:org.springframework.rabbit.stream.producer.RabbitStreamTemplate[] instances or if you want to override the default, Spring Boot provides a javadoc:org.springframework.boot.autoconfigure.amqp.RabbitStreamTemplateConfigurer[] bean that you can use to initialize a javadoc:org.springframework.rabbit.stream.producer.RabbitStreamTemplate[] with the same settings as the factories used by the auto-configuration.
+如果你需要创建更多 javadoc:org.springframework.rabbit.stream.producer.RabbitStreamTemplate[] 实例，或想覆盖默认配置，Spring Boot 提供了 javadoc:org.springframework.boot.autoconfigure.amqp.RabbitStreamTemplateConfigurer[] bean，可用来以与自动配置工厂相同的设置初始化 javadoc:org.springframework.rabbit.stream.producer.RabbitStreamTemplate[]。
 
 
 
 [[messaging.amqp.receiving]]
-== Receiving a Message
+== 接收消息
 
-When the Rabbit infrastructure is present, any bean can be annotated with javadoc:org.springframework.amqp.rabbit.annotation.RabbitListener[format=annotation] to create a listener endpoint.
-If no javadoc:org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory[] has been defined, a default javadoc:org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory[] is automatically configured and you can switch to a direct container using the configprop:spring.rabbitmq.listener.type[] property.
-If a javadoc:org.springframework.amqp.support.converter.MessageConverter[] or a javadoc:org.springframework.amqp.rabbit.retry.MessageRecoverer[] bean is defined, it is automatically associated with the default factory.
+当 Rabbit 基础设施存在时，任何 bean 都可以通过注解 javadoc:org.springframework.amqp.rabbit.annotation.RabbitListener[format=annotation] 创建监听端点。
+如果未定义 javadoc:org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory[]，则会自动配置一个默认的 javadoc:org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory[]，你可以通过 configprop:spring.rabbitmq.listener.type[] 属性切换为 direct 容器。
+如果定义了 javadoc:org.springframework.amqp.support.converter.MessageConverter[] 或 javadoc:org.springframework.amqp.rabbit.retry.MessageRecoverer[] bean，则会自动关联到默认工厂。
 
-The following sample component creates a listener endpoint on the `someQueue` queue:
+以下示例组件会在 `someQueue` 队列上创建一个监听端点：
 
 include-code::MyBean[]
 
-TIP: See javadoc:org.springframework.amqp.rabbit.annotation.EnableRabbit[format=annotation] for more details.
+TIP: 更多详情请参见 javadoc:org.springframework.amqp.rabbit.annotation.EnableRabbit[format=annotation]。
 
-If you need to create more javadoc:org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory[] instances or if you want to override the default, Spring Boot provides a javadoc:org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer[] and a javadoc:org.springframework.boot.autoconfigure.amqp.DirectRabbitListenerContainerFactoryConfigurer[] that you can use to initialize a javadoc:org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory[] and a javadoc:org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory[] with the same settings as the factories used by the auto-configuration.
+如果你需要创建更多 javadoc:org.springframework.amqp.rabbit.listener.RabbitListenerContainerFactory[] 实例，或想覆盖默认配置，Spring Boot 提供了 javadoc:org.springframework.boot.autoconfigure.amqp.SimpleRabbitListenerContainerFactoryConfigurer[] 和 javadoc:org.springframework.boot.autoconfigure.amqp.DirectRabbitListenerContainerFactoryConfigurer[]，可用来以与自动配置工厂相同的设置初始化 javadoc:org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory[] 和 javadoc:org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory[]。
 
-TIP: It does not matter which container type you chose.
-Those two beans are exposed by the auto-configuration.
+TIP: 你选择哪种容器类型并不重要。
+这两个 bean 都由自动配置暴露。
 
-For instance, the following configuration class exposes another factory that uses a specific javadoc:org.springframework.amqp.support.converter.MessageConverter[]:
+例如，下面的配置类暴露了一个使用特定 javadoc:org.springframework.amqp.support.converter.MessageConverter[] 的工厂：
 
 include-code::custom/MyRabbitConfiguration[]
 
-Then you can use the factory in any javadoc:org.springframework.amqp.rabbit.annotation.RabbitListener[format=annotation]-annotated method, as follows:
+然后你可以在任何带有 javadoc:org.springframework.amqp.rabbit.annotation.RabbitListener[format=annotation] 注解的方法中使用该工厂，如下所示：
 
 include-code::custom/MyBean[]
 
-You can enable retries to handle situations where your listener throws an exception.
-By default, javadoc:org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer[] is used, but you can define a javadoc:org.springframework.amqp.rabbit.retry.MessageRecoverer[] of your own.
-When retries are exhausted, the message is rejected and either dropped or routed to a dead-letter exchange if the broker is configured to do so.
-By default, retries are disabled.
-You can also customize the javadoc:org.springframework.retry.support.RetryTemplate[] programmatically by declaring a javadoc:org.springframework.boot.autoconfigure.amqp.RabbitRetryTemplateCustomizer[] bean.
+你可以启用重试来处理监听器抛出异常的情况。
+默认情况下，使用 javadoc:org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer[]，但你可以自定义 javadoc:org.springframework.amqp.rabbit.retry.MessageRecoverer[]。
+当重试耗尽时，消息会被拒绝并丢弃，或在 broker 配置允许时路由到死信交换。
+默认情况下，重试是关闭的。
+你也可以通过声明 javadoc:org.springframework.boot.autoconfigure.amqp.RabbitRetryTemplateCustomizer[] bean，编程方式自定义 javadoc:org.springframework.retry.support.RetryTemplate[]。
 
-IMPORTANT: By default, if retries are disabled and the listener throws an exception, the delivery is retried indefinitely.
-You can modify this behavior in two ways: Set the `defaultRequeueRejected` property to `false` so that zero re-deliveries are attempted or throw an javadoc:org.springframework.amqp.AmqpRejectAndDontRequeueException[] to signal the message should be rejected.
-The latter is the mechanism used when retries are enabled and the maximum number of delivery attempts is reached.
+IMPORTANT: 默认情况下，如果重试关闭且监听器抛出异常，则会无限次重投递。
+你可以通过两种方式修改此行为：将 `defaultRequeueRejected` 属性设置为 `false`，这样就不会再尝试重新投递；或抛出 javadoc:org.springframework.amqp.AmqpRejectAndDontRequeueException[]，表示消息应被拒绝。
+后者是启用重试并达到最大投递次数时采用的机制。

@@ -1,44 +1,44 @@
 [[web.spring-session]]
 = Spring Session
 
-Spring Boot provides {url-spring-session-site}[Spring Session] auto-configuration for a wide range of data stores.
-When building a servlet web application, the following stores can be auto-configured:
+Spring Boot 为多种数据存储提供了 {url-spring-session-site}[Spring Session] 自动配置。
+在构建 servlet Web 应用时，以下存储类型可自动配置：
 
 * Redis
 * JDBC
 * Hazelcast
 * MongoDB
 
-Additionally, {url-spring-boot-for-apache-geode-site}[Spring Boot for Apache Geode] provides {url-spring-boot-for-apache-geode-docs}#geode-session[auto-configuration for using Apache Geode as a session store].
+此外， {url-spring-boot-for-apache-geode-site}[Spring Boot for Apache Geode] 提供了 {url-spring-boot-for-apache-geode-docs}#geode-session[使用 Apache Geode 作为会话存储的自动配置]。
 
-The servlet auto-configuration replaces the need to use `@Enable*HttpSession`.
+servlet 自动配置无需再使用 `@Enable*HttpSession`。
 
-If a single Spring Session module is present on the classpath, Spring Boot uses that store implementation automatically.
-If you have more than one implementation, Spring Boot uses the following order for choosing a specific implementation:
+如果 classpath 上仅存在一个 Spring Session 模块，Spring Boot 会自动使用该存储实现。
+如存在多个实现，Spring Boot 按以下顺序选择具体实现：
 
 . Redis
 . JDBC
 . Hazelcast
 . MongoDB
-. If none of Redis, JDBC, Hazelcast and MongoDB are available, we do not configure a javadoc:org.springframework.session.SessionRepository[].
+. 若上述均不可用，则不会配置 javadoc:org.springframework.session.SessionRepository[]。
 
 
-When building a reactive web application, the following stores can be auto-configured:
+在构建响应式 Web 应用时，以下存储类型可自动配置：
 
 * Redis
 * MongoDB
 
-The reactive auto-configuration replaces the need to use `@Enable*WebSession`.
+响应式自动配置无需再使用 `@Enable*WebSession`。
 
-Similar to the servlet configuration, if you have more than one implementation, Spring Boot uses the following order for choosing a specific implementation:
+与 servlet 配置类似，如存在多个实现，Spring Boot 按以下顺序选择具体实现：
 
 . Redis
 . MongoDB
-. If neither Redis nor MongoDB are available, we do not configure a javadoc:org.springframework.session.ReactiveSessionRepository[].
+. 若 Redis 和 MongoDB 均不可用，则不会配置 javadoc:org.springframework.session.ReactiveSessionRepository[]。
 
 
-Each store has specific additional settings.
-For instance, it is possible to customize the name of the table for the JDBC store, as shown in the following example:
+每种存储均有特定的附加设置。
+例如，可自定义 JDBC 存储的表名，如下所示：
 
 [configprops,yaml]
 ----
@@ -48,10 +48,9 @@ spring:
       table-name: "SESSIONS"
 ----
 
-For setting the timeout of the session you can use the configprop:spring.session.timeout[] property.
-If that property is not set with a servlet web application, the auto-configuration falls back to the value of configprop:server.servlet.session.timeout[].
+会话超时可通过 configprop:spring.session.timeout[] 属性设置。
+如 servlet Web 应用未设置该属性，则自动配置会回退至 configprop:server.servlet.session.timeout[] 的值。
 
 
-You can take control over Spring Session's configuration using `@Enable*HttpSession` (servlet) or `@Enable*WebSession` (reactive).
-This will cause the auto-configuration to back off.
-Spring Session can then be configured using the annotation's attributes rather than the previously described configuration properties.
+你可以通过 `@Enable*HttpSession`（servlet）或 `@Enable*WebSession`（响应式）完全控制 Spring Session 的配置。
+此时自动配置将失效，Spring Session 可通过注解属性而非上述配置属性进行配置。

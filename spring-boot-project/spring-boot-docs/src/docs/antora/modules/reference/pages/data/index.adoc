@@ -1,4 +1,4 @@
 [[data]]
-= Data
+= 数据
 
-Spring Boot integrates with a number of data technologies, both SQL and NoSQL.
+Spring Boot 集成了多种数据技术，包括 SQL 和 NoSQL。

@@ -1,18 +1,18 @@
 [[io.quartz]]
-= Quartz Scheduler
+= Quartz 调度器
 
-Spring Boot offers several conveniences for working with the https://www.quartz-scheduler.org/[Quartz scheduler], including the `spring-boot-starter-quartz` starter.
-If Quartz is available, a javadoc:org.quartz.Scheduler[] is auto-configured (through the javadoc:org.springframework.scheduling.quartz.SchedulerFactoryBean[] abstraction).
+Spring Boot 针对 https://www.quartz-scheduler.org/[Quartz 调度器] 提供了多项便利，包括 `spring-boot-starter-quartz` 启动器。
+如果 Quartz 可用，会自动配置 javadoc:org.quartz.Scheduler[]（通过 javadoc:org.springframework.scheduling.quartz.SchedulerFactoryBean[] 抽象）。
 
-Beans of the following types are automatically picked up and associated with the javadoc:org.quartz.Scheduler[]:
+以下类型的 bean 会被自动关联到 javadoc:org.quartz.Scheduler[]：
 
-* javadoc:org.quartz.JobDetail[]: defines a particular Job.
-  javadoc:org.quartz.JobDetail[] instances can be built with the javadoc:org.quartz.JobBuilder[] API.
-* javadoc:org.quartz.Calendar[].
-* javadoc:org.quartz.Trigger[]: defines when a particular job is triggered.
+* javadoc:org.quartz.JobDetail[]：定义特定 Job。
+  javadoc:org.quartz.JobDetail[] 实例可通过 javadoc:org.quartz.JobBuilder[] API 构建。
+* javadoc:org.quartz.Calendar[]。
+* javadoc:org.quartz.Trigger[]：定义 Job 触发时机。
 
-By default, an in-memory javadoc:org.quartz.spi.JobStore[] is used.
-However, it is possible to configure a JDBC-based store if a javadoc:javax.sql.DataSource[] bean is available in your application and if the configprop:spring.quartz.job-store-type[] property is configured accordingly, as shown in the following example:
+默认使用内存型 javadoc:org.quartz.spi.JobStore[]。
+但如果应用中存在 javadoc:javax.sql.DataSource[] bean，并且配置了 configprop:spring.quartz.job-store-type[] 属性，也可配置为基于 JDBC 的存储，如下所示：
 
 [configprops,yaml]
 ----
@@ -21,7 +21,7 @@ spring:
     job-store-type: "jdbc"
 ----
 
-When the JDBC store is used, the schema can be initialized on startup, as shown in the following example:
+使用 JDBC 存储时，可在启动时初始化表结构，如下所示：
 
 [configprops,yaml]
 ----
@@ -31,26 +31,26 @@ spring:
       initialize-schema: "always"
 ----
 
-WARNING: By default, the database is detected and initialized by using the standard scripts provided with the Quartz library.
-These scripts drop existing tables, deleting all triggers on every restart.
-To use a custom script, set the configprop:spring.quartz.jdbc.schema[] property.
-Some of the standard scripts – such as those for SQL Server, Azure SQL, and Sybase – cannot be used without modification.
-In these cases, make a copy of the script and edit it as directed in the script's comments then set configprop:spring.quartz.jdbc.schema[] to use your customized script.
+WARNING: 默认情况下，数据库会使用 Quartz 库自带的标准脚本进行检测和初始化。
+这些脚本会删除已有表，每次重启都会清空所有触发器。
+如需自定义脚本，请设置 configprop:spring.quartz.jdbc.schema[] 属性。
+部分标准脚本（如 SQL Server、Azure SQL、Sybase）需修改后方可使用。
+此时请复制脚本并按注释修改，然后通过 configprop:spring.quartz.jdbc.schema[] 指定自定义脚本。
 
-To have Quartz use a javadoc:javax.sql.DataSource[] other than the application's main javadoc:javax.sql.DataSource[], declare a javadoc:javax.sql.DataSource[] bean, annotating its javadoc:org.springframework.context.annotation.Bean[format=annotation] method with javadoc:org.springframework.boot.autoconfigure.quartz.QuartzDataSource[format=annotation].
-Doing so ensures that the Quartz-specific javadoc:javax.sql.DataSource[] is used by both the javadoc:org.springframework.scheduling.quartz.SchedulerFactoryBean[] and for schema initialization.
-Similarly, to have Quartz use a javadoc:org.springframework.transaction.TransactionManager[] other than the application's main javadoc:org.springframework.transaction.TransactionManager[] declare a javadoc:org.springframework.transaction.TransactionManager[] bean, annotating its javadoc:org.springframework.context.annotation.Bean[format=annotation] method with javadoc:org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager[format=annotation].
+如需让 Quartz 使用应用主 javadoc:javax.sql.DataSource[] 以外的数据源，请声明 javadoc:javax.sql.DataSource[] bean，并在其 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法上添加 javadoc:org.springframework.boot.autoconfigure.quartz.QuartzDataSource[format=annotation] 注解。
+这样，Quartz 专用的数据源会被 javadoc:org.springframework.scheduling.quartz.SchedulerFactoryBean[] 和表结构初始化共同使用。
+同理，如需让 Quartz 使用主 javadoc:org.springframework.transaction.TransactionManager[] 以外的事务管理器，请声明 javadoc:org.springframework.transaction.TransactionManager[] bean，并在其 javadoc:org.springframework.context.annotation.Bean[format=annotation] 方法上添加 javadoc:org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager[format=annotation] 注解。
 
-By default, jobs created by configuration will not overwrite already registered jobs that have been read from a persistent job store.
-To enable overwriting existing job definitions set the configprop:spring.quartz.overwrite-existing-jobs[] property.
+默认情况下，通过配置创建的作业不会覆盖已从持久化作业存储读取的已注册作业。
+如需允许覆盖现有作业定义，请设置 configprop:spring.quartz.overwrite-existing-jobs[] 属性。
 
-Quartz Scheduler configuration can be customized using `spring.quartz` properties and javadoc:org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer[] beans, which allow programmatic javadoc:org.springframework.scheduling.quartz.SchedulerFactoryBean[] customization.
-Advanced Quartz configuration properties can be customized using `spring.quartz.properties.*`.
+Quartz 调度器配置可通过 `spring.quartz` 属性和 javadoc:org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer[] bean 进行定制，允许以编程方式自定义 javadoc:org.springframework.scheduling.quartz.SchedulerFactoryBean[]。
+高级 Quartz 配置属性可通过 `spring.quartz.properties.*` 定制。
 
-NOTE: In particular, an javadoc:java.util.concurrent.Executor[] bean is not associated with the scheduler as Quartz offers a way to configure the scheduler through `spring.quartz.properties`.
-If you need to customize the task executor, consider implementing javadoc:org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer[].
+NOTE: 特别说明，调度器默认不会关联 javadoc:java.util.concurrent.Executor[] bean，因为 Quartz 可通过 `spring.quartz.properties` 进行相关配置。
+如需自定义任务执行器，可实现 javadoc:org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer[]。
 
-Jobs can define setters to inject data map properties.
-Regular beans can also be injected in a similar manner, as shown in the following example:
+作业可定义 setter 方法以注入数据映射属性。
+常规 bean 也可类似注入，如下所示：
 
 include-code::MySampleJob[]

@@ -1,8 +1,9 @@
 [[io]]
 = IO
 
-Most applications will need to deal with input and output concerns at some point.
-Spring Boot provides utilities and integrations with a range of technologies to help when you need IO capabilities.
-This section covers standard IO features such as caching and validation as well as more advanced topics such as scheduling and distributed transactions.
-We will also cover calling remote REST or SOAP services and sending email.
+Spring Boot 提供了多种 IO 相关的自动配置，包括邮件发送、缓存、Hazelcast 等。你可以通过以下章节了解各功能的详细用法和配置方法：
+
+* xref:io/email.adoc[邮件发送]
+* xref:io/caching.adoc[缓存]
+* xref:io/hazelcast.adoc[Hazelcast]
 

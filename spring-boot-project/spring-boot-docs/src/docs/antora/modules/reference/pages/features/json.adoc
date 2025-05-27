@@ -1,43 +1,43 @@
 [[features.json]]
 = JSON
 
-Spring Boot provides integration with three JSON mapping libraries:
+Spring Boot 集成了三种 JSON 映射库：
 
 - Gson
 - Jackson
 - JSON-B
 
-Jackson is the preferred and default library.
+Jackson 是首选且默认的库。
 
 
 
 [[features.json.jackson]]
 == Jackson
 
-Auto-configuration for Jackson is provided and Jackson is part of `spring-boot-starter-json`.
-When Jackson is on the classpath an javadoc:com.fasterxml.jackson.databind.ObjectMapper[] bean is automatically configured.
-Several configuration properties are provided for xref:how-to:spring-mvc.adoc#howto.spring-mvc.customize-jackson-objectmapper[customizing the configuration of the javadoc:com.fasterxml.jackson.databind.ObjectMapper[]].
+Jackson 的自动配置已提供，且 Jackson 是 `spring-boot-starter-json` 的一部分。
+当类路径中存在 Jackson 时，会自动配置一个 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] bean。
+提供了多个配置属性用于 xref:how-to:spring-mvc.adoc#howto.spring-mvc.customize-jackson-objectmapper[自定义 javadoc:com.fasterxml.jackson.databind.ObjectMapper[] 的配置]。
 
 
 
 [[features.json.jackson.custom-serializers-and-deserializers]]
-=== Custom Serializers and Deserializers
+=== 自定义序列化器与反序列化器
 
-If you use Jackson to serialize and deserialize JSON data, you might want to write your own javadoc:com.fasterxml.jackson.databind.JsonSerializer[] and javadoc:com.fasterxml.jackson.databind.JsonDeserializer[] classes.
-Custom serializers are usually https://github.com/FasterXML/jackson-docs/wiki/JacksonHowToCustomSerializers[registered with Jackson through a module], but Spring Boot provides an alternative javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] annotation that makes it easier to directly register Spring Beans.
+如果你使用 Jackson 进行 JSON 数据的序列化与反序列化，可能需要编写自己的 javadoc:com.fasterxml.jackson.databind.JsonSerializer[] 和 javadoc:com.fasterxml.jackson.databind.JsonDeserializer[] 类。
+自定义序列化器通常通过 https://github.com/FasterXML/jackson-docs/wiki/JacksonHowToCustomSerializers[Jackson 模块注册]，但 Spring Boot 提供了 javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] 注解，使直接注册 Spring Bean 更加便捷。
 
-You can use the javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] annotation directly on javadoc:com.fasterxml.jackson.databind.JsonSerializer[], javadoc:com.fasterxml.jackson.databind.JsonDeserializer[] or javadoc:com.fasterxml.jackson.databind.KeyDeserializer[] implementations.
-You can also use it on classes that contain serializers/deserializers as inner classes, as shown in the following example:
+你可以直接在 javadoc:com.fasterxml.jackson.databind.JsonSerializer[]、javadoc:com.fasterxml.jackson.databind.JsonDeserializer[] 或 javadoc:com.fasterxml.jackson.databind.KeyDeserializer[] 实现类上使用 javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] 注解。
+也可以在包含序列化器/反序列化器的内部类的外部类上使用，如下例所示：
 
 include-code::MyJsonComponent[]
 
-All javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] beans in the javadoc:org.springframework.context.ApplicationContext[] are automatically registered with Jackson.
-Because javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] is meta-annotated with javadoc:org.springframework.stereotype.Component[format=annotation], the usual component-scanning rules apply.
+所有 javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] bean 都会自动注册到 javadoc:org.springframework.context.ApplicationContext[] 中的 Jackson。
+由于 javadoc:org.springframework.boot.jackson.JsonComponent[format=annotation] 是由 javadoc:org.springframework.stereotype.Component[format=annotation] 元注解的，因此适用常规组件扫描规则。
 
-Spring Boot also provides javadoc:org.springframework.boot.jackson.JsonObjectSerializer[] and javadoc:org.springframework.boot.jackson.JsonObjectDeserializer[] base classes that provide useful alternatives to the standard Jackson versions when serializing objects.
-See javadoc:org.springframework.boot.jackson.JsonObjectSerializer[] and javadoc:org.springframework.boot.jackson.JsonObjectDeserializer[] in the API documentation for details.
+Spring Boot 还提供了 javadoc:org.springframework.boot.jackson.JsonObjectSerializer[] 和 javadoc:org.springframework.boot.jackson.JsonObjectDeserializer[] 基类，在对象序列化时为标准 Jackson 版本提供了有用的替代方案。
+详细信息请参见 API 文档中的 javadoc:org.springframework.boot.jackson.JsonObjectSerializer[] 和 javadoc:org.springframework.boot.jackson.JsonObjectDeserializer[]。
 
-The example above can be rewritten to use javadoc:org.springframework.boot.jackson.JsonObjectSerializer[] and javadoc:org.springframework.boot.jackson.JsonObjectDeserializer[] as follows:
+上述示例可改写为使用 javadoc:org.springframework.boot.jackson.JsonObjectSerializer[] 和 javadoc:org.springframework.boot.jackson.JsonObjectDeserializer[]，如下所示：
 
 include-code::object/MyJsonComponent[]
 
@@ -46,25 +46,25 @@ include-code::object/MyJsonComponent[]
 [[features.json.jackson.mixins]]
 === Mixins
 
-Jackson has support for mixins that can be used to mix additional annotations into those already declared on a target class.
-Spring Boot's Jackson auto-configuration will scan your application's packages for classes annotated with javadoc:org.springframework.boot.jackson.JsonMixin[format=annotation] and register them with the auto-configured javadoc:com.fasterxml.jackson.databind.ObjectMapper[].
-The registration is performed by Spring Boot's javadoc:org.springframework.boot.jackson.JsonMixinModule[].
+Jackson 支持 mixin，可用于为目标类混入额外注解。
+Spring Boot 的 Jackson 自动配置会扫描应用包中带有 javadoc:org.springframework.boot.jackson.JsonMixin[format=annotation] 注解的类，并将其注册到自动配置的 javadoc:com.fasterxml.jackson.databind.ObjectMapper[]。
+注册由 Spring Boot 的 javadoc:org.springframework.boot.jackson.JsonMixinModule[] 完成。
 
 
 
 [[features.json.gson]]
 == Gson
 
-Auto-configuration for Gson is provided.
-When Gson is on the classpath a javadoc:com.google.gson.Gson[] bean is automatically configured.
-Several `+spring.gson.*+` configuration properties are provided for customizing the configuration.
-To take more control, one or more javadoc:org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer[] beans can be used.
+Gson 的自动配置已提供。
+当类路径中存在 Gson 时，会自动配置一个 javadoc:com.google.gson.Gson[] bean。
+可通过多个 `+spring.gson.*+` 配置属性进行自定义。
+如需更细致的控制，可使用一个或多个 javadoc:org.springframework.boot.autoconfigure.gson.GsonBuilderCustomizer[] bean。
 
 
 
 [[features.json.json-b]]
 == JSON-B
 
-Auto-configuration for JSON-B is provided.
-When the JSON-B API and an implementation are on the classpath a javadoc:jakarta.json.bind.Jsonb[] bean will be automatically configured.
-The preferred JSON-B implementation is Eclipse Yasson for which dependency management is provided.
+JSON-B 的自动配置已提供。
+当类路径中存在 JSON-B API 及其实现时，会自动配置一个 javadoc:jakarta.json.bind.Jsonb[] bean。
+首选 JSON-B 实现为 Eclipse Yasson，Spring Boot 已为其提供依赖管理。

@@ -761,7 +761,7 @@ JVM 指标以 `jvm.` 仪表名称发布。
 
 自动配置启用所有可用 javadoc:org.springframework.jms.core.JmsTemplate[] bean 和 javadoc:org.springframework.jms.annotation.JmsListener[format=annotation] 注解方法的仪表。
 这将分别生成 `"jms.message.publish"` 和 `"jms.message.process"` 指标。
-有关生成观察的更多信息，请参阅 {url spring-framework-docs}/integration/observability.html#observability.jms[Spring Framework 参考文档]。
+有关生成观察的更多信息，请参阅 {url-spring-framework-docs}/integration/observability.html#observability.jms[Spring Framework 参考文档]。
 
 
 
@@ -772,7 +772,7 @@ JVM 指标以 `jvm.` 仪表名称发布。
 默认情况下，指标以名称 `http.server.requests` 生成。
 您可以通过设置 configprop:management.observations.http.server.requests.name[] 属性自定义名称。
 
-有关生成观察的更多信息，请参阅 {url spring-framework-docs}/integration/observability.html#observability.http-server.servlet[Spring Framework 参考文档]。
+有关生成观察的更多信息，请参阅 {url-spring-framework-docs}/integration/observability.html#observability.http-server.servlet[Spring Framework 参考文档]。
 
 要添加默认标签，提供一个扩展自 `org.springframework.http.server.observation` 包中 javadoc:org.springframework.http.server.observation.DefaultServerRequestObservationConvention[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
 要替换默认标签，提供一个实现 javadoc:org.springframework.http.server.observation.ServerRequestObservationConvention[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
@@ -792,7 +792,7 @@ TIP: 在某些情况下，Web 控制器中处理的异常不会记录为请求�
 默认情况下，指标以名称 `http.server.requests` 生成。
 您可以通过设置 configprop:management.observations.http.server.requests.name[] 属性自定义名称。
 
-有关生成观察的更多信息，请参阅 {url spring-framework-docs}/integration/observability.html#observability.http-server.reactive[Spring Framework 参考文档]。
+有关生成观察的更多信息，请参阅 {url-spring-framework-docs}/integration/observability.html#observability.http-server.reactive[Spring Framework 参考文档]。
 
 要添加默认标签，提供一个扩展自 `org.springframework.http.server.reactive.observation` 包中 javadoc:org.springframework.http.server.reactive.observation.DefaultServerRequestObservationConvention[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
 要替换默认标签，提供一个实现 javadoc:org.springframework.http.server.reactive.observation.ServerRequestObservationConvention[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
@@ -873,7 +873,7 @@ Spring Boot Actuator 管理 javadoc:org.springframework.web.client.RestTemplate[
 默认情况下，指标以名称 `http.client.requests` 生成。
 您可以通过设置 configprop:management.observations.http.client.requests.name[] 属性自定义名称。
 
-有关生成观察的更多信息，请参阅 {url spring-framework-docs}/integration/observability.html#observability.http-client[Spring Framework 参考文档]。
+有关生成观察的更多信息，请参阅 {url-spring-framework-docs}/integration/observability.html#observability.http-client[Spring Framework 参考文档]。
 
 要在使用 javadoc:org.springframework.web.client.RestTemplate[] 或 javadoc:org.springframework.web.client.RestClient[] 时自定义标签，提供一个实现 `org.springframework.http.client.observation` 包中 javadoc:org.springframework.http.client.observation.ClientRequestObservationConvention[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
 要在使用 javadoc:org.springframework.web.reactive.function.client.WebClient[] 时自定义标签，提供一个实现 `org.springframework.web.reactive.function.client` 包中 javadoc:org.springframework.web.reactive.function.client.ClientRequestObservationConvention[] 的 javadoc:org.springframework.context.annotation.Bean[format=annotation]。
@@ -919,14 +919,14 @@ NOTE: 仅在启动时配置的缓存绑定到注册表。
 [[actuator.metrics.supported.spring-batch]]
 === Spring Batch 指标
 
-请参阅 {url spring-batch-docs}/monitoring-and-metrics.html[Spring Batch 参考文档]。
+请参阅 {url-spring-batch-docs}/monitoring-and-metrics.html[Spring Batch 参考文档]。
 
 
 
 [[actuator.metrics.supported.spring-graphql]]
 === Spring GraphQL 指标
 
-请参阅 {url spring-graphql-docs}/observability.html[Spring GraphQL 参考文档]。
+请参阅 {url-spring-graphql-docs}/observability.html[Spring GraphQL 参考文档]。
 
 
 
@@ -1012,7 +1012,7 @@ NOTE: 带有 `longTask = true` 的 javadoc:io.micrometer.core.annotation.Timed[f
 [[actuator.metrics.supported.spring-integration]]
 === Spring Integration 指标
 
-只要有 javadoc:io.micrometer.core.instrument.MeterRegistry[] bean 可用，Spring Integration 就会自动提供 {url spring-integration-docs}/metrics.html#micrometer-integration[Micrometer 支持]。
+只要有 javadoc:io.micrometer.core.instrument.MeterRegistry[] bean 可用，Spring Integration 就会自动提供 {url-spring-integration-docs}/metrics.html#micrometer-integration[Micrometer 支持]。
 指标以 `spring.integration.` 仪表名称发布。
 
 
@@ -1022,7 +1022,7 @@ NOTE: 带有 `longTask = true` 的 javadoc:io.micrometer.core.annotation.Timed[f
 
 自动配置为自动配置的消费者工厂和生产者工厂分别注册 javadoc:org.springframework.kafka.core.MicrometerConsumerListener[] 和 javadoc:org.springframework.kafka.core.MicrometerProducerListener[]。
 它还为 javadoc:org.springframework.kafka.config.StreamsBuilderFactoryBean[] 注册 javadoc:org.springframework.kafka.streams.KafkaStreamsMicrometerListener[]。
-有关更多详细信息，请参阅 Spring Kafka 文档的 {url spring-kafka-docs}/kafka/micrometer.html#micrometer-native[Micrometer 原生指标] 部分。
+有关更多详细信息，请参阅 Spring Kafka 文档的 {url-spring-kafka-docs}/kafka/micrometer.html#micrometer-native[Micrometer 原生指标] 部分。
 
 
 

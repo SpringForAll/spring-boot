@@ -1,11 +1,11 @@
 [[web.graceful-shutdown]]
-= Graceful Shutdown
+= 优雅关闭
 
-Graceful shutdown is enabled by default with all four embedded web servers (Jetty, Reactor Netty, Tomcat, and Undertow) and with both reactive and servlet-based web applications.
-It occurs as part of closing the application context and is performed in the earliest phase of stopping javadoc:org.springframework.context.SmartLifecycle[] beans.
-This stop processing uses a timeout which provides a grace period during which existing requests will be allowed to complete but no new requests will be permitted.
+优雅关闭功能默认在所有四个嵌入式 Web 服务器（Jetty、Reactor Netty、Tomcat 和 Undertow）中启用，并且同时支持响应式和基于 servlet 的 Web 应用程序。
+它作为关闭应用程序上下文的一部分发生，并在停止 javadoc:org.springframework.context.SmartLifecycle[] beans 的最早阶段执行。
+这个停止处理使用超时机制，提供了一个宽限期，在此期间允许现有请求完成，但不允许新的请求。
 
-To configure the timeout period, configure the configprop:spring.lifecycle.timeout-per-shutdown-phase[] property, as shown in the following example:
+要配置超时期限，请配置 configprop:spring.lifecycle.timeout-per-shutdown-phase[] 属性，如下例所示：
 
 [configprops,yaml]
 ----
@@ -14,29 +14,29 @@ spring:
     timeout-per-shutdown-phase: "20s"
 ----
 
-IMPORTANT: Shutdown in your IDE may be immediate rather than graceful if it does not send a proper `SIGTERM` signal.
-See the documentation of your IDE for more details.
+IMPORTANT: 如果您的 IDE 没有发送正确的 `SIGTERM` 信号，关闭可能会立即发生而不是优雅关闭。
+有关更多详细信息，请参阅您的 IDE 文档。
 
 
 
 [[web.graceful-shutdown.rejecting-requests-during-the-grace-period]]
-== Rejecting Requests During the Grace Period
+== 在宽限期内拒绝请求
 
-The exact way in which new requests are not permitted varies depending on the web server that is being used.
-Implementations may stop accepting requests at the network layer, or they may return a response with a specific HTTP status code or HTTP header.
-The use of persistent connections can also change the way that requests stop being accepted.
+不允许新请求的具体方式取决于所使用的 Web 服务器。
+实现可能会在网络层停止接受请求，或者它们可能会返回带有特定 HTTP 状态码或 HTTP 头的响应。
+持久连接的使用也会改变请求停止被接受的方式。
 
-TIP: To learn more about the specific method used with your web server, see the `shutDownGracefully` API documentation for javadoc:org.springframework.boot.web.embedded.tomcat.TomcatWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[], javadoc:org.springframework.boot.web.embedded.netty.NettyWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[], javadoc:org.springframework.boot.web.embedded.jetty.JettyWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[] or javadoc:org.springframework.boot.web.embedded.undertow.UndertowWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[].
+TIP: 要了解与您的 Web 服务器一起使用的具体方法，请参阅 javadoc:org.springframework.boot.web.embedded.tomcat.TomcatWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[]、javadoc:org.springframework.boot.web.embedded.netty.NettyWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[]、javadoc:org.springframework.boot.web.embedded.jetty.JettyWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[] 或 javadoc:org.springframework.boot.web.embedded.undertow.UndertowWebServer#shutDownGracefully(org.springframework.boot.web.server.GracefulShutdownCallback)[] 的 `shutDownGracefully` API 文档。
 
-Jetty, Reactor Netty, and Tomcat will stop accepting new requests at the network layer.
-Undertow will accept new connections but respond immediately with a service unavailable (503) response.
+Jetty、Reactor Netty 和 Tomcat 将在网络层停止接受新请求。
+Undertow 将接受新连接，但立即返回服务不可用（503）响应。
 
 
 
 [[web.graceful-shutdown.disabling-graceful-shutdown]]
-== Disabling Graceful Shutdown
+== 禁用优雅关闭
 
-To disable graceful shutdown, configure the configprop:server.shutdown[] property, as shown in the following example:
+要禁用优雅关闭，请配置 configprop:server.shutdown[] 属性，如下例所示：
 
 [configprops,yaml]
 ----

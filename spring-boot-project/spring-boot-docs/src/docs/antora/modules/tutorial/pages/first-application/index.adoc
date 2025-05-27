@@ -308,7 +308,7 @@ javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation
 javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] 注解告诉 Spring 将结果字符串直接返回给调用者。
 
 TIP: javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] 和 javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] 注解是 Spring MVC 注解（它们并非 Spring Boot 专有）。
-有关更多详细信息，请参阅 Spring 参考文档中的 {url spring-framework-docs}/web/webmvc.html[MVC 部分]。
+有关更多详细信息，请参阅 Spring 参考文档中的 {url-spring-framework-docs}/web/webmvc.html[MVC 部分]。
 
 
 
