@@ -1,22 +1,21 @@
 [[actuator.process-monitoring]]
-= Process Monitoring
+= 进程监控
 
-In the `spring-boot` module, you can find two classes to create files that are often useful for process monitoring:
+在 `spring-boot` 模块中，你可以找到两个用于创建进程监控常用文件的类：
 
-* javadoc:org.springframework.boot.context.ApplicationPidFileWriter[] creates a file that contains the application PID (by default, in the application directory with a file name of `application.pid`).
-* javadoc:org.springframework.boot.web.context.WebServerPortFileWriter[] creates a file (or files) that contain the ports of the running web server (by default, in the application directory with a file name of `application.port`).
+* javadoc:org.springframework.boot.context.ApplicationPidFileWriter[] 会创建一个包含应用 PID 的文件（默认位于应用目录，文件名为 `application.pid`）。
+* javadoc:org.springframework.boot.web.context.WebServerPortFileWriter[] 会创建一个（或多个）包含运行中 Web 服务器端口的文件（默认位于应用目录，文件名为 `application.port`）。
 
-By default, these writers are not activated, but you can enable them:
+默认情况下，这些 writer 并未激活，但你可以启用它们：
 
 * xref:actuator/process-monitoring.adoc#actuator.process-monitoring.configuration[]
 * xref:actuator/process-monitoring.adoc#actuator.process-monitoring.programmatically[]
 
 
-
 [[actuator.process-monitoring.configuration]]
-== Extending Configuration
+== 扩展配置
 
-In the `META-INF/spring.factories` file, you can activate the listener (or listeners) that writes a PID file:
+在 `META-INF/spring.factories` 文件中，你可以激活写入 PID 文件的监听器（或监听器们）：
 
 [source]
 ----
@@ -26,9 +25,8 @@ org.springframework.boot.web.context.WebServerPortFileWriter
 ----
 
 
-
 [[actuator.process-monitoring.programmatically]]
-== Programmatically Enabling Process Monitoring
+== 以编程方式启用进程监控
 
-You can also activate a listener by invoking the `SpringApplication.addListeners(...)` method and passing the appropriate javadoc:java.io.Writer[] object.
-This method also lets you customize the file name and path in the javadoc:java.io.Writer[] constructor.
+你也可以通过调用 `SpringApplication.addListeners(...)` 方法并传入合适的 javadoc:java.io.Writer[] 对象来激活监听器。
+该方法还允许你在 javadoc:java.io.Writer[] 构造器中自定义文件名和路径。

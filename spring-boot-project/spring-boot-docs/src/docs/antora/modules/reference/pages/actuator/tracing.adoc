@@ -1,42 +1,40 @@
 [[actuator.micrometer-tracing]]
-= Tracing
+= 链路追踪
 
-Spring Boot Actuator provides dependency management and auto-configuration for {url-micrometer-tracing-docs}[Micrometer Tracing], a facade for popular tracer libraries.
+Spring Boot Actuator 提供了对 {url-micrometer-tracing-docs}[Micrometer Tracing] 的依赖管理和自动配置，Micrometer Tracing 是一个流行追踪器库的门面。
 
-TIP: To learn more about Micrometer Tracing capabilities, see its {url-micrometer-tracing-docs}[reference documentation].
-
+TIP: 要了解 Micrometer Tracing 的更多功能，请参阅其 {url-micrometer-tracing-docs}[参考文档]。
 
 
 [[actuator.micrometer-tracing.tracers]]
-== Supported Tracers
+== 支持的追踪器
 
-Spring Boot ships auto-configuration for the following tracers:
+Spring Boot 提供以下追踪器的自动配置：
 
-* https://opentelemetry.io/[OpenTelemetry] with https://zipkin.io/[Zipkin],  https://docs.wavefront.com/[Wavefront], or https://opentelemetry.io/docs/reference/specification/protocol/[OTLP]
-* https://github.com/openzipkin/brave[OpenZipkin Brave] with https://zipkin.io/[Zipkin] or https://docs.wavefront.com/[Wavefront]
-
+* https://opentelemetry.io/[OpenTelemetry]，可配合 https://zipkin.io/[Zipkin]、 https://docs.wavefront.com/[Wavefront] 或 https://opentelemetry.io/docs/reference/specification/protocol/[OTLP] 使用
+* https://github.com/openzipkin/brave[OpenZipkin Brave]，可配合 https://zipkin.io/[Zipkin] 或 https://docs.wavefront.com/[Wavefront] 使用
 
 
 [[actuator.micrometer-tracing.getting-started]]
-== Getting Started
+== 入门
 
-We need an example application that we can use to get started with tracing.
-For our purposes, the simple "`Hello World!`" web application that's covered in the xref:tutorial:first-application/index.adoc[] section will suffice.
-We're going to use the OpenTelemetry tracer with Zipkin as trace backend.
+我们需要一个示例应用来演示如何开始链路追踪。
+这里我们使用 xref:tutorial:first-application/index.adoc[] 部分介绍的简单“`Hello World!`”Web 应用。
+我们将使用 OpenTelemetry 追踪器，并以 Zipkin 作为追踪后端。
 
-To recap, our main application code looks like this:
+回顾一下，主应用代码如下：
 
 include-code::MyApplication[]
 
-NOTE: There's an added logger statement in the `home()` method, which will be important later.
+NOTE: 在 `home()` 方法中增加了 logger 语句，这一点后续会用到。
 
-Now we have to add the following dependencies:
+现在需要添加以下依赖：
 
 * `org.springframework.boot:spring-boot-starter-actuator`
-* `io.micrometer:micrometer-tracing-bridge-otel` - bridges the Micrometer Observation API to OpenTelemetry.
-* `io.opentelemetry:opentelemetry-exporter-zipkin` - reports {url-micrometer-tracing-docs}/glossary[traces] to Zipkin.
+* `io.micrometer:micrometer-tracing-bridge-otel` - 将 Micrometer Observation API 桥接到 OpenTelemetry。
+* `io.opentelemetry:opentelemetry-exporter-zipkin` - 将 {url-micrometer-tracing-docs}/glossary[traces] 上报到 Zipkin。
 
-Add the following application properties:
+添加如下应用配置：
 
 [configprops,yaml]
 ----
@@ -46,41 +44,40 @@ management:
       probability: 1.0
 ----
 
-By default, Spring Boot samples only 10% of requests to prevent overwhelming the trace backend.
-This property switches it to 100% so that every request is sent to the trace backend.
+默认情况下，Spring Boot 只采样 10% 的请求以避免追踪后端压力过大。
+此配置将采样率调整为 100%，即每个请求都会发送到追踪后端。
 
-To collect and visualize the traces, we need a running trace backend.
-We use Zipkin as our trace backend here.
-The https://zipkin.io/pages/quickstart[Zipkin Quickstart guide] provides instructions how to start Zipkin locally.
+为了收集和可视化追踪数据，我们需要一个正在运行的追踪后端。
+这里我们使用 Zipkin 作为追踪后端。
+https://zipkin.io/pages/quickstart[Zipkin 快速入门指南] 提供了本地启动 Zipkin 的说明。
 
-After Zipkin is running, you can start your application.
+Zipkin 启动后，可以启动你的应用。
 
-If you open a web browser to `http://localhost:8080`, you should see the following output:
+在浏览器访问 `http://localhost:8080`，你应该会看到如下输出：
 
 [source]
 ----
 Hello World!
 ----
 
-Behind the scenes, an observation has been created for the HTTP request, which in turn gets bridged to OpenTelemetry, which reports a new trace to Zipkin.
+在幕后，HTTP 请求会创建一个 observation，该 observation 会桥接到 OpenTelemetry，并最终上报新的 trace 到 Zipkin。
 
-Now open the Zipkin UI at `http://localhost:9411` and press the "Run Query" button to list all collected traces.
-You should see one trace.
-Press the "Show" button to see the details of that trace.
-
+现在打开 Zipkin UI（`http://localhost:9411`），点击“Run Query”按钮即可列出所有已收集的追踪。
+你应该能看到一个 trace。
+点击“Show”按钮可查看该 trace 的详细信息。
 
 
 [[actuator.micrometer-tracing.logging]]
-== Logging Correlation IDs
+== 日志关联 ID（Correlation IDs）
 
-Correlation IDs provide a helpful way to link lines in your log files to spans/traces.
-If you are using Micrometer Tracing, Spring Boot will include correlation IDs in your logs by default.
+关联 ID 可帮助你将日志文件中的行与 span/trace 关联起来。
+如果你使用 Micrometer Tracing，Spring Boot 默认会在日志中包含关联 ID。
 
-The default correlation ID is built from `traceId` and `spanId` https://logback.qos.ch/manual/mdc.html[MDC] values.
-For example, if Micrometer Tracing has added an MDC `traceId` of `803B448A0489F84084905D3093480352` and an MDC `spanId` of `3425F23BB2432450` the log output will include the correlation ID `[803B448A0489F84084905D3093480352-3425F23BB2432450]`.
+默认的关联 ID 由 `traceId` 和 `spanId` https://logback.qos.ch/manual/mdc.html[MDC] 值组成。
+例如，Micrometer Tracing 添加了 MDC `traceId` 为 `803B448A0489F84084905D3093480352` 和 MDC `spanId` 为 `3425F23BB2432450`，日志输出将包含关联 ID `[803B448A0489F84084905D3093480352-3425F23BB2432450]`。
 
-If you prefer to use a different format for your correlation ID, you can use the configprop:logging.pattern.correlation[] property to define one.
-For example, the following will provide a correlation ID for Logback in format previously used by Spring Cloud Sleuth:
+如果你希望使用不同格式的关联 ID，可以通过 configprop:logging.pattern.correlation[] 属性自定义。
+例如，下面的配置将为 Logback 提供与 Spring Cloud Sleuth 之前格式一致的关联 ID：
 
 [configprops,yaml]
 ----
@@ -90,137 +87,125 @@ logging:
   include-application-name: false
 ----
 
-NOTE: In the example above, configprop:logging.include-application-name[] is set to `false` to avoid the application name being duplicated in the log messages (configprop:logging.pattern.correlation[] already contains it).
-It's also worth mentioning that configprop:logging.pattern.correlation[] contains a trailing space so that it is separated from the logger name that comes right after it by default.
+NOTE: 上述示例中，configprop:logging.include-application-name[] 被设置为 `false`，以避免日志消息中应用名重复（configprop:logging.pattern.correlation[] 已包含应用名）。
+另外，configprop:logging.pattern.correlation[] 末尾包含一个空格，以便与后续 logger 名称默认分隔。
 
-TIP: Correlation IDs rely on context propagation.
-Please read xref:reference:actuator/observability.adoc#actuator.observability.context-propagation[this documentation for more details].
-
+TIP: 关联 ID 依赖上下文传播。
+详细说明请参阅 xref:reference:actuator/observability.adoc#actuator.observability.context-propagation[此文档]。
 
 
 [[actuator.micrometer-tracing.propagating-traces]]
-== Propagating Traces
+== Trace 传播
 
-To automatically propagate traces over the network, use the auto-configured xref:io/rest-client.adoc#io.rest-client.resttemplate[`RestTemplateBuilder`], xref:io/rest-client.adoc#io.rest-client.restclient[`RestClient.Builder`] or xref:io/rest-client.adoc#io.rest-client.webclient[`WebClient.Builder`] to construct the client.
+要自动在网络上传播 trace，请使用自动配置的 xref:io/rest-client.adoc#io.rest-client.resttemplate[`RestTemplateBuilder`]、xref:io/rest-client.adoc#io.rest-client.restclient[`RestClient.Builder`] 或 xref:io/rest-client.adoc#io.rest-client.webclient[`WebClient.Builder`] 构建客户端。
 
-WARNING: If you create the javadoc:org.springframework.web.client.RestTemplate[], the javadoc:org.springframework.web.client.RestClient[] or the javadoc:org.springframework.web.reactive.function.client.WebClient[] without using the auto-configured builders, automatic trace propagation won't work!
-
+WARNING: 如果你直接创建 javadoc:org.springframework.web.client.RestTemplate[]、javadoc:org.springframework.web.client.RestClient[] 或 javadoc:org.springframework.web.reactive.function.client.WebClient[]，而未使用自动配置的 builder，则无法实现 trace 自动传播！
 
 
 [[actuator.micrometer-tracing.tracer-implementations]]
-== Tracer Implementations
+== 追踪器实现
 
-As Micrometer Tracer supports multiple tracer implementations, there are multiple dependency combinations possible with Spring Boot.
+Micrometer Tracer 支持多种追踪器实现，因此在 Spring Boot 中可组合多种依赖。
 
-All tracer implementations need the `org.springframework.boot:spring-boot-starter-actuator` dependency.
-
+所有追踪器实现都需要 `org.springframework.boot:spring-boot-starter-actuator` 依赖。
 
 
 [[actuator.micrometer-tracing.tracer-implementations.otel-zipkin]]
-=== OpenTelemetry With Zipkin
+=== OpenTelemetry 配合 Zipkin
 
-Tracing with OpenTelemetry and reporting to Zipkin requires the following dependencies:
+使用 OpenTelemetry 并上报到 Zipkin 需要以下依赖：
 
-* `io.micrometer:micrometer-tracing-bridge-otel` - bridges the Micrometer Observation API to OpenTelemetry.
-* `io.opentelemetry:opentelemetry-exporter-zipkin` - reports traces to Zipkin.
+* `io.micrometer:micrometer-tracing-bridge-otel` - 将 Micrometer Observation API 桥接到 OpenTelemetry。
+* `io.opentelemetry:opentelemetry-exporter-zipkin` - 将 trace 上报到 Zipkin。
 
-Use the `management.zipkin.tracing.*` configuration properties to configure reporting to Zipkin.
-
+通过 `management.zipkin.tracing.*` 配置属性可设置上报到 Zipkin 的相关参数。
 
 
 [[actuator.micrometer-tracing.tracer-implementations.otel-wavefront]]
-=== OpenTelemetry With Wavefront
+=== OpenTelemetry 配合 Wavefront
 
-Tracing with OpenTelemetry and reporting to Wavefront requires the following dependencies:
+使用 OpenTelemetry 并上报到 Wavefront 需要以下依赖：
 
-* `io.micrometer:micrometer-tracing-bridge-otel` - bridges the Micrometer Observation API to OpenTelemetry.
-* `io.micrometer:micrometer-tracing-reporter-wavefront` - reports traces to Wavefront.
+* `io.micrometer:micrometer-tracing-bridge-otel` - 将 Micrometer Observation API 桥接到 OpenTelemetry。
+* `io.micrometer:micrometer-tracing-reporter-wavefront` - 将 trace 上报到 Wavefront。
 
-Use the `management.wavefront.*` configuration properties to configure reporting to Wavefront.
-
+通过 `management.wavefront.*` 配置属性可设置上报到 Wavefront 的相关参数。
 
 
 [[actuator.micrometer-tracing.tracer-implementations.otel-otlp]]
-=== OpenTelemetry With OTLP
+=== OpenTelemetry 配合 OTLP
 
-Tracing with OpenTelemetry and reporting using OTLP requires the following dependencies:
+使用 OpenTelemetry 并通过 OTLP 上报需要以下依赖：
 
-* `io.micrometer:micrometer-tracing-bridge-otel` - bridges the Micrometer Observation API to OpenTelemetry.
-* `io.opentelemetry:opentelemetry-exporter-otlp` - reports traces to a collector that can accept OTLP.
+* `io.micrometer:micrometer-tracing-bridge-otel` - 将 Micrometer Observation API 桥接到 OpenTelemetry。
+* `io.opentelemetry:opentelemetry-exporter-otlp` - 将 trace 上报到可接收 OTLP 的采集器。
 
-Use the `management.otlp.tracing.*` configuration properties to configure reporting using OTLP.
+通过 `management.otlp.tracing.*` 配置属性可设置 OTLP 上报参数。
 
-NOTE: If you need to apply advanced customizations to OTLP span exporters, consider registering javadoc:org.springframework.boot.actuate.autoconfigure.tracing.otlp.OtlpHttpSpanExporterBuilderCustomizer[] or javadoc:org.springframework.boot.actuate.autoconfigure.tracing.otlp.OtlpGrpcSpanExporterBuilderCustomizer[] beans.
-These will be invoked before the creation of the `OtlpHttpSpanExporter` or `OtlpGrpcSpanExporter`.
-The customizers take precedence over anything applied by the auto-configuration.
-
+NOTE: 如果需要对 OTLP span exporter 进行高级自定义，可注册 javadoc:org.springframework.boot.actuate.autoconfigure.tracing.otlp.OtlpHttpSpanExporterBuilderCustomizer[] 或 javadoc:org.springframework.boot.actuate.autoconfigure.tracing.otlp.OtlpGrpcSpanExporterBuilderCustomizer[] bean。
+这些自定义器会在 `OtlpHttpSpanExporter` 或 `OtlpGrpcSpanExporter` 创建前被调用，并优先于自动配置应用的设置。
 
 
 [[actuator.micrometer-tracing.tracer-implementations.brave-zipkin]]
-=== OpenZipkin Brave With Zipkin
+=== OpenZipkin Brave 配合 Zipkin
 
-Tracing with OpenZipkin Brave and reporting to Zipkin requires the following dependencies:
+使用 OpenZipkin Brave 并上报到 Zipkin 需要以下依赖：
 
-* `io.micrometer:micrometer-tracing-bridge-brave` - bridges the Micrometer Observation API to Brave.
-* `io.zipkin.reporter2:zipkin-reporter-brave` - reports traces to Zipkin.
+* `io.micrometer:micrometer-tracing-bridge-brave` - 将 Micrometer Observation API 桥接到 Brave。
+* `io.zipkin.reporter2:zipkin-reporter-brave` - 将 trace 上报到 Zipkin。
 
-Use the `management.zipkin.tracing.*` configuration properties to configure reporting to Zipkin.
-
+通过 `management.zipkin.tracing.*` 配置属性可设置上报到 Zipkin 的相关参数。
 
 
 [[actuator.micrometer-tracing.tracer-implementations.brave-wavefront]]
-=== OpenZipkin Brave With Wavefront
+=== OpenZipkin Brave 配合 Wavefront
 
-Tracing with OpenZipkin Brave and reporting to Wavefront requires the following dependencies:
+使用 OpenZipkin Brave 并上报到 Wavefront 需要以下依赖：
 
-* `io.micrometer:micrometer-tracing-bridge-brave` - bridges the Micrometer Observation API to Brave.
-* `io.micrometer:micrometer-tracing-reporter-wavefront` - reports traces to Wavefront.
+* `io.micrometer:micrometer-tracing-bridge-brave` - 将 Micrometer Observation API 桥接到 Brave。
+* `io.micrometer:micrometer-tracing-reporter-wavefront` - 将 trace 上报到 Wavefront。
 
-Use the `management.wavefront.*` configuration properties to configure reporting to Wavefront.
-
+通过 `management.wavefront.*` 配置属性可设置上报到 Wavefront 的相关参数。
 
 
 [[actuator.micrometer-tracing.micrometer-observation]]
-== Integration with Micrometer Observation
+== 与 Micrometer Observation 集成
 
-A javadoc:io.micrometer.tracing.handler.TracingAwareMeterObservationHandler[] is automatically registered on the javadoc:io.micrometer.observation.ObservationRegistry[], which creates spans for every completed observation.
-
+javadoc:io.micrometer.tracing.handler.TracingAwareMeterObservationHandler[] 会自动注册到 javadoc:io.micrometer.observation.ObservationRegistry[] 上，每个已完成的 observation 都会创建 span。
 
 
 [[actuator.micrometer-tracing.creating-spans]]
-== Creating Custom Spans
+== 创建自定义 Span
 
-You can create your own spans by starting an observation.
-For this, inject javadoc:io.micrometer.observation.ObservationRegistry[] into your component:
+你可以通过启动 observation 创建自定义 span。
+为此，将 javadoc:io.micrometer.observation.ObservationRegistry[] 注入你的组件：
 
 include-code::CustomObservation[]
 
-This will create an observation named "some-operation" with the tag "some-tag=some-value".
+这会创建一个名为“some-operation”，带有标签“some-tag=some-value”的 observation。
 
-TIP: If you want to create a span without creating a metric, you need to use the {url-micrometer-tracing-docs}/api[lower-level `Tracer` API] from Micrometer.
-
+TIP: 如果你只想创建 span 而不创建 metric，可使用 Micrometer 的 {url-micrometer-tracing-docs}/api[底层 `Tracer` API]。
 
 
 [[actuator.micrometer-tracing.baggage]]
-== Baggage
+== Baggage（携带数据）
 
-You can create baggage with the javadoc:io.micrometer.tracing.Tracer[] API:
+你可以通过 javadoc:io.micrometer.tracing.Tracer[] API 创建 baggage：
 
 include-code::CreatingBaggage[]
 
-This example creates baggage named `baggage1` with the value `value1`.
-The baggage is automatically propagated over the network if you're using W3C propagation.
-If you're using B3 propagation, baggage is not automatically propagated.
-To manually propagate baggage over the network, use the configprop:management.tracing.baggage.remote-fields[] configuration property (this works for W3C, too).
-For the example above, setting this property to `baggage1` results in an HTTP header `baggage1: value1`.
+此示例创建名为 `baggage1`、值为 `value1` 的 baggage。
+如果你使用 W3C 传播方式，baggage 会自动在网络上传播。
+如果使用 B3 传播，baggage 不会自动传播。
+如需手动传播 baggage，可使用 configprop:management.tracing.baggage.remote-fields[] 配置属性（W3C 方式同样适用）。
+如上述示例，将该属性设置为 `baggage1`，则会产生 HTTP 头 `baggage1: value1`。
 
-If you want to propagate the baggage to the MDC, use the configprop:management.tracing.baggage.correlation.fields[] configuration property.
-For the example above, setting this property to `baggage1` results in an MDC entry named `baggage1`.
-
+如需将 baggage 传播到 MDC，可使用 configprop:management.tracing.baggage.correlation.fields[] 配置属性。
+如上述示例，将该属性设置为 `baggage1`，则会在 MDC 中生成名为 `baggage1` 的条目。
 
 
 [[actuator.micrometer-tracing.tests]]
-== Tests
+== 测试
 
-Tracing components which are reporting data are not auto-configured when using javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation].
-See xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.tracing[] for more details.
+在使用 javadoc:org.springframework.boot.test.context.SpringBootTest[format=annotation] 时，负责上报数据的追踪组件不会被自动配置。
+更多细节请参阅 xref:testing/spring-boot-applications.adoc#testing.spring-boot-applications.tracing[]。

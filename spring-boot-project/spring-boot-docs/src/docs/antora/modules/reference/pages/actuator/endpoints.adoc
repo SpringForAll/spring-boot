@@ -1,128 +1,128 @@
 [[actuator.endpoints]]
-= Endpoints
+= 端点
 
-Actuator endpoints let you monitor and interact with your application.
-Spring Boot includes a number of built-in endpoints and lets you add your own.
-For example, the `health` endpoint provides basic application health information.
+Actuator 端点允许您监控和与应用程序交互。
+Spring Boot 包含多个内置端点，并允许您添加自定义端点。
+例如，`health` 端点提供基本的应用程序健康信息。
 
-You can xref:actuator/endpoints.adoc#actuator.endpoints.controlling-access[control access] to each individual endpoint and xref:actuator/endpoints.adoc#actuator.endpoints.exposing[expose them (make them remotely accessible) over HTTP or JMX].
-An endpoint is considered to be available when access to it is permitted and it is exposed.
-The built-in endpoints are auto-configured only when they are available.
-Most applications choose exposure over HTTP, where the ID of the endpoint and a prefix of `/actuator` is mapped to a URL.
-For example, by default, the `health` endpoint is mapped to `/actuator/health`.
+您可以 xref:actuator/endpoints.adoc#actuator.endpoints.controlling-access[控制对每个端点的访问] 并 xref:actuator/endpoints.adoc#actuator.endpoints.exposing[通过 HTTP 或 JMX 暴露它们（使其可远程访问）]。
+当端点的访问被允许且暴露时，视为可用。
+内置端点仅在可用时才会自动配置。
+大多数应用程序选择通过 HTTP 暴露端点，其中端点的 ID 和 `/actuator` 前缀映射到 URL。
+例如，默认情况下，`health` 端点映射到 `/actuator/health`。
 
-TIP: To learn more about the Actuator's endpoints and their request and response formats, see the xref:api:rest/actuator/index.adoc[API documentation].
+TIP: 要了解更多关于 Actuator 端点及其请求和响应格式的信息，请参阅 xref:api:rest/actuator/index.adoc[API 文档]。
 
-The following technology-agnostic endpoints are available:
+以下是可用的技术无关端点：
 
 [cols="2,5"]
 |===
 | ID | Description
 
 | `auditevents`
-| Exposes audit events information for the current application.
-  Requires an javadoc:org.springframework.boot.actuate.audit.AuditEventRepository[] bean.
+| 暴露当前应用程序的审计事件信息。
+  需要一个 javadoc:org.springframework.boot.actuate.audit.AuditEventRepository[] bean。
 
 | `beans`
-| Displays a complete list of all the Spring beans in your application.
+| 显示应用程序中所有 Spring bean 的完整列表。
 
 | `caches`
-| Exposes available caches.
+| 暴露可用的缓存。
 
 | `conditions`
-| Shows the conditions that were evaluated on configuration and auto-configuration classes and the reasons why they did or did not match.
+| 显示配置和自动配置类上评估的条件以及它们匹配或不匹配的原因。
 
 | `configprops`
-| Displays a collated list of all javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation].
-Subject to xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[sanitization].
+| 显示所有 javadoc:org.springframework.boot.context.properties.ConfigurationProperties[format=annotation] 的整理列表。
+  受 xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[敏感信息清理] 限制。
 
 | `env`
-| Exposes properties from Spring's javadoc:org.springframework.core.env.ConfigurableEnvironment[].
-Subject to xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[sanitization].
+| 暴露 Spring 的 javadoc:org.springframework.core.env.ConfigurableEnvironment[] 中的属性。
+  受 xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[敏感信息清理] 限制。
 
 | `flyway`
-| Shows any Flyway database migrations that have been applied.
-  Requires one or more javadoc:org.flywaydb.core.Flyway[] beans.
+| 显示已应用的 Flyway 数据库迁移。
+  需要一个或多个 javadoc:org.flywaydb.core.Flyway[] bean。
 
 | `health`
-| Shows application health information.
+| 显示应用程序健康信息。
 
 | `httpexchanges`
-| Displays HTTP exchange information (by default, the last 100 HTTP request-response exchanges).
-  Requires an javadoc:org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository[] bean.
+| 显示 HTTP 交换信息（默认情况下为最近 100 次 HTTP 请求-响应交换）。
+  需要一个 javadoc:org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository[] bean。
 
 | `info`
-| Displays arbitrary application info.
+| 显示任意应用程序信息。
 
 | `integrationgraph`
-| Shows the Spring Integration graph.
-  Requires a dependency on `spring-integration-core`.
+| 显示 Spring Integration 图。
+  需要依赖 `spring-integration-core`。
 
 | `loggers`
-| Shows and modifies the configuration of loggers in the application.
+| 显示和修改应用程序中日志记录器的配置。
 
 | `liquibase`
-| Shows any Liquibase database migrations that have been applied.
-  Requires one or more javadoc:{url-liquibase-javadoc}/liquibase.Liquibase[] beans.
+| 显示已应用的 Liquibase 数据库迁移。
+  需要一个或多个 javadoc:{url-liquibase-javadoc}/liquibase.Liquibase[] bean。
 
 | `metrics`
-| Shows "`metrics`" information for the current application to diagnose the metrics the application has recorded.
+| 显示当前应用程序的 "`metrics`" 信息，以诊断应用程序记录的指标。
 
 | `mappings`
-| Displays a collated list of all javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] paths.
+| 显示所有 javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] 路径的整理列表。
 
 |`quartz`
-|Shows information about Quartz Scheduler jobs.
-Subject to xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[sanitization].
+| 显示 Quartz Scheduler 作业的信息。
+  受 xref:actuator/endpoints.adoc#actuator.endpoints.sanitization[敏感信息清理] 限制。
 
 | `scheduledtasks`
-| Displays the scheduled tasks in your application.
+| 显示应用程序中的计划任务。
 
 | `sessions`
-| Allows retrieval and deletion of user sessions from a Spring Session-backed session store.
-  Requires a servlet-based web application that uses Spring Session.
+| 允许从 Spring Session 支持的会话存储中检索和删除用户会话。
+  需要使用 Spring Session 的基于 Servlet 的 Web 应用程序。
 
 | `shutdown`
-| Lets the application be gracefully shutdown.
-  Only works when using jar packaging.
-  Disabled by default.
+| 允许应用程序优雅关闭。
+  仅在使用 jar 打包时有效。
+  默认禁用。
 
 | `startup`
-| Shows the xref:features/spring-application.adoc#features.spring-application.startup-tracking[startup steps data] collected by the javadoc:org.springframework.core.metrics.ApplicationStartup[].
-  Requires the javadoc:org.springframework.boot.SpringApplication[] to be configured with a javadoc:org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup[].
+| 显示由 javadoc:org.springframework.core.metrics.ApplicationStartup[] 收集的 xref:features/spring-application.adoc#features.spring-application.startup-tracking[启动步骤数据]。
+  需要将 javadoc:org.springframework.boot.SpringApplication[] 配置为使用 javadoc:org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup[]。
 
 | `threaddump`
-| Performs a thread dump.
+| 执行线程转储。
 |===
 
-If your application is a web application (Spring MVC, Spring WebFlux, or Jersey), you can use the following additional endpoints:
+如果您的应用程序是 Web 应用程序（Spring MVC、Spring WebFlux 或 Jersey），您可以使用以下额外的端点：
 
 [cols="2,5"]
 |===
 | ID | Description
 
 | `heapdump`
-| Returns a heap dump file.
-  On a HotSpot JVM, an `HPROF`-format file is returned.
-  On an OpenJ9 JVM, a `PHD`-format file is returned.
+| 返回堆转储文件。
+  在 HotSpot JVM 上，返回 `HPROF` 格式文件。
+  在 OpenJ9 JVM 上，返回 `PHD` 格式文件。
 
 | `logfile`
-| Returns the contents of the logfile (if the `logging.file.name` or the `logging.file.path` property has been set).
-  Supports the use of the HTTP `Range` header to retrieve part of the log file's content.
+| 返回日志文件内容（如果设置了 `logging.file.name` 或 `logging.file.path` 属性）。
+  支持使用 HTTP `Range` 头检索日志文件内容的一部分。
 
 | `prometheus`
-| Exposes metrics in a format that can be scraped by a Prometheus server.
-  Requires a dependency on `micrometer-registry-prometheus`.
+| 以 Prometheus 服务器可抓取的格式暴露指标。
+  需要依赖 `micrometer-registry-prometheus`。
 |===
 
 
 
 [[actuator.endpoints.controlling-access]]
-== Controlling Access to Endpoints
+== 控制端点访问
 
-By default, access to all endpoints except for `shutdown` and `heapdump` is unrestricted.
-To configure the permitted access to an endpoint, use its `management.endpoint.<id>.access` property.
-The following example allows unrestricted access to the `shutdown` endpoint:
+默认情况下，除 `shutdown` 和 `heapdump` 外，所有端点的访问不受限制。
+要配置对端点的允许访问，请使用其 `management.endpoint.<id>.access` 属性。
+以下示例允许对 `shutdown` 端点无限制访问：
 
 [configprops,yaml]
 ----
@@ -132,8 +132,8 @@ management:
       access: unrestricted
 ----
 
-If you prefer access to be opt-in rather than opt-out, set the configprop:management.endpoints.access.default[] property to `none` and use individual endpoint `access` properties to opt back in.
-The following example allows read-only access to the `loggers` endpoint and denies access to all other endpoints:
+如果您希望访问是选择性加入而不是选择性退出，请将 configprop:management.endpoints.access.default[] 属性设置为 `none`，并使用单个端点的 `access` 属性选择性加入。
+以下示例允许对 `loggers` 端点进行只读访问，并拒绝对所有其他端点的访问：
 
 [configprops,yaml]
 ----
@@ -146,32 +146,32 @@ management:
       access: read-only
 ----
 
-NOTE: Inaccessible endpoints are removed entirely from the application context.
-If you want to change only the technologies over which an endpoint is exposed, use the xref:actuator/endpoints.adoc#actuator.endpoints.exposing[`include` and `exclude` properties] instead.
+NOTE: 不可访问的端点将从应用程序上下文中完全移除。
+如果您只想更改端点暴露的技术，请改用 xref:actuator/endpoints.adoc#actuator.endpoints.exposing[`include` 和 `exclude` 属性]。
 
 
 
 [[actuator.endpoints.controlling-access.limiting]]
-=== Limiting Access
+=== 限制访问
 
-Application-wide endpoint access can be limited using the configprop:management.endpoints.access.max-permitted[] property.
-This property takes precedence over the default access or an individual endpoint's access level.
-Set it to `none` to make all endpoints inaccessible.
-Set it to `read-only` to only allow read access to endpoints.
+可以通过 configprop:management.endpoints.access.max-permitted[] 属性限制整个应用程序的端点访问。
+此属性优先于默认访问或单个端点的访问级别。
+将其设置为 `none` 将使所有端点不可访问。
+将其设置为 `read-only` 将仅允许对端点的只读访问。
 
-For javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation], javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint[format=annotation], and javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation], read access equates to the endpoint methods annotated with javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation].
-For javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoint[format=annotation] and javadoc:org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint[format=annotation], read access equates to request mappings that can handle `GET` and `HEAD` requests.
-For javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpoint[format=annotation], read access equates to `GET` and `HEAD` requests.
+对于 javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation]、javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint[format=annotation] 和 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation]，只读访问等同于使用 javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation] 注解的端点方法。
+对于 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoint[format=annotation] 和 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint[format=annotation]，只读访问等同于可以处理 `GET` 和 `HEAD` 请求的请求映射。
+对于 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpoint[format=annotation]，只读访问等同于 `GET` 和 `HEAD` 请求。
 
 
 
 [[actuator.endpoints.exposing]]
-== Exposing Endpoints
+== 暴露端点
 
-By default, only the health endpoint is exposed over HTTP and JMX.
-Since Endpoints may contain sensitive information, you should carefully consider when to expose them.
+默认情况下，只有 `health` 端点通过 HTTP 和 JMX 暴露。
+由于端点可能包含敏感信息，您应谨慎考虑何时暴露它们。
 
-To change which endpoints are exposed, use the following technology-specific `include` and `exclude` properties:
+要更改暴露的端点，请使用以下技术特定的 `include` 和 `exclude` 属性：
 
 [cols="3,1"]
 |===
@@ -190,12 +190,12 @@ To change which endpoints are exposed, use the following technology-specific `in
 | `health`
 |===
 
-The `include` property lists the IDs of the endpoints that are exposed.
-The `exclude` property lists the IDs of the endpoints that should not be exposed.
-The `exclude` property takes precedence over the `include` property.
-You can configure both the `include` and the `exclude` properties with a list of endpoint IDs.
+`include` 属性列出暴露的端点 ID。
+`exclude` 属性列出不应暴露的端点 ID。
+`exclude` 属性优先于 `include` 属性。
+您可以使用端点 ID 列表配置 `include` 和 `exclude` 属性。
 
-For example, to only expose the `health` and `info` endpoints over JMX, use the following property:
+例如，要仅通过 JMX 暴露 `health` 和 `info` 端点，请使用以下属性：
 
 [configprops,yaml]
 ----
@@ -206,8 +206,8 @@ management:
         include: "health,info"
 ----
 
-`*` can be used to select all endpoints.
-For example, to expose everything over HTTP except the `env` and `beans` endpoints, use the following properties:
+`*` 可用于选择所有端点。
+例如，要通过 HTTP 暴露除 `env` 和 `beans` 端点外的所有内容，请使用以下属性：
 
 [configprops,yaml]
 ----
@@ -219,37 +219,37 @@ management:
         exclude: "env,beans"
 ----
 
-NOTE: `*` has a special meaning in YAML, so be sure to add quotation marks if you want to include (or exclude) all endpoints.
+NOTE: 在 YAML 中，`*` 有特殊含义，因此如果要包含（或排除）所有端点，请确保添加引号。
 
-NOTE: If your application is exposed publicly, we strongly recommend that you also xref:actuator/endpoints.adoc#actuator.endpoints.security[secure your endpoints].
+NOTE: 如果您的应用程序公开暴露，我们强烈建议您还 xref:actuator/endpoints.adoc#actuator.endpoints.security[保护您的端点]。
 
-TIP: If you want to implement your own strategy for when endpoints are exposed, you can register an javadoc:org.springframework.boot.actuate.endpoint.EndpointFilter[] bean.
+TIP: 如果您想实现自己的端点暴露策略，可以注册一个 javadoc:org.springframework.boot.actuate.endpoint.EndpointFilter[] bean。
 
 
 
 [[actuator.endpoints.security]]
-== Security
+== 安全性
 
-For security purposes, only the `/health` endpoint is exposed over HTTP by default.
-You can use the configprop:management.endpoints.web.exposure.include[] property to configure the endpoints that are exposed.
+出于安全考虑，默认情况下只有 `/health` 端点通过 HTTP 暴露。
+您可以使用 configprop:management.endpoints.web.exposure.include[] 属性配置暴露的端点。
 
-NOTE: Before setting the `management.endpoints.web.exposure.include`, ensure that the exposed actuators do not contain sensitive information, are secured by placing them behind a firewall, or are secured by something like Spring Security.
+NOTE: 在设置 `management.endpoints.web.exposure.include` 之前，请确保暴露的 Actuator 端点不包含敏感信息，通过防火墙保护，或使用 Spring Security 等方式保护。
 
-If Spring Security is on the classpath and no other javadoc:org.springframework.security.web.SecurityFilterChain[] bean is present, all actuators other than `/health` are secured by Spring Boot auto-configuration.
-If you define a custom javadoc:org.springframework.security.web.SecurityFilterChain[] bean, Spring Boot auto-configuration backs off and lets you fully control the actuator access rules.
+如果 Spring Security 在类路径中且没有其他 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，Spring Boot 自动配置将保护除 `/health` 外的所有 Actuator 端点。
+如果您定义了自定义 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，Spring Boot 自动配置将退避，让您完全控制 Actuator 访问规则。
 
-If you wish to configure custom security for HTTP endpoints (for example, to allow only users with a certain role to access them), Spring Boot provides some convenient javadoc:org.springframework.security.web.util.matcher.RequestMatcher[] objects that you can use in combination with Spring Security.
+如果您希望为 HTTP 端点配置自定义安全性（例如，仅允许具有特定角色的用户访问），Spring Boot 提供了一些方便的 javadoc:org.springframework.security.web.util.matcher.RequestMatcher[] 对象，可与 Spring Security 结合使用。
 
-A typical Spring Security configuration might look something like the following example:
+典型的 Spring Security 配置可能如下所示：
 
 include-code::typical/MySecurityConfiguration[]
 
-The preceding example uses `EndpointRequest.toAnyEndpoint()` to match a request to any endpoint and then ensures that all have the `ENDPOINT_ADMIN` role.
-Several other matcher methods are also available on javadoc:org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest[].
-See the xref:api:rest/actuator/index.adoc[API documentation] for details.
+上述示例使用 `EndpointRequest.toAnyEndpoint()` 匹配任何端点的请求，然后确保所有端点都需要 `ENDPOINT_ADMIN` 角色。
+javadoc:org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest[] 上还提供了其他匹配器方法。
+有关详细信息，请参阅 xref:api:rest/actuator/index.adoc[API 文档]。
 
-If you deploy applications behind a firewall, you may prefer that all your actuator endpoints can be accessed without requiring authentication.
-You can do so by changing the configprop:management.endpoints.web.exposure.include[] property, as follows:
+如果您在防火墙后部署应用程序，您可能希望所有 Actuator 端点无需身份验证即可访问。
+您可以通过更改 configprop:management.endpoints.web.exposure.include[] 属性实现，如下所示：
 
 [configprops,yaml]
 ----
@@ -260,33 +260,33 @@ management:
         include: "*"
 ----
 
-Additionally, if Spring Security is present, you would need to add custom security configuration that allows unauthenticated access to the endpoints, as the following example shows:
+此外，如果存在 Spring Security，您需要添加自定义安全配置以允许对端点进行未经身份验证的访问，如下例所示：
 
 include-code::exposeall/MySecurityConfiguration[]
 
-NOTE: In both of the preceding examples, the configuration applies only to the actuator endpoints.
-Since Spring Boot's security configuration backs off completely in the presence of any javadoc:org.springframework.security.web.SecurityFilterChain[] bean, you need to configure an additional javadoc:org.springframework.security.web.SecurityFilterChain[] bean with rules that apply to the rest of the application.
+NOTE: 在上述两个示例中，配置仅适用于 Actuator 端点。
+由于 Spring Boot 的安全配置在存在任何 javadoc:org.springframework.security.web.SecurityFilterChain[] bean 时完全退避，您需要配置额外的 javadoc:org.springframework.security.web.SecurityFilterChain[] bean，以应用到应用程序的其余部分。
 
 
 
 [[actuator.endpoints.security.csrf]]
-=== Cross Site Request Forgery Protection
+=== 跨站请求伪造保护
 
-Since Spring Boot relies on Spring Security's defaults, CSRF protection is turned on by default.
-This means that the actuator endpoints that require a `POST` (shutdown and loggers endpoints), a `PUT`, or a `DELETE` get a 403 (forbidden) error when the default security configuration is in use.
+由于 Spring Boot 依赖 Spring Security 的默认设置，CSRF 保护默认启用。
+这意味着需要 `POST`（`shutdown` 和 `loggers` 端点）、`PUT` 或 `DELETE` 的 Actuator 端点在使用默认安全配置时会返回 403（禁止）错误。
 
-NOTE: We recommend disabling CSRF protection completely only if you are creating a service that is used by non-browser clients.
+NOTE: 我们建议仅在创建由非浏览器客户端使用的服务时完全禁用 CSRF 保护。
 
-You can find additional information about CSRF protection in the {url-spring-security-docs}/features/exploits/csrf.html[Spring Security Reference Guide].
+有关 CSRF 保护的更多信息，请参阅 {url spring-security-docs}/features/exploits/csrf.html[Spring Security 参考指南]。
 
 
 
 [[actuator.endpoints.caching]]
-== Configuring Endpoints
+== 配置端点
 
-Endpoints automatically cache responses to read operations that do not take any parameters.
-To configure the amount of time for which an endpoint caches a response, use its `cache.time-to-live` property.
-The following example sets the time-to-live of the `beans` endpoint's cache to 10 seconds:
+端点会自动缓存不带参数的读操作的响应。
+要配置端点缓存响应的时间，请使用其 `cache.time-to-live` 属性。
+以下示例将 `beans` 端点的缓存时间设置为 10 秒：
 
 [configprops,yaml]
 ----
@@ -297,33 +297,33 @@ management:
         time-to-live: "10s"
 ----
 
-NOTE: The `management.endpoint.<name>` prefix uniquely identifies the endpoint that is being configured.
+NOTE: `management.endpoint.<name>` 前缀唯一标识正在配置的端点。
 
 
 
 [[actuator.endpoints.sanitization]]
-== Sanitize Sensitive Values
+== 清理敏感值
 
-Information returned by the `/env`, `/configprops` and `/quartz` endpoints can be sensitive, so by default values are always fully sanitized (replaced by `+******+`).
+`/env`、`/configprops` 和 `/quartz` 端点返回的信息可能是敏感的，因此默认情况下值始终完全清理（替换为 `+******+`）。
 
-Values can only be viewed in an unsanitized form when:
+只有在以下情况下才能查看未清理的值：
 
-- The `show-values` property has been set to something other than `never`
-- No custom xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] beans apply
+- `show-values` 属性设置为除 `never` 外的值
+- 没有应用自定义 xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] bean
 
-The `show-values` property can be configured for sanitizable endpoints to one of the following values:
+可清理端点的 `show-values` 属性可以配置为以下值之一：
 
-- `never`  - values are always fully sanitized (replaced by `+******+`)
-- `always` - values are shown to all users (as long as no javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean applies)
-- `when-authorized` - values are shown only to authorized users (as long as no javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean applies)
+- `never` - 值始终完全清理（替换为 `+******+`）
+- `always` - 值对所有用户显示（只要没有应用 javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean）
+- `when-authorized` - 仅对授权用户显示值（只要没有应用 javadoc:org.springframework.boot.actuate.endpoint.SanitizingFunction[] bean）
 
-For HTTP endpoints, a user is considered to be authorized if they have authenticated and have the roles configured by the endpoint's roles property.
-By default, any authenticated user is authorized.
+对于 HTTP 端点，如果用户已通过身份验证并具有端点角色属性配置的角色，则视为授权用户。
+默认情况下，任何经过身份验证的用户都被视为授权用户。
 
-For JMX endpoints, all users are always authorized.
+对于 JMX 端点，所有用户始终被视为授权用户。
 
-The following example allows all users with the `admin` role to view values from the `/env` endpoint in their original form.
-Unauthorized users, or users without the `admin` role, will see only sanitized values.
+以下示例允许具有 `admin` 角色的所有用户以原始形式查看 `/env` 端点的值。
+未经授权的用户或没有 `admin` 角色的用户将仅看到清理后的值。
 
 [configprops,yaml]
 ----
@@ -334,17 +334,17 @@ management:
       roles: "admin"
 ----
 
-NOTE: This example assumes that no xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] beans have been defined.
+NOTE: 此示例假设未定义 xref:how-to:actuator.adoc#howto.actuator.customizing-sanitization[`SanitizingFunction`] bean。
 
 
 
 [[actuator.endpoints.hypermedia]]
-== Hypermedia for Actuator Web Endpoints
+== Actuator Web 端点的超媒体
 
-A "`discovery page`" is added with links to all the endpoints.
-The "`discovery page`" is available on `/actuator` by default.
+添加了一个 "`发现页面`"，包含指向所有端点的链接。
+默认情况下，"`发现页面`" 位于 `/actuator`。
 
-To disable the "`discovery page`", add the following property to your application properties:
+要禁用 "`发现页面`"，请在应用程序属性中添加以下属性：
 
 [configprops,yaml]
 ----
@@ -355,20 +355,20 @@ management:
         enabled: false
 ----
 
-When a custom management context path is configured, the "`discovery page`" automatically moves from `/actuator` to the root of the management context.
-For example, if the management context path is `/management`, the discovery page is available from `/management`.
-When the management context path is set to `/`, the discovery page is disabled to prevent the possibility of a clash with other mappings.
+当配置了自定义管理上下文路径时，"`发现页面`" 将自动从 `/actuator` 移动到管理上下文的根路径。
+例如，如果管理上下文路径为 `/management`，则发现页面将位于 `/management`。
+当管理上下文路径设置为 `/` 时，发现页面将被禁用，以防止与其他映射发生冲突。
 
 
 
 [[actuator.endpoints.cors]]
-== CORS Support
+== CORS 支持
 
-https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[Cross-origin resource sharing] (CORS) is a https://www.w3.org/TR/cors/[W3C specification] that lets you specify in a flexible way what kind of cross-domain requests are authorized.
-If you use Spring MVC or Spring WebFlux, you can configure Actuator's web endpoints to support such scenarios.
+https://en.wikipedia.org/wiki/Cross-origin_resource_sharing[跨源资源共享]（CORS）是一个 https://www.w3.org/TR/cors/[W3C 规范]，允许您以灵活的方式指定允许的跨域请求类型。
+如果您使用 Spring MVC 或 Spring WebFlux，可以配置 Actuator 的 Web 端点以支持此类场景。
 
-CORS support is disabled by default and is only enabled once you have set the configprop:management.endpoints.web.cors.allowed-origins[] property.
-The following configuration permits `GET` and `POST` calls from the `example.com` domain:
+CORS 支持默认禁用，仅在设置了 configprop:management.endpoints.web.cors.allowed-origins[] 属性后启用。
+以下配置允许来自 `example.com` 域的 `GET` 和 `POST` 调用：
 
 [configprops,yaml]
 ----
@@ -380,106 +380,106 @@ management:
         allowed-methods: "GET,POST"
 ----
 
-TIP: See javadoc:org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties[] for a complete list of options.
+TIP: 有关选项的完整列表，请参阅 javadoc:org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties[]。
 
 
 
 [[actuator.endpoints.implementing-custom]]
-== Implementing Custom Endpoints
+== 实现自定义端点
 
-If you add a javadoc:org.springframework.context.annotation.Bean[format=annotation] annotated with javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation], any methods annotated with javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation], javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation], or javadoc:org.springframework.boot.actuate.endpoint.annotation.DeleteOperation[format=annotation] are automatically exposed over JMX and, in a web application, over HTTP as well.
-Endpoints can be exposed over HTTP by using Jersey, Spring MVC, or Spring WebFlux.
-If both Jersey and Spring MVC are available, Spring MVC is used.
+如果您添加一个使用 javadoc:org.springframework.context.annotation.Bean[format=annotation] 注解的 javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation]，任何使用 javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation]、javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation] 或 javadoc:org.springframework.boot.actuate.endpoint.annotation.DeleteOperation[format=annotation] 注解的方法将自动通过 JMX 暴露，在 Web 应用程序中也将通过 HTTP 暴露。
+端点可以通过 Jersey、Spring MVC 或 Spring WebFlux 通过 HTTP 暴露。
+如果 Jersey 和 Spring MVC 都可用，将使用 Spring MVC。
 
-The following example exposes a read operation that returns a custom object:
+以下示例暴露一个返回自定义对象的读操作：
 
 include-code::MyEndpoint[tag=read]
 
-You can also write technology-specific endpoints by using javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint[format=annotation] or javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation].
-These endpoints are restricted to their respective technologies.
-For example, javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation] is exposed only over HTTP and not over JMX.
+您还可以使用 javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.JmxEndpoint[format=annotation] 或 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation] 编写技术特定的端点。
+这些端点受限于各自的技术。
+例如，javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation] 仅通过 HTTP 暴露，而不通过 JMX 暴露。
 
-You can write technology-specific extensions by using javadoc:org.springframework.boot.actuate.endpoint.web.annotation.EndpointWebExtension[format=annotation] and javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.EndpointJmxExtension[format=annotation].
-These annotations let you provide technology-specific operations to augment an existing endpoint.
+您可以使用 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.EndpointWebExtension[format=annotation] 和 javadoc:org.springframework.boot.actuate.endpoint.jmx.annotation.EndpointJmxExtension[format=annotation] 编写技术特定的扩展。
+这些注解允许您为现有端点提供技术特定的操作。
 
-Finally, if you need access to web-framework-specific functionality, you can implement servlet or Spring javadoc:org.springframework.stereotype.Controller[format=annotation] and javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] endpoints at the cost of them not being available over JMX or when using a different web framework.
+最后，如果您需要访问特定于 Web 框架的功能，可以实现 Servlet 或 Spring 的 javadoc:org.springframework.stereotype.Controller[format=annotation] 和 javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] 端点，但代价是它们无法通过 JMX 或使用不同 Web 框架时可用。
 
 
 
 [[actuator.endpoints.implementing-custom.input]]
-=== Receiving Input
+=== 接收输入
 
-Operations on an endpoint receive input through their parameters.
-When exposed over the web, the values for these parameters are taken from the URL's query parameters and from the JSON request body.
-When exposed over JMX, the parameters are mapped to the parameters of the MBean's operations.
-Parameters are required by default.
-They can be made optional by annotating them with either `@javax.annotation.Nullable` or javadoc:org.springframework.lang.Nullable[format=annotation].
+端点上的操作通过其参数接收输入。
+当通过 Web 暴露时，这些参数的值从 URL 的查询参数和 JSON 请求体中获取。
+当通过 JMX 暴露时，参数映射到 MBean 操作的参数。
+参数默认是必需的。
+可以通过使用 `@javax.annotation.Nullable` 或 javadoc:org.springframework.lang.Nullable[format=annotation] 注解使参数变为可选。
 
-You can map each root property in the JSON request body to a parameter of the endpoint.
-Consider the following JSON request body:
+您可以将 JSON 请求体中的每个根属性映射到端点的参数。
+考虑以下 JSON 请求体：
 
 [source,json]
 ----
 {
-	"name": "test",
-	"counter": 42
+    "name": "test",
+    "counter": 42
 }
 ----
 
-You can use this to invoke a write operation that takes `String name` and `int counter` parameters, as the following example shows:
+您可以使用它调用一个接受 `String name` 和 `int counter` 参数的写操作，如下例所示：
 
 include-code::../MyEndpoint[tag=write]
 
-TIP: Because endpoints are technology agnostic, only simple types can be specified in the method signature.
-In particular, declaring a single parameter with a javadoc:liquibase.report.CustomData[] type that defines a `name` and `counter` properties is not supported.
+TIP: 因为端点是技术无关的，方法签名中只能指定简单类型。
+特别是，声明一个具有 `name` 和 `counter` 属性的 javadoc:liquibase.report.CustomData[] 类型的单一参数不受支持。
 
-NOTE: To let the input be mapped to the operation method's parameters, Java code that implements an endpoint should be compiled with `-parameters`.
-For Kotlin code, please review {url-spring-framework-docs}/languages/kotlin/classes-interfaces.html[the recommendation] of the Spring Framework reference.
-This will happen automatically if you use Spring Boot's Gradle plugin or if you use Maven and `spring-boot-starter-parent`.
+NOTE: 要让输入映射到操作方法的参数，Java 代码实现端点时应使用 `-parameters` 编译。
+对于 Kotlin 代码，请参阅 Spring Framework 参考文档中的 {url spring-framework-docs}/languages/kotlin/classes-interfaces.html[建议]。
+如果您使用 Spring Boot 的 Gradle 插件或 Maven 和 `spring-boot-starter-parent`，这将自动发生。
 
 
 
 [[actuator.endpoints.implementing-custom.input.conversion]]
-==== Input Type Conversion
+==== 输入类型转换
 
-The parameters passed to endpoint operation methods are, if necessary, automatically converted to the required type.
-Before calling an operation method, the input received over JMX or HTTP is converted to the required types by using an instance of javadoc:org.springframework.boot.convert.ApplicationConversionService[] as well as any javadoc:org.springframework.core.convert.converter.Converter[] or javadoc:org.springframework.core.convert.converter.GenericConverter[] beans qualified with javadoc:org.springframework.boot.actuate.endpoint.annotation.EndpointConverter[format=annotation].
+传递给端点操作方法的参数，如有必要，会自动转换为所需类型。
+在调用操作方法之前，通过 JMX 或 HTTP 接收的输入将使用 javadoc:org.springframework.boot.convert.ApplicationConversionService[] 实例以及任何使用 javadoc:org.springframework.boot.actuate.endpoint.annotation.EndpointConverter[format=annotation] 限定的 javadoc:org.springframework.core.convert.converter.Converter[] 或 javadoc:org.springframework.core.convert.converter.GenericConverter[] bean 转换为所需类型。
 
 
 
 [[actuator.endpoints.implementing-custom.web]]
-=== Custom Web Endpoints
+=== 自定义 Web 端点
 
-Operations on an javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation], javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation], or javadoc:org.springframework.boot.actuate.endpoint.web.annotation.EndpointWebExtension[format=annotation] are automatically exposed over HTTP using Jersey, Spring MVC, or Spring WebFlux.
-If both Jersey and Spring MVC are available, Spring MVC is used.
+javadoc:org.springframework.boot.actuate.endpoint.annotation.Endpoint[format=annotation]、javadoc:org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint[format=annotation] 或 javadoc:org.springframework.boot.actuate.endpoint.web.annotation.EndpointWebExtension[format=annotation] 上的操作将自动通过 Jersey、Spring MVC 或 Spring WebFlux 通过 HTTP 暴露。
+如果 Jersey 和 Spring MVC 都可用，将使用 Spring MVC。
 
 
 
 [[actuator.endpoints.implementing-custom.web.request-predicates]]
-==== Web Endpoint Request Predicates
+==== Web 端点请求谓词
 
-A request predicate is automatically generated for each operation on a web-exposed endpoint.
+为 Web 暴露的端点上的每个操作自动生成一个请求谓词。
 
 
 
 [[actuator.endpoints.implementing-custom.web.path-predicates]]
-==== Path
+==== 路径
 
-The path of the predicate is determined by the ID of the endpoint and the base path of the web-exposed endpoints.
-The default base path is `/actuator`.
-For example, an endpoint with an ID of `sessions` uses `/actuator/sessions` as its path in the predicate.
+谓词的路径由端点的 ID 和 Web 暴露端点的基本路径确定。
+默认基本路径是 `/actuator`。
+例如，ID 为 `sessions` 的端点在谓词中的路径为 `/actuator/sessions`。
 
-You can further customize the path by annotating one or more parameters of the operation method with javadoc:org.springframework.boot.actuate.endpoint.annotation.Selector[format=annotation].
-Such a parameter is added to the path predicate as a path variable.
-The variable's value is passed into the operation method when the endpoint operation is invoked.
-If you want to capture all remaining path elements, you can add `@Selector(Match=ALL_REMAINING)` to the last parameter and make it a type that is conversion-compatible with a `String[]`.
+您可以通过使用 javadoc:org.springframework.boot.actuate.endpoint.annotation.Selector[format=annotation] 注解操作方法的一个或多个参数来进一步自定义路径。
+此类参数作为路径变量添加到路径谓词中。
+变量的值在调用端点操作时传递到操作方法中。
+如果您想捕获所有剩余路径元素，可以在最后一个参数上添加 `@Selector(Match=ALL_REMAINING)`，并使其为与 `String[]` 兼容的类型。
 
 
 
 [[actuator.endpoints.implementing-custom.web.method-predicates]]
-==== HTTP method
+==== HTTP 方法
 
-The HTTP method of the predicate is determined by the operation type, as shown in the following table:
+谓词的 HTTP 方法由操作类型确定，如下表所示：
 
 [cols="3, 1"]
 |===
@@ -500,109 +500,108 @@ The HTTP method of the predicate is determined by the operation type, as shown i
 [[actuator.endpoints.implementing-custom.web.consumes-predicates]]
 ==== Consumes
 
-For a javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation] (HTTP `POST`) that uses the request body, the `consumes` clause of the predicate is `application/vnd.spring-boot.actuator.v2+json, application/json`.
-For all other operations, the `consumes` clause is empty.
+对于使用请求体的 javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation]（HTTP `POST`），谓词的 `consumes` 子句为 `application/vnd.spring-boot.actuator.v2+json, application/json`。
+对于所有其他操作，`consumes` 子句为空。
 
 
 
 [[actuator.endpoints.implementing-custom.web.produces-predicates]]
 ==== Produces
 
-The `produces` clause of the predicate can be determined by the `produces` attribute of the javadoc:org.springframework.boot.actuate.endpoint.annotation.DeleteOperation[format=annotation], javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation], and javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation] annotations.
-The attribute is optional.
-If it is not used, the `produces` clause is determined automatically.
+谓词的 `produces` 子句可由 javadoc:org.springframework.boot.actuate.endpoint.annotation.DeleteOperation[format=annotation]、javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation] 和 javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation] 的 `produces` 属性确定。
+该属性是可选的。
+如果未使用，`produces` 子句将自动确定。
 
-If the operation method returns `void` or javadoc:java.lang.Void[], the `produces` clause is empty.
-If the operation method returns a javadoc:org.springframework.core.io.Resource[], the `produces` clause is `application/octet-stream`.
-For all other operations, the `produces` clause is `application/vnd.spring-boot.actuator.v2+json, application/json`.
+如果操作方法返回 `void` 或 javadoc:java.lang.Void[]，`produces` 子句为空。
+如果操作方法返回 javadoc:org.springframework.core.io.Resource[]，`produces` 子句为 `application/octet-stream`。
+对于所有其他操作，`produces` 子句为 `application/vnd.spring-boot.actuator.v2+json, application/json`。
 
 
 
 [[actuator.endpoints.implementing-custom.web.response-status]]
-==== Web Endpoint Response Status
+==== Web 端点响应状态
 
-The default response status for an endpoint operation depends on the operation type (read, write, or delete) and what, if anything, the operation returns.
+端点操作的默认响应状态取决于操作类型（读、写或删除）以及操作返回的内容（如果有）。
 
-If a javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation] returns a value, the response status will be 200 (OK).
-If it does not return a value, the response status will be 404 (Not Found).
+如果 javadoc:org.springframework.boot.actuate.endpoint.annotation.ReadOperation[format=annotation] 返回值，响应状态为 200（OK）。
+如果不返回值，响应状态为 404（Not Found）。
 
-If a javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation] or javadoc:org.springframework.boot.actuate.endpoint.annotation.DeleteOperation[format=annotation] returns a value, the response status will be 200 (OK).
-If it does not return a value, the response status will be 204 (No Content).
+如果 javadoc:org.springframework.boot.actuate.endpoint.annotation.WriteOperation[format=annotation] 或 javadoc:org.springframework.boot.actuate.endpoint.annotation.DeleteOperation[format=annotation] 返回值，响应状态为 200（OK）。
+如果不返回值，响应状态为 204（No Content）。
 
-If an operation is invoked without a required parameter or with a parameter that cannot be converted to the required type, the operation method is not called, and the response status will be 400 (Bad Request).
+如果操作缺少必需参数或参数无法转换为所需类型，操作方法不会被调用，响应状态为 400（Bad Request）。
 
 
 
 [[actuator.endpoints.implementing-custom.web.range-requests]]
-==== Web Endpoint Range Requests
+==== Web 端点范围请求
 
-You can use an HTTP range request to request part of an HTTP resource.
-When using Spring MVC or Spring Web Flux, operations that return a javadoc:org.springframework.core.io.Resource[] automatically support range requests.
+您可以使用 HTTP 范围请求来请求 HTTP 资源的一部分。
+当使用 Spring MVC 或 Spring WebFlux 时，返回 javadoc:org.springframework.core.io.Resource[] 的操作自动支持范围请求。
 
-NOTE: Range requests are not supported when using Jersey.
+NOTE: 使用 Jersey 时不支持范围请求。
 
 
 
 [[actuator.endpoints.implementing-custom.web.security]]
-==== Web Endpoint Security
+==== Web 端点安全性
 
-An operation on a web endpoint or a web-specific endpoint extension can receive the current javadoc:java.security.Principal[] or javadoc:org.springframework.boot.actuate.endpoint.SecurityContext[] as a method parameter.
-The former is typically used in conjunction with either `@javax.annotation.Nullable` or javadoc:org.springframework.lang.Nullable[format=annotation] to provide different behavior for authenticated and unauthenticated users.
-The latter is typically used to perform authorization checks by using its `isUserInRole(String)` method.
+Web 端点或 Web 特定端点扩展上的操作可以接收当前 javadoc:java.security.Principal[] 或 javadoc:org.springframework.boot.actuate.endpoint.SecurityContext[] 作为方法参数。
+前者通常与 `@javax.annotation.Nullable` 或 javadoc:org.springframework.lang.Nullable[format=annotation] 结合使用，为经过身份验证和未经过身份验证的用户提供不同的行为。
+后者通常用于通过其 `isUserInRole(String)` 方法执行授权检查。
 
 
 
 [[actuator.endpoints.health]]
-== Health Information
+== 健康信息
 
-You can use health information to check the status of your running application.
-It is often used by monitoring software to alert someone when a production system goes down.
-The information exposed by the `health` endpoint depends on the configprop:management.endpoint.health.show-details[] and configprop:management.endpoint.health.show-components[] properties, which can be configured with one of the following values:
+您可以使用健康信息检查运行中应用程序的状态。
+它常被监控软件用于在生产系统宕机时发出警报。
+`health` 端点暴露的信息取决于 configprop:management.endpoint.health.show-details[] 和 configprop:management.endpoint.health.show-components[] 属性，可配置为以下值之一：
 
 [cols="1, 3"]
 |===
 | Name | Description
 
 | `never`
-| Details are never shown.
+| 从不显示详细信息。
 
 | `when-authorized`
-| Details are shown only to authorized users.
-  Authorized roles can be configured by using `management.endpoint.health.roles`.
+| 仅对授权用户显示详细信息。
+  可通过 `management.endpoint.health.roles` 配置授权角色。
 
 | `always`
-| Details are shown to all users.
+| 对所有用户显示详细信息。
 |===
 
-The default value is `never`.
-A user is considered to be authorized when they are in one or more of the endpoint's roles.
-If the endpoint has no configured roles (the default), all authenticated users are considered to be authorized.
-You can configure the roles by using the configprop:management.endpoint.health.roles[] property.
+默认值为 `never`。
+当用户具有端点的一个或多个角色时，视为授权用户。
+如果端点未配置角色（默认情况），所有经过身份验证的用户都被视为授权用户。
+您可以使用 configprop:management.endpoint.health.roles[] 属性配置角色。
 
-NOTE: If you have secured your application and wish to use `always`, your security configuration must permit access to the health endpoint for both authenticated and unauthenticated users.
+NOTE: 如果您的应用程序已启用安全保护并希望使用 `always`，您的安全配置必须允许经过身份验证和未经过身份验证的用户访问健康端点。
 
-Health information is collected from the content of a javadoc:org.springframework.boot.actuate.health.HealthContributorRegistry[] (by default, all javadoc:org.springframework.boot.actuate.health.HealthContributor[] instances defined in your javadoc:org.springframework.context.ApplicationContext[]).
-Spring Boot includes a number of auto-configured javadoc:org.springframework.boot.actuate.health.HealthContributor[] beans, and you can also write your own.
+健康信息从 javadoc:org.springframework.boot.actuate.health.HealthContributorRegistry[] 的内容中收集（默认情况下，是您 javadoc:org.springframework.context.ApplicationContext[] 中定义的所有 javadoc:org.springframework.boot.actuate.health.HealthContributor[] 实例）。
+Spring Boot 包含多个自动配置的 javadoc:org.springframework.boot.actuate.health.HealthContributor[] bean，您也可以编写自己的。
 
-A javadoc:org.springframework.boot.actuate.health.HealthContributor[] can be either a javadoc:org.springframework.boot.actuate.health.HealthIndicator[] or a javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[].
-A javadoc:org.springframework.boot.actuate.health.HealthIndicator[] provides actual health information, including a javadoc:org.springframework.boot.actuate.health.Status[].
-A javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[] provides a composite of other javadoc:org.springframework.boot.actuate.health.HealthContributor[] instances.
-Taken together, contributors form a tree structure to represent the overall system health.
+javadoc:org.springframework.boot.actuate.health.HealthContributor[] 可以是 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 或 javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[]。
+javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 提供实际的健康信息，包括 javadoc:org.springframework.boot.actuate.health.Status[]。
+javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[] 提供其他 javadoc:org.springframework.boot.actuate.health.HealthContributor[] 实例的复合。
+这些贡献者共同形成一个树形结构，以表示整个系统健康状况。
 
-By default, the final system health is derived by a javadoc:org.springframework.boot.actuate.health.StatusAggregator[], which sorts the statuses from each javadoc:org.springframework.boot.actuate.health.HealthIndicator[] based on an ordered list of statuses.
-The first status in the sorted list is used as the overall health status.
-If no javadoc:org.springframework.boot.actuate.health.HealthIndicator[] returns a status that is known to the javadoc:org.springframework.boot.actuate.health.StatusAggregator[], an `UNKNOWN` status is used.
+默认情况下，最终系统健康状况由 javadoc:org.springframework.boot.actuate.health.StatusAggregator[] 派生，它根据状态的有序列表对每个 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 的状态进行排序。
+排序列表中的第一个状态用作总体健康状态。
+如果没有 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 返回 javadoc:org.springframework.boot.actuate.health.StatusAggregator[] 已知的状态，则使用 `UNKNOWN` 状态。
 
-TIP: You can use the javadoc:org.springframework.boot.actuate.health.HealthContributorRegistry[] to register and unregister health indicators at runtime.
+TIP: 您可以使用 javadoc:org.springframework.boot.actuate.health.HealthContributorRegistry[] 在运行时注册和注销健康指示器。
 
 
 
 [[actuator.endpoints.health.auto-configured-health-indicators]]
-=== Auto-configured HealthIndicators
+=== 自动配置的 HealthIndicator
 
-When appropriate, Spring Boot auto-configures the javadoc:org.springframework.boot.actuate.health.HealthIndicator[] beans listed in the following table.
-You can also enable or disable selected indicators by configuring `management.health.key.enabled`,
-with the `key` listed in the following table:
+在适当情况下，Spring Boot 自动配置下表中列出的 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] bean。
+您还可以通过配置 `management.health.key.enabled` 启用或禁用选定的指示器，`key` 如下表所示：
 
 [cols="2,4,6"]
 |===
@@ -610,72 +609,72 @@ with the `key` listed in the following table:
 
 | `cassandra`
 | javadoc:org.springframework.boot.actuate.cassandra.CassandraDriverHealthIndicator[]
-| Checks that a Cassandra database is up.
+| 检查 Cassandra 数据库是否正常运行。
 
 | `couchbase`
 | javadoc:org.springframework.boot.actuate.couchbase.CouchbaseHealthIndicator[]
-| Checks that a Couchbase cluster is up.
+| 检查 Couchbase 集群是否正常运行。
 
 | `db`
 | javadoc:org.springframework.boot.actuate.jdbc.DataSourceHealthIndicator[]
-| Checks that a connection to javadoc:javax.sql.DataSource[] can be obtained.
+| 检查是否可以获取到 javadoc:javax.sql.DataSource[] 的连接。
 
 | `diskspace`
 | javadoc:org.springframework.boot.actuate.system.DiskSpaceHealthIndicator[]
-| Checks for low disk space.
+| 检查磁盘空间是否不足。
 
 | `elasticsearch`
 | javadoc:org.springframework.boot.actuate.elasticsearch.ElasticsearchRestClientHealthIndicator[]
-| Checks that an Elasticsearch cluster is up.
+| 检查 Elasticsearch 集群是否正常运行。
 
 | `hazelcast`
 | javadoc:org.springframework.boot.actuate.hazelcast.HazelcastHealthIndicator[]
-| Checks that a Hazelcast server is up.
+| 检查 Hazelcast 服务器是否正常运行。
 
 | `jms`
 | javadoc:org.springframework.boot.actuate.jms.JmsHealthIndicator[]
-| Checks that a JMS broker is up.
+| 检查 JMS 代理是否正常运行。
 
 | `ldap`
 | javadoc:org.springframework.boot.actuate.ldap.LdapHealthIndicator[]
-| Checks that an LDAP server is up.
+| 检查 LDAP 服务器是否正常运行。
 
 | `mail`
 | javadoc:org.springframework.boot.actuate.mail.MailHealthIndicator[]
-| Checks that a mail server is up.
+| 检查邮件服务器是否正常运行。
 
 | `mongo`
 | javadoc:org.springframework.boot.actuate.data.mongo.MongoHealthIndicator[]
-| Checks that a Mongo database is up.
+| 检查 Mongo 数据库是否正常运行。
 
 | `neo4j`
 | javadoc:org.springframework.boot.actuate.neo4j.Neo4jHealthIndicator[]
-| Checks that a Neo4j database is up.
+| 检查 Neo4j 数据库是否正常运行。
 
 | `ping`
 | javadoc:org.springframework.boot.actuate.health.PingHealthIndicator[]
-| Always responds with `UP`.
+| 始终返回 `UP`。
 
 | `rabbit`
 | javadoc:org.springframework.boot.actuate.amqp.RabbitHealthIndicator[]
-| Checks that a Rabbit server is up.
+| 检查 Rabbit 服务器是否正常运行。
 
 | `redis`
 | javadoc:org.springframework.boot.actuate.data.redis.RedisHealthIndicator[]
-| Checks that a Redis server is up.
+| 检查 Redis 服务器是否正常运行。
 
 | `ssl`
 | javadoc:org.springframework.boot.actuate.ssl.SslHealthIndicator[]
-| Checks that SSL certificates are ok.
+| 检查 SSL 证书是否正常。
 |===
 
-TIP: You can disable them all by setting the configprop:management.health.defaults.enabled[] property.
+TIP: 您可以通过设置 configprop:management.health.defaults.enabled[] 属性禁用所有指示器。
 
-TIP: The `ssl` javadoc:org.springframework.boot.actuate.health.HealthIndicator[] has a "warning threshold" property named configprop:management.health.ssl.certificate-validity-warning-threshold[].
-If an SSL certificate will be invalid within the time span defined by this threshold, the javadoc:org.springframework.boot.actuate.health.HealthIndicator[] will warn you but it will still return HTTP 200 to not disrupt the application.
-You can use this threshold to give yourself enough lead time to rotate the soon to be expired certificate.
+TIP: `ssl` javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 具有名为 configprop:management.health.ssl.certificate-validity-warning-threshold[] 的“警告阈值”属性。
+如果 SSL 证书将在此阈值定义的时间范围内失效，javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 将发出警告，但仍返回 HTTP 200 以避免中断应用程序。
+您可以使用此阈值为即将过期的证书轮换提供足够的提前时间。
 
-Additional javadoc:org.springframework.boot.actuate.health.HealthIndicator[] beans are available but are not enabled by default:
+额外的 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] bean 可用，但默认不启用：
 
 [cols="3,4,6"]
 |===
@@ -683,37 +682,37 @@ Additional javadoc:org.springframework.boot.actuate.health.HealthIndicator[] bea
 
 | `livenessstate`
 | javadoc:org.springframework.boot.actuate.availability.LivenessStateHealthIndicator[]
-| Exposes the "`Liveness`" application availability state.
+| 暴露 "`Liveness`" 应用程序可用性状态。
 
 | `readinessstate`
 | javadoc:org.springframework.boot.actuate.availability.ReadinessStateHealthIndicator[]
-| Exposes the "`Readiness`" application availability state.
+| 暴露 "`Readiness`" 应用程序可用性状态。
 |===
 
 
 
 [[actuator.endpoints.health.writing-custom-health-indicators]]
-=== Writing Custom HealthIndicators
+=== 编写自定义 HealthIndicator
 
-To provide custom health information, you can register Spring beans that implement the javadoc:org.springframework.boot.actuate.health.HealthIndicator[] interface.
-You need to provide an implementation of the `health()` method and return a javadoc:org.springframework.boot.actuate.health.Health[] response.
-The javadoc:org.springframework.boot.actuate.health.Health[] response should include a status and can optionally include additional details to be displayed.
-The following code shows a sample javadoc:org.springframework.boot.actuate.health.HealthIndicator[] implementation:
+要提供自定义健康信息，您可以注册实现 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 接口的 Spring bean。
+您需要提供 `health()` 方法的实现并返回 javadoc:org.springframework.boot.actuate.health.Health[] 响应。
+javadoc:org.springframework.boot.actuate.health.Health[] 响应应包括状态，并可以选择包含要显示的额外详细信息。
+以下代码展示了一个示例 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 实现：
 
 include-code::MyHealthIndicator[]
 
-NOTE: The identifier for a given javadoc:org.springframework.boot.actuate.health.HealthIndicator[] is the name of the bean without the javadoc:org.springframework.boot.actuate.health.HealthIndicator[] suffix, if it exists.
-In the preceding example, the health information is available in an entry named `my`.
+NOTE: 给定 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 的标识符是 bean 的名称，去掉 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 后缀（如果存在）。
+在上述示例中，健康信息在名为 `my` 的条目中可用。
 
-TIP: Health indicators are usually called over HTTP and need to respond before any connection timeouts.
-Spring Boot will log a warning message for any health indicator that takes longer than 10 seconds to respond.
-If you want to configure this threshold, you can use the configprop:management.endpoint.health.logging.slow-indicator-threshold[] property.
+TIP: 健康指示器通常通过 HTTP 调用，需要在任何连接超时之前响应。
+Spring Boot 将为任何响应时间超过 10 秒的健康指示器记录警告消息。
+如果您想配置此阈值，可以使用 configprop:management.endpoint.health.logging.slow-indicator-threshold[] 属性。
 
-In addition to Spring Boot's predefined javadoc:org.springframework.boot.actuate.health.Status[] types, javadoc:org.springframework.boot.actuate.health.Health[] can return a custom javadoc:org.springframework.boot.actuate.health.Status[] that represents a new system state.
-In such cases, you also need to provide a custom implementation of the javadoc:org.springframework.boot.actuate.health.StatusAggregator[] interface, or you must configure the default implementation by using the configprop:management.endpoint.health.status.order[] configuration property.
+除了 Spring Boot 预定义的 javadoc:org.springframework.boot.actuate.health.Status[] 类型，javadoc:org.springframework.boot.actuate.health.Health[] 还可以返回表示新系统状态的自定义 javadoc:org.springframework.boot.actuate.health.Status[]。
+在这种情况下，您还需要提供 javadoc:org.springframework.boot.actuate.health.StatusAggregator[] 接口的自定义实现，或者使用 configprop:management.endpoint.health.status.order[] 配置属性配置默认实现。
 
-For example, assume a new javadoc:org.springframework.boot.actuate.health.Status[] with a code of `FATAL` is being used in one of your javadoc:org.springframework.boot.actuate.health.HealthIndicator[] implementations.
-To configure the severity order, add the following property to your application properties:
+例如，假设您的某个 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 实现中使用了一个代码为 `FATAL` 的新 javadoc:org.springframework.boot.actuate.health.Status[]。
+要配置严重性顺序，请在应用程序属性中添加以下属性：
 
 [configprops,yaml]
 ----
@@ -724,13 +723,13 @@ management:
         order: "fatal,down,out-of-service,unknown,up"
 ----
 
-The HTTP status code in the response reflects the overall health status.
-By default, `OUT_OF_SERVICE` and `DOWN` map to 503.
-Any unmapped health statuses, including `UP`, map to 200.
-You might also want to register custom status mappings if you access the health endpoint over HTTP.
-Configuring a custom mapping disables the defaults mappings for `DOWN` and `OUT_OF_SERVICE`.
-If you want to retain the default mappings, you must explicitly configure them, alongside any custom mappings.
-For example, the following property maps `FATAL` to 503 (service unavailable) and retains the default mappings for `DOWN` and `OUT_OF_SERVICE`:
+响应中的 HTTP 状态码反映总体健康状态。
+默认情况下，`OUT_OF_SERVICE` 和 `DOWN` 映射到 503。
+任何未映射的健康状态，包括 `UP`，映射到 200。
+如果您通过 HTTP 访问健康端点，您可能还想注册自定义状态映射。
+配置自定义映射将禁用 `DOWN` 和 `OUT_OF_SERVICE` 的默认映射。
+如果您想保留默认映射，必须显式配置它们，以及任何自定义映射。
+例如，以下属性将 `FATAL` 映射到 503（服务不可用）并保留 `DOWN` 和 `OUT_OF_SERVICE` 的默认映射：
 
 [configprops,yaml]
 ----
@@ -744,9 +743,9 @@ management:
           out-of-service: 503
 ----
 
-TIP: If you need more control, you can define your own javadoc:org.springframework.boot.actuate.health.HttpCodeStatusMapper[] bean.
+TIP: 如果需要更多控制，您可以定义自己的 javadoc:org.springframework.boot.actuate.health.HttpCodeStatusMapper[] bean。
 
-The following table shows the default status mappings for the built-in statuses:
+下表显示了内置状态的默认状态映射：
 
 [cols="1,3"]
 |===
@@ -759,37 +758,37 @@ The following table shows the default status mappings for the built-in statuses:
 | `SERVICE_UNAVAILABLE` (`503`)
 
 | `UP`
-| No mapping by default, so HTTP status is `200`
+| 默认无映射，因此 HTTP 状态为 `200`
 
 | `UNKNOWN`
-| No mapping by default, so HTTP status is `200`
+| 默认无映射，因此 HTTP 状态为 `200`
 |===
 
 
 
 [[actuator.endpoints.health.reactive-health-indicators]]
-=== Reactive Health Indicators
+=== 反应式健康指示器
 
-For reactive applications, such as those that use Spring WebFlux, javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributor[] provides a non-blocking contract for getting application health.
-Similar to a traditional javadoc:org.springframework.boot.actuate.health.HealthContributor[], health information is collected from the content of a javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributorRegistry[] (by default, all javadoc:org.springframework.boot.actuate.health.HealthContributor[] and javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributor[] instances defined in your javadoc:org.springframework.context.ApplicationContext[]).
-Regular javadoc:org.springframework.boot.actuate.health.HealthContributor[] instances that do not check against a reactive API are executed on the elastic scheduler.
+对于反应式应用程序（例如使用 Spring WebFlux 的应用程序），javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributor[] 提供了一个非阻塞的合同，用于获取应用程序健康状况。
+类似于传统的 javadoc:org.springframework.boot.actuate.health.HealthContributor[]，健康信息从 javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributorRegistry[] 的内容中收集（默认情况下，是您 javadoc:org.springframework.context.ApplicationContext[] 中定义的所有 javadoc:org.springframework.boot.actuate.health.HealthContributor[] 和 javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributor[] 实例）。
+不检查反应式 API 的常规 javadoc:org.springframework.boot.actuate.health.HealthContributor[] 实例在弹性调度器上执行。
 
-TIP: In a reactive application, you should use the javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributorRegistry[] to register and unregister health indicators at runtime.
-If you need to register a regular javadoc:org.springframework.boot.actuate.health.HealthContributor[], you should wrap it with `ReactiveHealthContributor#adapt`.
+TIP: 在反应式应用程序中，您应使用 javadoc:org.springframework.boot.actuate.health.ReactiveHealthContributorRegistry[] 在运行时注册和注销健康指示器。
+如果需要注册常规 javadoc:org.springframework.boot.actuate.health.HealthContributor[]，您应使用 `ReactiveHealthContributor#adapt` 包装它。
 
-To provide custom health information from a reactive API, you can register Spring beans that implement the javadoc:org.springframework.boot.actuate.health.ReactiveHealthIndicator[] interface.
-The following code shows a sample javadoc:org.springframework.boot.actuate.health.ReactiveHealthIndicator[] implementation:
+要从反应式 API 提供自定义健康信息，您可以注册实现 javadoc:org.springframework.boot.actuate.health.ReactiveHealthIndicator[] 接口的 Spring bean。
+以下代码展示了一个示例 javadoc:org.springframework.boot.actuate.health.ReactiveHealthIndicator[] 实现：
 
 include-code::MyReactiveHealthIndicator[]
 
-TIP: To handle the error automatically, consider extending from javadoc:org.springframework.boot.actuate.health.AbstractReactiveHealthIndicator[].
+TIP: 要自动处理错误，请考虑从 javadoc:org.springframework.boot.actuate.health.AbstractReactiveHealthIndicator[] 扩展。
 
 
 
 [[actuator.endpoints.health.auto-configured-reactive-health-indicators]]
-=== Auto-configured ReactiveHealthIndicators
+=== 自动配置的 ReactiveHealthIndicator
 
-When appropriate, Spring Boot auto-configures the following javadoc:org.springframework.boot.actuate.health.ReactiveHealthIndicator[] beans:
+在适当情况下，Spring Boot 自动配置以下 javadoc:org.springframework.boot.actuate.health.ReactiveHealthIndicator[] bean：
 
 [cols="2,4,6"]
 |===
@@ -797,41 +796,41 @@ When appropriate, Spring Boot auto-configures the following javadoc:org.springfr
 
 | `cassandra`
 | javadoc:org.springframework.boot.actuate.cassandra.CassandraDriverReactiveHealthIndicator[]
-| Checks that a Cassandra database is up.
+| 检查 Cassandra 数据库是否正常运行。
 
 | `couchbase`
 | javadoc:org.springframework.boot.actuate.couchbase.CouchbaseReactiveHealthIndicator[]
-| Checks that a Couchbase cluster is up.
+| 检查 Couchbase 集群是否正常运行。
 
 | `elasticsearch`
 | javadoc:org.springframework.boot.actuate.data.elasticsearch.ElasticsearchReactiveHealthIndicator[]
-| Checks that an Elasticsearch cluster is up.
+| 检查 Elasticsearch 集群是否正常运行。
 
 | `mongo`
 | javadoc:org.springframework.boot.actuate.data.mongo.MongoReactiveHealthIndicator[]
-| Checks that a Mongo database is up.
+| 检查 Mongo 数据库是否正常运行。
 
 | `neo4j`
 | javadoc:org.springframework.boot.actuate.neo4j.Neo4jReactiveHealthIndicator[]
-| Checks that a Neo4j database is up.
+| 检查 Neo4j 数据库是否正常运行。
 
 | `redis`
 | javadoc:org.springframework.boot.actuate.data.redis.RedisReactiveHealthIndicator[]
-| Checks that a Redis server is up.
+| 检查 Redis 服务器是否正常运行。
 |===
 
-TIP: If necessary, reactive indicators replace the regular ones.
-Also, any javadoc:org.springframework.boot.actuate.health.HealthIndicator[] that is not handled explicitly is wrapped automatically.
+TIP: 如有必要，反应式指示器将替换常规指示器。
+此外，任何未显式处理的 javadoc:org.springframework.boot.actuate.health.HealthIndicator[] 将自动包装。
 
 
 
 [[actuator.endpoints.health.groups]]
-=== Health Groups
+=== 健康组
 
-It is sometimes useful to organize health indicators into groups that you can use for different purposes.
+有时将健康指示器组织成组用于不同目的很有用。
 
-To create a health indicator group, you can use the `management.endpoint.health.group.<name>` property and specify a list of health indicator IDs to `include` or `exclude`.
-For example, to create a group that includes only database indicators you can define the following:
+要创建健康指示器组，您可以使用 `management.endpoint.health.group.<name>` 属性并指定要 `include` 或 `exclude` 的健康指示器 ID 列表。
+例如，要创建一个仅包含数据库指示器的组，您可以定义以下内容：
 
 [configprops,yaml]
 ----
@@ -843,9 +842,9 @@ management:
           include: "db"
 ----
 
-You can then check the result by hitting `http://localhost:8080/actuator/health/custom`.
+然后，您可以通过访问 `http://localhost:8080/actuator/health/custom` 检查结果。
 
-Similarly, to create a group that excludes the database indicators from the group and includes all the other indicators, you can define the following:
+类似地，要创建一个排除数据库指示器并包括所有其他指示器的组，您可以定义以下内容：
 
 [configprops,yaml]
 ----
@@ -857,12 +856,12 @@ management:
           exclude: "db"
 ----
 
-By default, startup will fail if a health group includes or excludes a health indicator that does not exist.
-To disable this behavior set configprop:management.endpoint.health.validate-group-membership[] to `false`.
+默认情况下，如果健康组包含或排除不存在的健康指示器，启动将失败。
+要禁用此行为，请将 configprop:management.endpoint.health.validate-group-membership[] 设置为 `false`。
 
-By default, groups inherit the same javadoc:org.springframework.boot.actuate.health.StatusAggregator[] and javadoc:org.springframework.boot.actuate.health.HttpCodeStatusMapper[] settings as the system health.
-However, you can also define these on a per-group basis.
-You can also override the `show-details` and `roles` properties if required:
+默认情况下，组继承系统健康的相同 javadoc:org.springframework.boot.actuate.health.StatusAggregator[] 和 javadoc:org.springframework.boot.actuate.health.HttpCodeStatusMapper[] 设置。
+但是，您也可以按组逐个定义这些设置。
+如有需要，您还可以覆盖 `show-details` 和 `roles` 属性：
 
 [configprops,yaml]
 ----
@@ -880,11 +879,11 @@ management:
               out-of-service: 500
 ----
 
-TIP: You can use `@Qualifier("groupname")` if you need to register custom javadoc:org.springframework.boot.actuate.health.StatusAggregator[] or javadoc:org.springframework.boot.actuate.health.HttpCodeStatusMapper[] beans for use with the group.
+TIP: 如果您需要为组注册自定义 javadoc:org.springframework.boot.actuate.health.StatusAggregator[] 或 javadoc:org.springframework.boot.actuate.health.HttpCodeStatusMapper[] bean，可以使用 `@Qualifier("groupname")`。
 
-A health group can also include/exclude a javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[].
-You can also include/exclude only a certain component of a javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[].
-This can be done using the fully qualified name of the component as follows:
+健康组还可以包含/排除 javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[]。
+您还可以仅包含/排除 javadoc:org.springframework.boot.actuate.health.CompositeHealthContributor[] 的某个组件。
+这可以通过使用组件的完全限定名称完成，如下所示：
 
 [source,properties]
 ----
@@ -892,48 +891,47 @@ management.endpoint.health.group.custom.include="test/primary"
 management.endpoint.health.group.custom.exclude="test/primary/b"
 ----
 
-In the example above, the `custom` group will include the javadoc:org.springframework.boot.actuate.health.HealthContributor[] with the name `primary` which is a component of the composite `test`.
-Here, `primary` itself is a composite and the javadoc:org.springframework.boot.actuate.health.HealthContributor[] with the name `b` will be excluded from the `custom` group.
+在上述示例中，`custom` 组将包括名为 `primary` 的 javadoc:org.springframework.boot.actuate.health.HealthContributor[]，它是复合 `test` 的一个组件。
+在这里，`primary` 本身是一个复合，名为 `b` 的 javadoc:org.springframework.boot.actuate.health.HealthContributor[] 将从 `custom` 组中排除。
 
-
-Health groups can be made available at an additional path on either the main or management port.
-This is useful in cloud environments such as Kubernetes, where it is quite common to use a separate management port for the actuator endpoints for security purposes.
-Having a separate port could lead to unreliable health checks because the main application might not work properly even if the health check is successful.
-The health group can be configured with an additional path as follows:
+健康组可以在主端口或管理端口上的额外路径上可用。
+这在 Kubernetes 等云环境中很有用，在这些环境中，通常出于安全目的为 Actuator 端点使用单独的管理端口。
+单独的端口可能导致不可靠的健康检查，因为即使健康检查成功，主应用程序也可能无法正常工作。
+可以通过如下配置为健康组设置额外的路径：
 
 [source,properties]
 ----
 management.endpoint.health.group.live.additional-path="server:/healthz"
 ----
 
-This would make the `live` health group available on the main server port at `/healthz`.
-The prefix is mandatory and must be either `server:` (represents the main server port) or `management:` (represents the management port, if configured.)
-The path must be a single path segment.
+这将使 `live` 健康组在主服务器端口上的 `/healthz` 可用。
+前缀是必填的，必须是 `server:`（表示主服务器端口）或 `management:`（表示管理端口，如果已配置）。
+路径必须是单一路径段。
 
 
 
 [[actuator.endpoints.health.datasource]]
-=== DataSource Health
+=== 数据源健康
 
-The javadoc:javax.sql.DataSource[] health indicator shows the health of both standard data sources and routing data source beans.
-The health of a routing data source includes the health of each of its target data sources.
-In the health endpoint's response, each of a routing data source's targets is named by using its routing key.
-If you prefer not to include routing data sources in the indicator's output, set configprop:management.health.db.ignore-routing-data-sources[] to `true`.
+javadoc:javax.sql.DataSource[] 健康指示器显示标准数据源和路由数据源 bean 的健康状况。
+路由数据源的健康状况包括其每个目标数据源的健康状况。
+在健康端点的响应中，路由数据源的每个目标使用其路由键命名。
+如果您不希望在指示器输出中包含路由数据源，请将 configprop:management.health.db.ignore-routing-data-sources[] 设置为 `true`。
 
 
 
 [[actuator.endpoints.kubernetes-probes]]
-== Kubernetes Probes
+== Kubernetes 探针
 
-Applications deployed on Kubernetes can provide information about their internal state with https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes[Container Probes].
-Depending on https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/[your Kubernetes configuration], the kubelet calls those probes and reacts to the result.
+部署在 Kubernetes 上的应用程序可以通过 https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-probes[容器探针] 提供其内部状态信息。
+根据 https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/[您的 Kubernetes 配置]，kubelet 会调用这些探针并对结果做出反应。
 
-By default, Spring Boot manages your xref:features/spring-application.adoc#features.spring-application.application-availability[Application Availability] state.
-If deployed in a Kubernetes environment, actuator gathers the "`Liveness`" and "`Readiness`" information from the javadoc:org.springframework.boot.availability.ApplicationAvailability[] interface and uses that information in dedicated xref:actuator/endpoints.adoc#actuator.endpoints.health.auto-configured-health-indicators[health indicators]: javadoc:org.springframework.boot.actuate.availability.LivenessStateHealthIndicator[] and javadoc:org.springframework.boot.actuate.availability.ReadinessStateHealthIndicator[].
-These indicators are shown on the global health endpoint (`"/actuator/health"`).
-They are also exposed as separate HTTP Probes by using xref:actuator/endpoints.adoc#actuator.endpoints.health.groups[health groups]: `"/actuator/health/liveness"` and `"/actuator/health/readiness"`.
+默认情况下，Spring Boot 管理您的 xref:features/spring-application.adoc#features.spring-application.application-availability[应用程序可用性] 状态。
+如果部署在 Kubernetes 环境中，Actuator 会从 javadoc:org.springframework.boot.availability.ApplicationAvailability[] 接口收集 "`Liveness`" 和 "`Readiness`" 信息，并使用这些信息在专用的 xref:actuator/endpoints.adoc#actuator.endpoints.health.auto-configured-health-indicators[健康指示器] 中：javadoc:org.springframework.boot.actuate.availability.LivenessStateHealthIndicator[] 和 javadoc:org.springframework.boot.actuate.availability.ReadinessStateHealthIndicator[]。
+这些指示器显示在全局健康端点（`"/actuator/health"`）上。
+它们还通过 xref:actuator/endpoints.adoc#actuator.endpoints.health.groups[健康组] 作为单独的 HTTP 探针暴露：`"/actuator/health/liveness"` 和 `"/actuator/health/readiness"`。
 
-You can then configure your Kubernetes infrastructure with the following endpoint information:
+您可以为 Kubernetes 基础设施配置以下端点信息：
 
 [source,yaml]
 ----
@@ -952,39 +950,39 @@ readinessProbe:
   periodSeconds: ...
 ----
 
-NOTE: `<actuator-port>` should be set to the port that the actuator endpoints are available on.
-It could be the main web server port or a separate management port if the `"management.server.port"` property has been set.
+NOTE: `<actuator-port>` 应设置为 Actuator 端点可用的端口。
+它可以是主 Web 服务器端口，或如果设置了 `"management.server.port"` 属性，则为单独的管理端口。
 
-These health groups are automatically enabled only if the application xref:how-to:deployment/cloud.adoc#howto.deployment.cloud.kubernetes[runs in a Kubernetes environment].
-You can enable them in any environment by using the configprop:management.endpoint.health.probes.enabled[] configuration property.
+这些健康组仅在应用程序 xref:how-to:deployment/cloud.adoc#howto.deployment.cloud.kubernetes[运行在 Kubernetes 环境] 中时自动启用。
+您可以通过使用 configprop:management.endpoint.health.probes.enabled[] 配置属性在任何环境中启用它们。
 
-NOTE: If an application takes longer to start than the configured liveness period, Kubernetes mentions the `"startupProbe"` as a possible solution.
-Generally speaking, the `"startupProbe"` is not necessarily needed here, as the `"readinessProbe"` fails until all startup tasks are done.
-This means your application will not receive traffic until it is ready.
-However, if your application takes a long time to start, consider using a `"startupProbe"` to make sure that Kubernetes won't kill your application while it is in the process of starting.
-See the section that describes xref:actuator/endpoints.adoc#actuator.endpoints.kubernetes-probes.lifecycle[how probes behave during the application lifecycle].
+NOTE: 如果应用程序启动时间超过配置的存活期，Kubernetes 会提到 `"startupProbe"` 作为可能的解决方案。
+一般来说，这里不需要 `"startupProbe"`，因为在所有启动任务完成之前，`"readinessProbe"` 会失败。
+这意味着您的应用程序在准备好之前不会接收流量。
+但是，如果您的应用程序启动时间较长，请考虑使用 `"startupProbe"`，以确保 Kubernetes 在应用程序启动过程中不会终止它。
+有关探针在应用程序生命周期中的行为，请参阅 xref:actuator/endpoints.adoc#actuator.endpoints.kubernetes-probes.lifecycle[探针行为] 部分。
 
-If your Actuator endpoints are deployed on a separate management context, the endpoints do not use the same web infrastructure (port, connection pools, framework components) as the main application.
-In this case, a probe check could be successful even if the main application does not work properly (for example, it cannot accept new connections).
-For this reason, it is a good idea to make the `liveness` and `readiness` health groups available on the main server port.
-This can be done by setting the following property:
+如果您的 Actuator 端点部署在单独的管理上下文中，端点不使用与主应用程序相同的 Web 基础设施（端口、连接池、框架组件）。
+在这种情况下，即使主应用程序无法正常工作（例如，无法接受新连接），探针检查也可能成功。
+因此，建议在主服务器端口上使 `liveness` 和 `readiness` 健康组可用。
+可以通过设置以下属性实现：
 
 [source,properties]
 ----
 management.endpoint.health.probes.add-additional-paths=true
 ----
 
-This would make the `liveness` group available at `/livez` and the `readiness` group available at `/readyz` on the main server port.
-Paths can be customized using the `additional-path` property on each group, see xref:actuator/endpoints.adoc#actuator.endpoints.health.groups[health groups] for details.
+这将使 `liveness` 组在主服务器端口上的 `/livez` 可用，`readiness` 组在 `/readyz` 可用。
+路径可以通过每个组的 `additional-path` 属性自定义，详情请参阅 xref:actuator/endpoints.adoc#actuator.endpoints.health.groups[健康组]。
 
 
 
 [[actuator.endpoints.kubernetes-probes.external-state]]
-=== Checking External State With Kubernetes Probes
+=== 使用 Kubernetes 探针检查外部状态
 
-Actuator configures the "`liveness`" and "`readiness`" probes as Health Groups.
-This means that all the xref:actuator/endpoints.adoc#actuator.endpoints.health.groups[health groups features] are available for them.
-You can, for example, configure additional Health Indicators:
+Actuator 将 "`liveness`" 和 "`readiness`" 探针配置为健康组。
+这意味着 xref:actuator/endpoints.adoc#actuator.endpoints.health.groups[健康组功能] 都适用于它们。
+例如，您可以配置额外的健康指示器：
 
 [configprops,yaml]
 ----
@@ -996,43 +994,41 @@ management:
           include: "readinessState,customCheck"
 ----
 
-By default, Spring Boot does not add other health indicators to these groups.
+默认情况下，Spring Boot 不会在这些组中添加其他健康指示器。
 
-The "`liveness`" probe should not depend on health checks for external systems.
-If the xref:features/spring-application.adoc#features.spring-application.application-availability.liveness[liveness state of an application] is broken, Kubernetes tries to solve that problem by restarting the application instance.
-This means that if an external system (such as a database, a Web API, or an external cache) fails, Kubernetes might restart all application instances and create cascading failures.
+"`liveness`" 探针不应依赖外部系统的健康检查。
+如果应用程序的 xref:features/spring-application.adoc#features.spring-application.application-availability.liveness[存活状态] 出现问题，Kubernetes 会通过重启应用程序实例来解决问题。
+这意味着如果外部系统（例如数据库、Web API 或外部缓存）失败，Kubernetes 可能会重启所有应用程序实例并导致级联失败。
 
-As for the "`readiness`" probe, the choice of checking external systems must be made carefully by the application developers.
-For this reason, Spring Boot does not include any additional health checks in the readiness probe.
-If the xref:features/spring-application.adoc#features.spring-application.application-availability.readiness[readiness state of an application instance] is unready, Kubernetes does not route traffic to that instance.
-Some external systems might not be shared by application instances, in which case they could be included in a readiness probe.
-Other external systems might not be essential to the application (the application could have circuit breakers and fallbacks), in which case they definitely should not be included.
-Unfortunately, an external system that is shared by all application instances is common, and you have to make a judgement call: Include it in the readiness probe and expect that the application is taken out of service when the external service is down or leave it out and deal with failures higher up the stack, perhaps by using a circuit breaker in the caller.
+至于 "`readiness`" 探针，检查外部系统的选择必须由应用程序开发者谨慎决定。
+因此，Spring Boot 不会在 readiness 探针中包含任何额外的健康检查。
+如果应用程序实例的 xref:features/spring-application.adoc#features.spring-application.application-availability.readiness[就绪状态] 未就绪，Kubernetes 不会将流量路由到该实例。
+某些外部系统可能不被应用程序实例共享，在这种情况下可以包含在 readiness 探针中。
+其他外部系统可能对应用程序不重要（应用程序可能有断路器和回退），在这种情况下绝对不应包含。
+不幸的是，所有应用程序实例共享的外部系统很常见，您需要做出判断：将其包含在 readiness 探针中并在外部服务宕机时预期应用程序停止服务，或者将其排除在外并在更高级别处理失败，例如在调用者中使用断路器。
 
-NOTE: If all instances of an application are unready, a Kubernetes Service with `type=ClusterIP` or `NodePort` does not accept any incoming connections.
-There is no HTTP error response (503 and so on), since there is no connection.
-A service with `type=LoadBalancer` might or might not accept connections, depending on the provider.
-A service that has an explicit https://kubernetes.io/docs/concepts/services-networking/ingress/[ingress] also responds in a way that depends on the implementation -- the ingress service itself has to decide how to handle the "`connection refused`" from downstream.
-HTTP 503 is quite likely in the case of both load balancer and ingress.
+NOTE: 如果所有应用程序实例都未就绪，`type=ClusterIP` 或 `NodePort` 的 Kubernetes Service 不会接受任何传入连接。
+没有 HTTP 错误响应（503 等），因为没有连接。
+`type=LoadBalancer` 的服务可能接受也可能不接受连接，具体取决于提供商。
+具有明确 https://kubernetes.io/docs/concepts/services-networking/ingress/[入口] 的服务也以取决于实现的方式响应——入口服务本身必须决定如何处理来自下游的 "`连接拒绝`"。
+在负载均衡器和入口的情况下，HTTP 503 很常见。
 
-Also, if an application uses Kubernetes https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[autoscaling], it may react differently to applications being taken out of the load-balancer, depending on its autoscaler configuration.
+此外，如果应用程序使用 Kubernetes https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[自动扩展]，它对应用程序从负载均衡器中移除的反应可能因其自动扩展器配置而异。
 
 
 
 [[actuator.endpoints.kubernetes-probes.lifecycle]]
-=== Application Lifecycle and Probe States
+=== 应用程序生命周期和探针状态
 
-An important aspect of the Kubernetes Probes support is its consistency with the application lifecycle.
-There is a significant difference between the javadoc:org.springframework.boot.availability.AvailabilityState[] (which is the in-memory, internal state of the application)
-and the actual probe (which exposes that state).
-Depending on the phase of application lifecycle, the probe might not be available.
+Kubernetes 探针支持的一个重要方面是其与应用程序生命周期的一致性。
+javadoc:org.springframework.boot.availability.AvailabilityState[]（应用程序的内存中内部状态）与实际探针（暴露该状态）之间存在显著差异。
+根据应用程序生命周期的阶段，探针可能不可用。
 
-Spring Boot publishes xref:features/spring-application.adoc#features.spring-application.application-events-and-listeners[application events during startup and shutdown],
-and probes can listen to such events and expose the javadoc:org.springframework.boot.availability.AvailabilityState[] information.
+Spring Boot 在启动和关闭期间发布 xref:features/spring-application.adoc#features.spring-application.application-events-and-listeners[应用程序事件]，探针可以监听这些事件并暴露 javadoc:org.springframework.boot.availability.AvailabilityState[] 信息。
 
-The following tables show the javadoc:org.springframework.boot.availability.AvailabilityState[] and the state of HTTP connectors at different stages.
+下表显示了不同阶段的 javadoc:org.springframework.boot.availability.AvailabilityState[] 和 HTTP 连接器的状态。
 
-When a Spring Boot application starts:
+当 Spring Boot 应用程序启动时：
 
 [cols="2,2,2,3,5"]
 |===
@@ -1042,22 +1038,22 @@ When a Spring Boot application starts:
 |`BROKEN`
 |`REFUSING_TRAFFIC`
 |Not started
-|Kubernetes checks the "liveness" Probe and restarts the application if it takes too long.
+|Kubernetes 检查 "liveness" 探针，如果耗时过长会重启应用程序。
 
 |Started
 |`CORRECT`
 |`REFUSING_TRAFFIC`
 |Refuses requests
-|The application context is refreshed. The application performs startup tasks and does not receive traffic yet.
+|应用程序上下文已刷新。应用程序执行启动任务，尚未接收流量。
 
 |Ready
 |`CORRECT`
 |`ACCEPTING_TRAFFIC`
 |Accepts requests
-|Startup tasks are finished. The application is receiving traffic.
+|启动任务已完成。应用程序正在接收流量。
 |===
 
-When a Spring Boot application shuts down:
+当 Spring Boot 应用程序关闭时：
 
 [cols="2,2,2,3,5"]
 |===
@@ -1067,37 +1063,37 @@ When a Spring Boot application shuts down:
 |`CORRECT`
 |`ACCEPTING_TRAFFIC`
 |Accepts requests
-|Shutdown has been requested.
+|已请求关闭。
 
 |Graceful shutdown
 |`CORRECT`
 |`REFUSING_TRAFFIC`
 |New requests are rejected
-|If enabled, xref:web/graceful-shutdown.adoc[graceful shutdown processes in-flight requests].
+|如果启用，xref:web/graceful-shutdown.adoc[优雅关闭处理正在进行的请求]。
 
 |Shutdown complete
 |N/A
 |N/A
 |Server is shut down
-|The application context is closed and the application is shut down.
+|应用程序上下文已关闭，应用程序已停止。
 |===
 
-TIP: See xref:how-to:deployment/cloud.adoc#howto.deployment.cloud.kubernetes.container-lifecycle[] for more information about Kubernetes deployment.
+TIP: 有关 Kubernetes 部署的更多信息，请参阅 xref:how-to:deployment/cloud.adoc#howto.deployment.cloud.kubernetes.container-lifecycle[]。
 
 
 
 [[actuator.endpoints.info]]
-== Application Information
+== 应用程序信息
 
-Application information exposes various information collected from all javadoc:org.springframework.boot.actuate.info.InfoContributor[] beans defined in your javadoc:org.springframework.context.ApplicationContext[].
-Spring Boot includes a number of auto-configured javadoc:org.springframework.boot.actuate.info.InfoContributor[] beans, and you can write your own.
+应用程序信息暴露从您 javadoc:org.springframework.context.ApplicationContext[] 中定义的所有 javadoc:org.springframework.boot.actuate.info.InfoContributor[] bean 收集的各种信息。
+Spring Boot 包含多个自动配置的 javadoc:org.springframework.boot.actuate.info.InfoContributor[] bean，您也可以编写自己的。
 
 
 
 [[actuator.endpoints.info.auto-configured-info-contributors]]
-=== Auto-configured InfoContributors
+=== 自动配置的 InfoContributor
 
-When appropriate, Spring auto-configures the following javadoc:org.springframework.boot.actuate.info.InfoContributor[] beans:
+在适当情况下，Spring 自动配置下表中列出的 javadoc:org.springframework.boot.actuate.info.InfoContributor[] bean：
 
 [cols="1,4,8,4"]
 |===
@@ -1105,59 +1101,58 @@ When appropriate, Spring auto-configures the following javadoc:org.springframewo
 
 | `build`
 | javadoc:org.springframework.boot.actuate.info.BuildInfoContributor[]
-| Exposes build information.
-| A `META-INF/build-info.properties` resource.
+| 暴露构建信息。
+| `META-INF/build-info.properties` 资源。
 
 | `env`
 | javadoc:org.springframework.boot.actuate.info.EnvironmentInfoContributor[]
-| Exposes any property from the javadoc:org.springframework.core.env.Environment[] whose name starts with `info.`.
-| None.
+| 暴露 javadoc:org.springframework.core.env.Environment[] 中以 `info.` 开头的任何属性。
+| 无。
 
 | `git`
 | javadoc:org.springframework.boot.actuate.info.GitInfoContributor[]
-| Exposes git information.
-| A `git.properties` resource.
+| 暴露 git 信息。
+| `git.properties` 资源。
 
 | `java`
 | javadoc:org.springframework.boot.actuate.info.JavaInfoContributor[]
-| Exposes Java runtime information.
-| None.
+| 暴露 Java 运行时信息。
+| 无。
 
 | `os`
 | javadoc:org.springframework.boot.actuate.info.OsInfoContributor[]
-| Exposes Operating System information.
-| None.
+| 暴露操作系统信息。
+| 无。
 
 | `process`
 | javadoc:org.springframework.boot.actuate.info.ProcessInfoContributor[]
-| Exposes process information.
-| None.
+| 暴露进程信息。
+| 无。
 
 | `ssl`
 | javadoc:org.springframework.boot.actuate.info.SslInfoContributor[]
-| Exposes SSL certificate information.
-| An xref:features/ssl.adoc#features.ssl.bundles[SSL Bundle] configured.
-
+| 暴露 SSL 证书信息。
+| 配置了 xref:features/ssl.adoc#features.ssl.bundles[SSL Bundle]。
 |===
 
-Whether an individual contributor is enabled is controlled by its `management.info.<id>.enabled` property.
-Different contributors have different defaults for this property, depending on their prerequisites and the nature of the information that they expose.
+各个贡献者的启用由其 `management.info.<id>.enabled` 属性控制。
+不同的贡献者对此属性的默认值不同，取决于其前提条件和暴露信息的性质。
 
-With no prerequisites to indicate that they should be enabled, the `env`, `java`, `os`, and `process` contributors are disabled by default. The `ssl` contributor has a prerequisite of having an xref:features/ssl.adoc#features.ssl.bundles[SSL Bundle] configured but it is disabled by default.
-Each can be enabled by setting its `management.info.<id>.enabled` property to `true`.
+对于没有前提条件表明应启用的 `env`、`java`、`os` 和 `process` 贡献者，默认禁用。`ssl` 贡献者需要配置 xref:features/ssl.adoc#features.ssl.bundles[SSL Bundle]，但默认禁用。
+每个可以通过将其 `management.info.<id>.enabled` 属性设置为 `true` 启用。
 
-The `build` and `git` info contributors are enabled by default.
-Each can be disabled by setting its `management.info.<id>.enabled` property to `false`.
-Alternatively, to disable every contributor that is usually enabled by default, set the configprop:management.info.defaults.enabled[] property to `false`.
+`build` 和 `git` 信息贡献者默认启用。
+每个可以通过将其 `management.info.<id>.enabled` 属性设置为 `false` 禁用。
+或者，要禁用通常默认启用的每个贡献者，请将 configprop:management.info.defaults.enabled[] 属性设置为 `false`。
 
 
 
 [[actuator.endpoints.info.custom-application-information]]
-=== Custom Application Information
+=== 自定义应用程序信息
 
-When the `env` contributor is enabled, you can customize the data exposed by the `info` endpoint by setting `+info.*+` Spring properties.
-All javadoc:org.springframework.core.env.Environment[] properties under the `info` key are automatically exposed.
-For example, you could add the following settings to your `application.properties` file:
+当启用 `env` 贡献者时，您可以通过设置 `+info.*+` Spring 属性自定义 `info` 端点暴露的数据。
+javadoc:org.springframework.core.env.Environment[] 中以 `info` 为键的所有属性都会自动暴露。
+例如，您可以在 `application.properties` 文件中添加以下设置：
 
 [configprops,yaml]
 ----
@@ -1171,9 +1166,9 @@ info:
 
 [TIP]
 ====
-Rather than hardcoding those values, you could also xref:how-to:properties-and-configuration.adoc#howto.properties-and-configuration.expand-properties[expand info properties at build time].
+与其硬编码这些值，您也可以在构建时 xref:how-to:properties-and-configuration.adoc#howto.properties-and-configuration.expand-properties[扩展信息属性]。
 
-Assuming you use Maven, you could rewrite the preceding example as follows:
+假设您使用 Maven，可以将上述示例重写如下：
 
 [configprops,yaml]
 ----
@@ -1189,17 +1184,17 @@ info:
 
 
 [[actuator.endpoints.info.git-commit-information]]
-=== Git Commit Information
+=== Git 提交信息
 
-Another useful feature of the `info` endpoint is its ability to publish information about the state of your `git` source code repository when the project was built.
-If a javadoc:org.springframework.boot.info.GitProperties[] bean is available, you can use the `info` endpoint to expose these properties.
+`info` 端点的另一个有用功能是能够发布项目构建时 `git` 源代码存储库的状态信息。
+如果 javadoc:org.springframework.boot.info.GitProperties[] bean 可用，您可以使用 `info` 端点暴露这些属性。
 
-TIP: A javadoc:org.springframework.boot.info.GitProperties[] bean is auto-configured if a `git.properties` file is available at the root of the classpath.
-See xref:how-to:build.adoc#howto.build.generate-git-info[] for more detail.
+TIP: 如果类路径根目录下有 `git.properties` 文件，javadoc:org.springframework.boot.info.GitProperties[] bean 会自动配置。
+有关详细信息，请参阅 xref:how-to:build.adoc#howto.build.generate-git-info[]。
 
-By default, the endpoint exposes `git.branch`, `git.commit.id`, and `git.commit.time` properties, if present.
-If you do not want any of these properties in the endpoint response, they need to be excluded from the `git.properties` file.
-If you want to display the full git information (that is, the full content of `git.properties`), use the configprop:management.info.git.mode[] property, as follows:
+默认情况下，端点暴露 `git.branch`、`git.commit.id` 和 `git.commit.time` 属性（如果存在）。
+如果您不希望这些属性出现在端点响应中，需要从 `git.properties` 文件中排除它们。
+如果您想显示完整的 git 信息（即 `git.properties` 的全部内容），请使用 configprop:management.info.git.mode[] 属性，如下所示：
 
 [configprops,yaml]
 ----
@@ -1209,7 +1204,7 @@ management:
       mode: "full"
 ----
 
-To disable the git commit information from the `info` endpoint completely, set the configprop:management.info.git.enabled[] property to `false`, as follows:
+要完全禁用 `info` 端点的 git 提交信息，请将 configprop:management.info.git.enabled[] 属性设置为 `false`，如下所示：
 
 [configprops,yaml]
 ----
@@ -1222,96 +1217,96 @@ management:
 
 
 [[actuator.endpoints.info.build-information]]
-=== Build Information
+=== 构建信息
 
-If a javadoc:org.springframework.boot.info.BuildProperties[] bean is available, the `info` endpoint can also publish information about your build.
-This happens if a `META-INF/build-info.properties` file is available in the classpath.
+如果 javadoc:org.springframework.boot.info.BuildProperties[] bean 可用，`info` 端点还可以发布有关构建的信息。
+如果类路径中有 `META-INF/build-info.properties` 文件，则会发生这种情况。
 
-TIP: The Maven and Gradle plugins can both generate that file.
-See xref:how-to:build.adoc#howto.build.generate-info[] for more details.
+TIP: Maven 和 Gradle 插件都可以生成该文件。
+有关详细信息，请参阅 xref:how-to:build.adoc#howto.build.generate-info[]。
 
 
 
 [[actuator.endpoints.info.java-information]]
-=== Java Information
+=== Java 信息
 
-The `info` endpoint publishes information about your Java runtime environment, see javadoc:org.springframework.boot.info.JavaInfo[] for more details.
+`info` 端点发布有关 Java 运行时环境的信息，详情请参阅 javadoc:org.springframework.boot.info.JavaInfo[]。
 
 
 
 [[actuator.endpoints.info.os-information]]
-=== OS Information
+=== 操作系统信息
 
-The `info` endpoint publishes information about your Operating System, see javadoc:org.springframework.boot.info.OsInfo[] for more details.
+`info` 端点发布有关操作系统的信息，详情请参阅 javadoc:org.springframework.boot.info.OsInfo[]。
 
 
 
 [[actuator.endpoints.info.process-information]]
-=== Process Information
+=== 进程信息
 
-The `info` endpoint publishes information about your process, see javadoc:org.springframework.boot.info.ProcessInfo[] for more details.
+`info` 端点发布有关进程的信息，详情请参阅 javadoc:org.springframework.boot.info.ProcessInfo[]。
 
 
 
 [[actuator.endpoints.info.ssl-information]]
-=== SSL Information
+=== SSL 信息
 
-The `info` endpoint publishes information about your SSL certificates (that are configured through xref:features/ssl.adoc#features.ssl.bundles[SSL Bundles]), see javadoc:org.springframework.boot.info.SslInfo[] for more details. This endpoint reuses the "warning threshold" property of javadoc:org.springframework.boot.actuate.ssl.SslHealthIndicator[]: if an SSL certificate will be invalid within the time span defined by this threshold, it will trigger a warning. See the `management.health.ssl.certificate-validity-warning-threshold` property.
+`info` 端点发布有关 SSL 证书（通过 xref:features/ssl.adoc#features.ssl.bundles[SSL Bundle] 配置）的信息，详情请参阅 javadoc:org.springframework.boot.info.SslInfo[]。此端点重用 javadoc:org.springframework.boot.actuate.ssl.SslHealthIndicator[] 的“警告阈值”属性：如果 SSL 证书将在此阈值定义的时间范围内失效，将触发警告。有关详细信息，请参阅 `management.health.ssl.certificate-validity-warning-threshold` 属性。
 
 
 
 [[actuator.endpoints.info.writing-custom-info-contributors]]
-=== Writing Custom InfoContributors
+=== 编写自定义 InfoContributor
 
-To provide custom application information, you can register Spring beans that implement the javadoc:org.springframework.boot.actuate.info.InfoContributor[] interface.
+要提供自定义应用程序信息，您可以注册实现 javadoc:org.springframework.boot.actuate.info.InfoContributor[] 接口的 Spring bean。
 
-The following example contributes an `example` entry with a single value:
+以下示例贡献一个包含单个值的 `example` 条目：
 
 include-code::MyInfoContributor[]
 
-If you reach the `info` endpoint, you should see a response that contains the following additional entry:
+如果您访问 `info` 端点，您应该看到包含以下额外条目的响应：
 
 [source,json]
 ----
 {
-	"example": {
-		"key" : "value"
-	}
+    "example": {
+        "key" : "value"
+    }
 }
 ----
 
 
 
 [[actuator.endpoints.sbom]]
-== Software Bill of Materials (SBOM)
+== 软件物料清单 (SBOM)
 
-The `sbom` endpoint exposes the https://en.wikipedia.org/wiki/Software_supply_chain[Software Bill of Materials].
-CycloneDX SBOMs can be auto-detected, but other formats can be manually configured, too.
+`sbom` 端点暴露 https://en.wikipedia.org/wiki/Software_supply_chain[软件物料清单]。
+CycloneDX SBOM 可以自动检测，但也可以手动配置其他格式。
 
-The `sbom` actuator endpoint will then expose an SBOM called "application", which describes the contents of your application.
+`sbom` Actuator 端点将暴露一个名为 "application" 的 SBOM，描述应用程序的内容。
 
-TIP: To automatically generate a CycloneDX SBOM at project build time, please see the xref:how-to:build.adoc#howto.build.generate-cyclonedx-sbom[] section.
+TIP: 要在项目构建时自动生成 CycloneDX SBOM，请参阅 xref:how-to:build.adoc#howto.build.generate-cyclonedx-sbom[] 部分。
 
 
 
 [[actuator.endpoints.sbom.other-formats]]
-=== Other SBOM formats
+=== 其他 SBOM 格式
 
-If you want to publish an SBOM in a different format, there are some configuration properties which you can use.
+如果您想发布其他格式的 SBOM，可以使用一些配置属性。
 
-The configuration property configprop:management.endpoint.sbom.application.location[] sets the location for the application SBOM.
-For example, setting this to `classpath:sbom.json` will use the contents of the `/sbom.json` resource on the classpath.
+配置属性 configprop:management.endpoint.sbom.application.location[] 设置应用程序 SBOM 的位置。
+例如，将其设置为 `classpath:sbom.json` 将使用类路径上 `/sbom.json` 资源的内容。
 
-The media type for SBOMs in CycloneDX, SPDX and Syft format is detected automatically.
-To override the auto-detected media type, use the configuration property configprop:management.endpoint.sbom.application.media-type[].
+CycloneDX、SPDX 和 Syft 格式的 SBOM 的媒体类型会自动检测。
+要覆盖自动检测的媒体类型，请使用配置属性 configprop:management.endpoint.sbom.application.media-type[]。
 
 
 
 [[actuator.endpoints.sbom.additional]]
-=== Additional SBOMs
+=== 额外的 SBOM
 
-The actuator endpoint can handle multiple SBOMs.
-To add SBOMs, use the configuration property configprop:management.endpoint.sbom.additional[], as shown in this example:
+Actuator 端点可以处理多个 SBOM。
+要添加 SBOM，请使用配置属性 configprop:management.endpoint.sbom.additional[]，如下例所示：
 
 [configprops,yaml]
 ----
@@ -1324,5 +1319,5 @@ management:
           media-type: "application/spdx+json"
 ----
 
-This will add an SBOM called "system", which is stored in `/system.spdx.json`.
-The `optional:` prefix can be used to prevent a startup failure if the file doesn't exist.
+这将添加一个名为 "system" 的 SBOM，存储在 `/system.spdx.json` 中。
+`optional:` 前缀可用于防止文件不存在时启动失败。
