@@ -1,25 +1,25 @@
 [[getting-started.first-application]]
-= Developing Your First Spring Boot Application
+= 开发您的第一个 Spring Boot 应用程序
 
-This section describes how to develop a small "`Hello World!`" web application that highlights some of Spring Boot's key features.
-You can choose between Maven or Gradle as the build system.
+本节描述如何开发一个小的 "`Hello World!`" Web 应用程序，展示 Spring Boot 的一些关键功能。
+您可以选择 Maven 或 Gradle 作为构建系统。
 
 [TIP]
 ====
-The https://spring.io[spring.io] website contains many "`Getting Started`" https://spring.io/guides[guides] that use Spring Boot.
-If you need to solve a specific problem, check there first.
+https://spring.io[spring.io] 网站包含许多使用 Spring Boot 的 "`Getting Started`" https://spring.io/guides[指南]。
+如果您需要解决特定问题，请先查看那里。
 
-You can shortcut the steps below by going to https://start.spring.io and choosing the "Web" starter from the dependencies searcher.
-Doing so generates a new project structure so that you can xref:tutorial:first-application/index.adoc#getting-started.first-application.code[start coding right away].
-Check the https://github.com/spring-io/start.spring.io/blob/main/USING.adoc[start.spring.io user guide] for more details.
+您可以通过访问 https://start.spring.io 并在依赖搜索中选择 "Web" starter 来简化以下步骤。
+这样做会生成一个新的项目结构，以便您可以 xref:tutorial:first-application/index.adoc#getting-started.first-application.code[立即开始编码]。
+有关更多详细信息，请查看 https://github.com/spring-io/start.spring.io/blob/main/USING.adoc[start.spring.io 用户指南]。
 ====
 
 
 
 [[getting-started.first-application.prerequisites]]
-== Prerequisites
+== 前提条件
 
-Before we begin, open a terminal and run the following commands to ensure that you have a valid version of Java installed:
+在开始之前，打开终端并运行以下命令，以确保您已安装有效版本的 Java：
 
 [source,shell]
 ----
@@ -29,15 +29,15 @@ OpenJDK Runtime Environment (build 17.0.4.1+1-LTS)
 OpenJDK 64-Bit Server VM (build 17.0.4.1+1-LTS, mixed mode, sharing)
 ----
 
-NOTE: This sample needs to be created in its own directory.
-Subsequent instructions assume that you have created a suitable directory and that it is your current directory.
+NOTE: 此示例需要在自己的目录中创建。
+后续说明假设您已创建了一个合适的目录，并且它是您当前的目录。
 
 
 
 [[getting-started.first-application.prerequisites.maven]]
 === Maven
 
-If you want to use Maven, ensure that you have Maven installed:
+如果您想使用 Maven，请确保已安装 Maven：
 
 [source,shell]
 ----
@@ -52,7 +52,7 @@ Java version: 17.0.4.1, vendor: BellSoft, runtime: /Users/developer/sdkman/candi
 [[getting-started.first-application.prerequisites.gradle]]
 === Gradle
 
-If you want to use Gradle, ensure that you have Gradle installed:
+如果您想使用 Gradle，请确保已安装 Gradle：
 
 [source,shell]
 ----
@@ -75,105 +75,105 @@ OS:           Linux 6.2.12-200.fc37.aarch64 aarch64
 
 
 [[getting-started.first-application.pom]]
-== Setting Up the Project With Maven
+== 使用 Maven 设置项目
 
-We need to start by creating a Maven `pom.xml` file.
-The `pom.xml` is the recipe that is used to build your project.
-Open your favorite text editor and add the following:
+我们需要首先创建一个 Maven `pom.xml` 文件。
+`pom.xml` 是用于构建项目的配方文件。
+打开您喜欢的文本编辑器并添加以下内容：
 
 [source,xml,subs="verbatim,attributes"]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example</groupId>
-	<artifactId>myproject</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <groupId>com.example</groupId>
+    <artifactId>myproject</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>{version-spring-boot}</version>
-	</parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>{version spring-boot}</version>
+    </parent>
 
-	<!-- Additional lines to be added here... -->
+    <!-- Additional lines to be added here... -->
 
 ifeval::["{build-and-artifact-release-type}" == "opensource-milestone"]
-		<!-- (you don't need this if you are using a release version) -->
-		<repositories>
-			<repository>
-				<id>spring-milestones</id>
-				<url>https://repo.spring.io/milestone</url>
-			</repository>
-		</repositories>
-		<pluginRepositories>
-			<pluginRepository>
-				<id>spring-milestones</id>
-				<url>https://repo.spring.io/milestone</url>
-			</pluginRepository>
-		</pluginRepositories>
+        <!-- (you don't need this if you are using a release version) -->
+        <repositories>
+            <repository>
+                <id>spring-milestones</id>
+                <url>https://repo.spring.io/milestone</url>
+            </repository>
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <id>spring-milestones</id>
+                <url>https://repo.spring.io/milestone</url>
+            </pluginRepository>
+        </pluginRepositories>
 endif::[]
 ifeval::["{build-and-artifact-release-type}" == "opensource-snapshot"]
-		<!-- (you don't need this if you are using a release version) -->
-		<repositories>
-			<repository>
-				<id>spring-snapshots</id>
-				<url>https://repo.spring.io/snapshot</url>
-				<snapshots><enabled>true</enabled></snapshots>
-			</repository>
-			<repository>
-				<id>spring-milestones</id>
-				<url>https://repo.spring.io/milestone</url>
-			</repository>
-		</repositories>
-		<pluginRepositories>
-			<pluginRepository>
-				<id>spring-snapshots</id>
-				<url>https://repo.spring.io/snapshot</url>
-			</pluginRepository>
-			<pluginRepository>
-				<id>spring-milestones</id>
-				<url>https://repo.spring.io/milestone</url>
-			</pluginRepository>
-		</pluginRepositories>
+        <!-- (you don't need this if you are using a release version) -->
+        <repositories>
+            <repository>
+                <id>spring-snapshots</id>
+                <url>https://repo.spring.io/snapshot</url>
+                <snapshots><enabled>true</enabled></snapshots>
+            </repository>
+            <repository>
+                <id>spring-milestones</id>
+                <url>https://repo.spring.io/milestone</url>
+            </repository>
+        </repositories>
+        <pluginRepositories>
+            <pluginRepository>
+                <id>spring-snapshots</id>
+                <url>https://repo.spring.io/snapshot</url>
+            </pluginRepository>
+            <pluginRepository>
+                <id>spring-milestones</id>
+                <url>https://repo.spring.io/milestone</url>
+            </pluginRepository>
+        </pluginRepositories>
 endif::[]
 </project>
 ----
 
 ifeval::["{build-type}" == "opensource"]
-The preceding listing should give you a working build.
+上述清单应为您提供一个可用的构建。
 endif::[]
 
 ifeval::["{build-type}" == "commercial"]
-You will also have to configure your build to access the Spring Commercial repository.
-This is usual done through a local artifact repository that mirrors the content of the Spring Commercial repository.
-Alternatively, while it is not recommended, the Spring Commercial repository can also be accessed directly.
-In either case, see https://docs.vmware.com/en/Tanzu-Spring-Runtime/Commercial/Tanzu-Spring-Runtime/spring-enterprise-subscription.html[the Tanzu Spring Runtime documentation] for further details.
+您还需要配置您的构建以访问 Spring 商业存储库。
+这通常通过镜像 Spring 商业存储库内容的本地 artifact 存储库完成。
+或者，虽然不推荐，但也可以直接访问 Spring 商业存储库。
+无论哪种情况，详细信息请参阅 https://docs.vmware.com/en/Tanzu-Spring-Runtime/Commercial/Tanzu-Spring-Runtime/spring-enterprise-subscription.html[Tanzu Spring Runtime 文档]。
 
-With the addition of the necessary repository configuration, the preceding listing should give you a working build.
+在添加必要的存储库配置后，上述清单应为您提供一个可用的构建。
 endif::[]
 
-You can test it by running `mvn package` (for now, you can ignore the "`jar will be empty - no content was marked for inclusion!`" warning).
+您可以通过运行 `mvn package` 测试它（现在可以忽略 "`jar will be empty - no content was marked for inclusion!`" 警告）。
 
-NOTE: At this point, you could import the project into an IDE (most modern Java IDEs include built-in support for Maven).
-For simplicity, we continue to use a plain text editor for this example.
+NOTE: 此时，您可以将项目导入 IDE（大多数现代 Java IDE 都内置支持 Maven）。
+为简单起见，我们在此示例中继续使用纯文本编辑器。
 
 
 
 [[getting-started.first-application.gradle]]
-== Setting Up the Project With Gradle
+== 使用 Gradle 设置项目
 
-We need to start by creating a Gradle `build.gradle` file.
-The `build.gradle` is the build script that is used to build your project.
-Open your favorite text editor and add the following:
+我们需要首先创建一个 Gradle `build.gradle` 文件。
+`build.gradle` 是用于构建项目的构建脚本。
+打开您喜欢的文本编辑器并添加以下内容：
 
 [source,gradle,subs="verbatim,attributes"]
 ----
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '{version-spring-boot}'
+    id 'java'
+    id 'org.springframework.boot' version '{version spring-boot}'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -183,10 +183,10 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 ifeval::["{artifact-release-type}" != "release"]
-	maven { url 'https://repo.spring.io/milestone' }
-	maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
 endif::[]
 }
 
@@ -194,31 +194,31 @@ dependencies {
 }
 ----
 
-The preceding listing should give you a working build.
-You can test it by running `gradle classes`.
+上述清单应为您提供一个可用的构建。
+您可以通过运行 `gradle classes` 测试它。
 
-NOTE: At this point, you could import the project into an IDE (most modern Java IDEs include built-in support for Gradle).
-For simplicity, we continue to use a plain text editor for this example.
+NOTE: 此时，您可以将项目导入 IDE（大多数现代 Java IDE 都内置支持 Gradle）。
+为简单起见，我们在此示例中继续使用纯文本编辑器。
 
 
 
 [[getting-started.first-application.dependencies]]
-== Adding Classpath Dependencies
+== 添加类路径依赖
 
-Spring Boot provides a number of starters that let you add jars to your classpath.
-Starters provide dependencies that you are likely to need when developing a specific type of application.
+Spring Boot 提供了许多 starter，允许您将 jar 添加到类路径中。
+Starter 提供了开发特定类型应用程序时可能需要的依赖。
 
 
 
 [[getting-started.first-application.dependencies.maven]]
 === Maven
 
-Most Spring Boot applications use the `spring-boot-starter-parent` in the `parent` section of the POM.
-The `spring-boot-starter-parent` is a special starter that provides useful Maven defaults.
-It also provides a xref:reference:using/build-systems.adoc#using.build-systems.dependency-management[`dependency-management`] section so that you can omit `version` tags for "`blessed`" dependencies.
+大多数 Spring Boot 应用程序在 POM 的 `parent` 部分使用 `spring-boot-starter-parent`。
+`spring-boot-starter-parent` 是一个特殊的 starter，提供有用的 Maven 默认配置。
+它还提供一个 xref:reference:using/build-systems.adoc#using.build-systems.dependency-management[`dependency-management`] 部分，以便您可以省略 "`blessed`" 依赖的 `version` 标签。
 
-Since we are developing a web application, we add a `spring-boot-starter-web` dependency.
-Before that, we can look at what we currently have by running the following command:
+由于我们正在开发一个 Web 应用程序，我们添加一个 `spring-boot-starter-web` 依赖。
+在此之前，我们可以通过运行以下命令查看当前拥有的内容：
 
 [source,shell]
 ----
@@ -227,33 +227,33 @@ $ mvn dependency:tree
 [INFO] com.example:myproject:jar:0.0.1-SNAPSHOT
 ----
 
-The `mvn dependency:tree` command prints a tree representation of your project dependencies.
-You can see that `spring-boot-starter-parent` provides no dependencies by itself.
-To add the necessary dependencies, edit your `pom.xml` and add the `spring-boot-starter-web` dependency immediately below the `parent` section:
+`mvn dependency:tree` 命令打印项目依赖的树形表示。
+您可以看到 `spring-boot-starter-parent` 本身不提供任何依赖。
+要添加必要的依赖，编辑您的 `pom.xml` 并在 `parent` 部分下方立即添加 `spring-boot-starter-web` 依赖：
 
 [source,xml]
 ----
 <dependencies>
-	<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-web</artifactId>
-	</dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
 </dependencies>
 ----
 
-If you run `mvn dependency:tree` again, you see that there are now a number of additional dependencies, including the Tomcat web server and Spring Boot itself.
+如果您再次运行 `mvn dependency:tree`，您会看到现在有许多额外的依赖，包括 Tomcat Web 服务器和 Spring Boot 本身。
 
 
 
 [[getting-started.first-application.dependencies.gradle]]
 === Gradle
 
-Most Spring Boot applications use the `org.springframework.boot` Gradle plugin.
-This plugin provides useful defaults and Gradle tasks.
-The `io.spring.dependency-management` Gradle plugin provides xref:reference:using/build-systems.adoc#using.build-systems.dependency-management[dependency management] so that you can omit `version` tags for "`blessed`" dependencies.
+大多数 Spring Boot 应用程序使用 `org.springframework.boot` Gradle 插件。
+此插件提供有用的默认配置和 Gradle 任务。
+`io.spring.dependency-management` Gradle 插件提供 xref:reference:using/build-systems.adoc#using.build-systems.dependency-management[依赖管理]，以便您可以省略 "`blessed`" 依赖的 `version` 标签。
 
-Since we are developing a web application, we add a `spring-boot-starter-web` dependency.
-Before that, we can look at what we currently have by running the following command:
+由于我们正在开发一个 Web 应用程序，我们添加一个 `spring-boot-starter-web` 依赖。
+在此之前，我们可以通过运行以下命令查看当前拥有的内容：
 
 [source,shell]
 ----
@@ -266,95 +266,95 @@ Root project 'myproject'
 ------------------------------------------------------------
 ----
 
-The `gradle dependencies` command prints a tree representation of your project dependencies.
-Right now, the project has no dependencies.
-To add the necessary dependencies, edit your `build.gradle` and add the `spring-boot-starter-web` dependency in the `dependencies` section:
+`gradle dependencies` 命令打印项目依赖的树形表示。
+目前，项目没有任何依赖。
+要添加必要的依赖，编辑您的 `build.gradle` 并在 `dependencies` 部分添加 `spring-boot-starter-web` 依赖：
 
 [source,gradle]
 ----
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 }
 ----
 
-If you run `gradle dependencies` again, you see that there are now a number of additional dependencies, including the Tomcat web server and Spring Boot itself.
+如果您再次运行 `gradle dependencies`，您会看到现在有许多额外的依赖，包括 Tomcat Web 服务器和 Spring Boot 本身。
 
 
 
 [[getting-started.first-application.code]]
-== Writing the Code
+== 编写代码
 
-To finish our application, we need to create a single Java file.
-By default, Maven and Gradle compile sources from `src/main/java`, so you need to create that directory structure and then add a file named `src/main/java/com/example/MyApplication.java` to contain the following code:
+要完成我们的应用程序，我们需要创建一个 Java 文件。
+默认情况下，Maven 和 Gradle 从 `src/main/java` 编译源代码，因此您需要创建该目录结构，然后添加一个名为 `src/main/java/com/example/MyApplication.java` 的文件，包含以下代码：
 
 [chomp_package_replacement=com.example]
 include-code::MyApplication[]
 
-Although there is not much code here, quite a lot is going on.
-We step through the important parts in the next few sections.
+虽然这里的代码不多，但发生了很多事情。
+我们在接下来的几个部分中逐步讲解重要部分。
 
 
 
 [[getting-started.first-application.code.mvc-annotations]]
-=== The @RestController and @RequestMapping Annotations
+=== @RestController 和 @RequestMapping 注解
 
-The first annotation on our `MyApplication` class is javadoc:org.springframework.web.bind.annotation.RestController[format=annotation].
-This is known as a _stereotype_ annotation.
-It provides hints for people reading the code and for Spring that the class plays a specific role.
-In this case, our class is a web javadoc:org.springframework.stereotype.Controller[format=annotation], so Spring considers it when handling incoming web requests.
+我们的 `MyApplication` 类上的第一个注解是 javadoc:org.springframework.web.bind.annotation.RestController[format=annotation]。
+这被称为 _stereotype_ 注解。
+它为阅读代码的人和 Spring 提供了提示，表明该类扮演特定角色。
+在这种情况下，我们的类是一个 Web javadoc:org.springframework.stereotype.Controller[format=annotation]，因此 Spring 在处理传入的 Web 请求时会考虑它。
 
-The javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] annotation provides "`routing`" information.
-It tells Spring that any HTTP request with the `/` path should be mapped to the `home` method.
-The javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] annotation tells Spring to render the resulting string directly back to the caller.
+javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] 注解提供 "`routing`" 信息。
+它告诉 Spring，任何带有 `/` 路径的 HTTP 请求都应映射到 `home` 方法。
+javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] 注解告诉 Spring 将结果字符串直接返回给调用者。
 
-TIP: The javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] and javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] annotations are Spring MVC annotations (they are not specific to Spring Boot).
-See the {url-spring-framework-docs}/web/webmvc.html[MVC section] in the Spring Reference Documentation for more details.
+TIP: javadoc:org.springframework.web.bind.annotation.RestController[format=annotation] 和 javadoc:org.springframework.web.bind.annotation.RequestMapping[format=annotation] 注解是 Spring MVC 注解（它们并非 Spring Boot 专有）。
+有关更多详细信息，请参阅 Spring 参考文档中的 {url spring-framework-docs}/web/webmvc.html[MVC 部分]。
 
 
 
 [[getting-started.first-application.code.spring-boot-application]]
-=== The @SpringBootApplication Annotation
+=== @SpringBootApplication 注解
 
-The second class-level annotation is javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation].
-This annotation is known as a _meta-annotation_, it combines javadoc:org.springframework.boot.SpringBootConfiguration[format=annotation], javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] and javadoc:org.springframework.context.annotation.ComponentScan[format=annotation].
+第二个类级注解是 javadoc:org.springframework.boot.autoconfigure.SpringBootApplication[format=annotation]。
+此注解被称为 _meta-annotation_，它结合了 javadoc:org.springframework.boot.SpringBootConfiguration[format=annotation]、javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] 和 javadoc:org.springframework.context.annotation.ComponentScan[format=annotation]。
 
-Of those, the annotation we're most interested in here is javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation].
-javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] tells Spring Boot to "`guess`" how you want to configure Spring, based on the jar dependencies that you have added.
-Since `spring-boot-starter-web` added Tomcat and Spring MVC, the auto-configuration assumes that you are developing a web application and sets up Spring accordingly.
+其中，我们最感兴趣的注解是 javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation]。
+javadoc:org.springframework.boot.autoconfigure.EnableAutoConfiguration[format=annotation] 告诉 Spring Boot 根据您添加的 jar 依赖来 "`猜测`" 如何配置 Spring。
+由于添加了 `spring-boot-starter-web`，自动配置假设您正在开发 Web 应用程序并相应地设置 Spring。
 
-.Starters and Auto-configuration
+.Starters 和自动配置
 ****
-Auto-configuration is designed to work well with starters, but the two concepts are not directly tied.
-You are free to pick and choose jar dependencies outside of the starters.
-Spring Boot still does its best to auto-configure your application.
+自动配置设计为与 starter 配合良好，但这两个概念并非直接关联。
+您可以自由选择 starter 之外的 jar 依赖。
+Spring Boot 仍会尽力自动配置您的应用程序。
 ****
 
 
 
 [[getting-started.first-application.code.main-method]]
-=== The "`main`" Method
+=== "`main`" 方法
 
-The final part of our application is the `main` method.
-This is a standard method that follows the Java convention for an application entry point.
-Our main method delegates to Spring Boot's javadoc:org.springframework.boot.SpringApplication[] class by calling `run`.
-javadoc:org.springframework.boot.SpringApplication[] bootstraps our application, starting Spring, which, in turn, starts the auto-configured Tomcat web server.
-We need to pass `MyApplication.class` as an argument to the `run` method to tell javadoc:org.springframework.boot.SpringApplication[] which is the primary Spring component.
-The `args` array is also passed through to expose any command-line arguments.
+我们应用程序的最后部分是 `main` 方法。
+这是一个遵循 Java 应用程序入口点约定的标准方法。
+我们的 `main` 方法通过调用 `run` 将任务委托给 Spring Boot 的 javadoc:org.springframework.boot.SpringApplication[] 类。
+javadoc:org.springframework.boot.SpringApplication[] 启动我们的应用程序，启动 Spring，进而启动自动配置的 Tomcat Web 服务器。
+我们需要将 `MyApplication.class` 作为参数传递给 `run` 方法，以告诉 javadoc:org.springframework.boot.SpringApplication[] 哪个是主要的 Spring 组件。
+`args` 数组也会被传递，以暴露任何命令行参数。
 
 
 
 [[getting-started.first-application.run]]
-== Running the Example
+== 运行示例
 
 
 
 [[getting-started.first-application.run.maven]]
 === Maven
 
-At this point, your application should work.
-Since you used the `spring-boot-starter-parent` POM, you have a useful `run` goal that you can use to start the application.
-Type `mvn spring-boot:run` from the root project directory to start the application.
-You should see output similar to the following:
+此时，您的应用程序应该可以运行。
+由于您使用了 `spring-boot-starter-parent` POM，您可以使用一个有用的 `run` 目标来启动应用程序。
+从项目根目录运行 `mvn spring-boot:run` 以启动应用程序。
+您应该看到类似以下的输出：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -366,31 +366,31 @@ $ mvn spring-boot:run
  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::  (v{version-spring-boot})
+ :: Spring Boot ::  (v{version spring-boot})
 ....... . . .
 ....... . . . (log output here)
 ....... . . .
 ........ Started MyApplication in 0.906 seconds (process running for 6.514)
 ----
 
-If you open a web browser to `http://localhost:8080`, you should see the following output:
+如果您打开 Web 浏览器访问 `http://localhost:8080`，您应该看到以下输出：
 
 [source]
 ----
 Hello World!
 ----
 
-To gracefully exit the application, press `ctrl-c`.
+要优雅地退出应用程序，按 `ctrl-c`。
 
 
 
 [[getting-started.first-application.run.gradle]]
 === Gradle
 
-At this point, your application should work.
-Since you used the `org.springframework.boot` Gradle plugin, you have a useful `bootRun` goal that you can use to start the application.
-Type `gradle bootRun` from the root project directory to start the application.
-You should see output similar to the following:
+此时，您的应用程序应该可以运行。
+由于您使用了 `org.springframework.boot` Gradle 插件，您可以使用一个有用的 `bootRun` 目标来启动应用程序。
+从项目根目录运行 `gradle bootRun` 以启动应用程序。
+您应该看到类似以下的输出：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -402,41 +402,41 @@ $ gradle bootRun
  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::  (v{version-spring-boot})
+ :: Spring Boot ::  (v{version spring-boot})
 ....... . . .
 ....... . . . (log output here)
 ....... . . .
 ........ Started MyApplication in 0.906 seconds (process running for 6.514)
 ----
 
-If you open a web browser to `http://localhost:8080`, you should see the following output:
+如果您打开 Web 浏览器访问 `http://localhost:8080`，您应该看到以下输出：
 
 [source]
 ----
 Hello World!
 ----
 
-To gracefully exit the application, press `ctrl-c`.
+要优雅地退出应用程序，按 `ctrl-c`。
 
 
 
 [[getting-started.first-application.executable-jar]]
-== Creating an Executable Jar
+== 创建可执行 Jar
 
-We finish our example by creating a completely self-contained executable jar file that we could run in production.
-Executable jars (sometimes called "`uber jars`" or "`fat jars`") are archives containing your compiled classes along with all of the jar dependencies that your code needs to run.
+我们通过创建一个完全自包含的可执行 jar 文件来完成示例，该文件可以在生产环境中运行。
+可执行 jar（有时称为 "`uber jars`" 或 "`fat jars`"）是包含您编译的类以及代码运行所需的所有 jar 依赖的归档文件。
 
-.Executable jars and Java
+.可执行 jar 和 Java
 ****
-Java does not provide a standard way to load nested jar files (jar files that are themselves contained within a jar).
-This can be problematic if you are looking to distribute a self-contained application.
+Java 不提供加载嵌套 jar 文件（即包含在 jar 文件中的 jar 文件）的标准方式。
+如果您希望分发自包含的应用程序，这可能会成为问题。
 
-To solve this problem, many developers use "`uber`" jars.
-An uber jar packages all the classes from all the application's dependencies into a single archive.
-The problem with this approach is that it becomes hard to see which libraries are in your application.
-It can also be problematic if the same filename is used (but with different content) in multiple jars.
+为解决此问题，许多开发者使用 "`uber`" jar。
+Uber jar 将应用程序所有依赖中的所有类打包到一个单一归档文件中。
+这种方法的缺点是难以看出应用程序中包含哪些库。
+如果多个 jar 中使用了相同的文件名（但内容不同），也可能出现问题。
 
-Spring Boot takes a xref:specification:executable-jar/index.adoc[different approach] and lets you actually nest jars directly.
+Spring Boot 采用了 xref:specification:executable-jar/index.adoc[不同的方法]，允许您直接嵌套 jar 文件。
 ****
 
 
@@ -444,26 +444,26 @@ Spring Boot takes a xref:specification:executable-jar/index.adoc[different appro
 [[getting-started.first-application.executable-jar.maven]]
 === Maven
 
-To create an executable jar, we need to add the `spring-boot-maven-plugin` to our `pom.xml`.
-To do so, insert the following lines just below the `dependencies` section:
+要创建可执行 jar，我们需要在 `pom.xml` 中添加 `spring-boot-maven-plugin`。
+为此，在 `dependencies` 部分下方插入以下行：
 
 [source,xml]
 ----
 <build>
-	<plugins>
-		<plugin>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-maven-plugin</artifactId>
-		</plugin>
-	</plugins>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+    </plugins>
 </build>
 ----
 
-NOTE: The `spring-boot-starter-parent` POM includes `<executions>` configuration to bind the `repackage` goal.
-If you do not use the parent POM, you need to declare this configuration yourself.
-See the xref:maven-plugin:getting-started.adoc[plugin documentation] for details.
+NOTE: `spring-boot-starter-parent` POM 包含 `<executions>` 配置以绑定 `repackage` 目标。
+如果您不使用 parent POM，您需要自己声明此配置。
+有关详细信息，请参阅 xref:maven-plugin:getting-started.adoc[插件文档]。
 
-Save your `pom.xml` and run `mvn package` from the command line, as follows:
+保存您的 `pom.xml` 并从命令行运行 `mvn package`，如下所示：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -478,25 +478,25 @@ $ mvn package
 [INFO] --- maven-jar-plugin:2.4:jar (default-jar) @ myproject ---
 [INFO] Building jar: /Users/developer/example/spring-boot-example/target/myproject-0.0.1-SNAPSHOT.jar
 [INFO]
-[INFO] --- spring-boot-maven-plugin:{version-spring-boot}:repackage (default) @ myproject ---
+[INFO] --- spring-boot-maven-plugin:{version spring-boot}:repackage (default) @ myproject ---
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
 ----
 
-If you look in the `target` directory, you should see `myproject-0.0.1-SNAPSHOT.jar`.
-The file should be around 18 MB in size.
-If you want to peek inside, you can use `jar tvf`, as follows:
+如果您查看 `target` 目录，您应该看到 `myproject-0.0.1-SNAPSHOT.jar`。
+文件大小应约为 18 MB。
+如果您想查看内部内容，可以使用 `jar tvf`，如下所示：
 
 [source,shell]
 ----
 $ jar tvf target/myproject-0.0.1-SNAPSHOT.jar
 ----
 
-You should also see a much smaller file named `myproject-0.0.1-SNAPSHOT.jar.original` in the `target` directory.
-This is the original jar file that Maven created before it was repackaged by Spring Boot.
+您还应该在 `target` 目录中看到一个名为 `myproject-0.0.1-SNAPSHOT.jar.original` 的更小的文件。
+这是 Maven 创建的原始 jar 文件，在被 Spring Boot 重新打包之前。
 
-To run that application, use the `java -jar` command, as follows:
+要运行该应用程序，使用 `java -jar` 命令，如下所示：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -508,21 +508,21 @@ $ java -jar target/myproject-0.0.1-SNAPSHOT.jar
  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::  (v{version-spring-boot})
+ :: Spring Boot ::  (v{version spring-boot})
 ....... . . .
 ....... . . . (log output here)
 ....... . . .
 ........ Started MyApplication in 0.999 seconds (process running for 1.253)
 ----
 
-As before, to exit the application, press `ctrl-c`.
+与之前一样，要退出应用程序，按 `ctrl-c`。
 
 
 
 [[getting-started.first-application.executable-jar.gradle]]
 === Gradle
 
-To create an executable jar, we need to run `gradle bootJar` from the command line, as follows:
+要创建可执行 jar，我们需要从命令行运行 `gradle bootJar`，如下所示：
 
 [source,shell,subs="verbatim,attributes"]
 ----
@@ -532,16 +532,16 @@ BUILD SUCCESSFUL in 639ms
 3 actionable tasks: 3 executed
 ----
 
-If you look in the `build/libs` directory, you should see `myproject-0.0.1-SNAPSHOT.jar`.
-The file should be around 18 MB in size.
-If you want to peek inside, you can use `jar tvf`, as follows:
+如果您查看 `build/libs` 目录，您应该看到 `myproject-0.0.1-SNAPSHOT.jar`。
+文件大小应约为 18 MB。
+如果您想查看内部内容，可以使用 `jar tvf`，如下所示：
 
 [source,shell]
 ----
 $ jar tvf build/libs/myproject-0.0.1-SNAPSHOT.jar
 ----
 
-To run that application, use the `java -jar` command, as follows:
+要运行该应用程序，使用 `java -jar` 命令，如下所示：
 
 [source,shell]
 ----
@@ -553,11 +553,11 @@ $ java -jar build/libs/myproject-0.0.1-SNAPSHOT.jar
  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
   '  |____| .__|_| |_|_| |_\__, | / / / /
  =========|_|==============|___/=/_/_/_/
- :: Spring Boot ::  (v{version-spring-boot})
+ :: Spring Boot ::  (v{version spring-boot})
 ....... . . .
 ....... . . . (log output here)
 ....... . . .
 ........ Started MyApplication in 0.999 seconds (process running for 1.253)
 ----
 
-As before, to exit the application, press `ctrl-c`.
+与之前一样，要退出应用程序，按 `ctrl-c`。
