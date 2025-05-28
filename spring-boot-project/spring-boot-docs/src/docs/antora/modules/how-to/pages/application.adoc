@@ -1,5 +1,5 @@
 [[howto.application]]
-= Spring Boot Application
+= Spring Boot应用
 
 本节包含与 Spring Boot 应用程序直接相关的主题。
 

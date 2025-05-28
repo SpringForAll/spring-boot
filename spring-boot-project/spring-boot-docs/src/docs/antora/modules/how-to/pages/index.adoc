@@ -1,12 +1,12 @@
 [[howto]]
-= How-to Guides
+= 操作指南
 
-This section provides answers to some common '`how do I do that...`' questions that often arise when using Spring Boot.
-Its coverage is not exhaustive, but it does cover quite a lot.
+本节为使用 Spring Boot 时经常遇到的“如何做……”类问题提供解答。
+内容虽不全面，但已涵盖大量常见场景。
 
-If you have a specific problem that we do not cover here, you might want to check https://stackoverflow.com/tags/spring-boot[stackoverflow.com] to see if someone has already provided an answer.
-This is also a great place to ask new questions (please use the `spring-boot` tag).
+如果你遇到的问题未在此处涵盖，可以访问 https://stackoverflow.com/tags/spring-boot[stackoverflow.com] 查看是否已有答案。
+这也是一个提出新问题的好地方（请使用 `spring-boot` 标签）。
 
-We are also more than happy to extend this section.
-If you want to add a '`how-to`', send us a {url-github}[pull request].
+我们也非常欢迎扩展本节内容。
+如果你想添加“how-to”，请向我们提交 {url-github}[pull request]。
 

@@ -1,19 +1,19 @@
 [[howto.nosql]]
 = NoSQL
 
-Spring Boot offers a number of starters that support NoSQL technologies.
-This section answers questions that arise from using NoSQL with Spring Boot.
+Spring Boot 提供了多个支持 NoSQL 技术的 starter。
+本节解答在 Spring Boot 中使用 NoSQL 时常见的问题。
 
 
 
 [[howto.nosql.jedis-instead-of-lettuce]]
-== Use Jedis Instead of Lettuce
+== 使用 Jedis 替代 Lettuce
 
-By default, the Spring Boot starter (`spring-boot-starter-data-redis`) uses https://github.com/lettuce-io/lettuce-core/[Lettuce].
-You need to exclude that dependency and include the https://github.com/xetorthio/jedis/[Jedis] one instead.
-Spring Boot manages both of these dependencies, allowing you to switch to Jedis without specifying a version.
+默认情况下，Spring Boot starter（`spring-boot-starter-data-redis`）使用 https://github.com/lettuce-io/lettuce-core/[Lettuce]。
+你需要排除该依赖，并改为引入 https://github.com/xetorthio/jedis/[Jedis]。
+Spring Boot 会管理这两种依赖，因此切换到 Jedis 时无需指定版本。
 
-The following example shows how to accomplish this in Maven:
+以下示例展示了在 Maven 中如何实现：
 
 [source,xml]
 ----
@@ -33,7 +33,7 @@ The following example shows how to accomplish this in Maven:
 </dependency>
 ----
 
-The following example shows how to accomplish this in Gradle:
+以下示例展示了在 Gradle 中如何实现：
 
 [source,gradle]
 ----

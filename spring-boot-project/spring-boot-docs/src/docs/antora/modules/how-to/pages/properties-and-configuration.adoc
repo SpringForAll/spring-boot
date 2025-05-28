@@ -1,5 +1,5 @@
 [[howto.properties-and-configuration]]
-= Properties and Configuration
+= 属性与配置
 
 本节包含有关设置和读取属性、配置设置及其与 Spring Boot 应用程序交互的主题。
 

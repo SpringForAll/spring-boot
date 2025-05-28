@@ -1,7 +1,7 @@
 [[howto.testing]]
 = 测试
 
-Spring Boot 包含许多测试工具和支持类，以及一个提供常见测试依赖项的专用启动器。
+Spring Boot 包含许多测试工具和支持类，以及一个提供常见测试依赖项的专用 starter。
 本节解答有关测试的常见问题。
 
 
@@ -20,9 +20,8 @@ Spring Security 提供了与 Spring MVC Test 的全面集成，这也可以在�
 
 
 
-
 [[howto.testing.slice-tests]]
-== 为包含在切片测试中构建 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类
+== 为切片测试构建 javadoc:org.springframework.context.annotation.Configuration[format=annotation] 类
 
 切片测试通过将 Spring Framework 的组件扫描限制为基于其类型的有限组件集来工作。
 对于任何不是通过组件扫描创建的 bean，例如使用 javadoc:org.springframework.context.annotation.Bean[format=annotation] 注解创建的 bean，切片测试将无法在应用程序上下文中包含/排除它们。
@@ -40,6 +39,6 @@ include-code::MySecurityConfiguration[]
 
 include-code::MyDatasourceConfiguration[]
 
-当需要将某个域的 bean 包含在切片测试中时，拥有单个配置类可能效率低下。
-相反，将应用程序的配置构建为具有特定域 bean 的多个细粒度类可以仅针对特定的切片测试导入它们。
+当需要将某个领域的 bean 包含在切片测试中时，拥有单个配置类可能效率低下。
+相反，将应用程序的配置构建为具有特定领域 bean 的多个细粒度类，可以仅针对特定的切片测试导入它们。
 

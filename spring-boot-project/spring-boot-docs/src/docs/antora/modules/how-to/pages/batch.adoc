@@ -1,5 +1,5 @@
 [[howto.batch]]
-= Batch Applications
+= 批处理应用
 
 当人们在 Spring Boot 应用程序中使用 Spring Batch 时，经常会遇到一些问题。
 本节将解答这些问题。

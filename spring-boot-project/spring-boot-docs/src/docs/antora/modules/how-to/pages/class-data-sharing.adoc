@@ -1,5 +1,5 @@
 [[howto.class-data-sharing]]
-= Class Data Sharing
+= 类数据共享
 
 本节包含有关在 Spring Boot 应用程序中使用 Class Data Sharing (CDS) 的信息。
 有关 Spring Boot 对 CDS 支持的概述，请参阅 xref:reference:packaging/class-data-sharing.adoc[]。
