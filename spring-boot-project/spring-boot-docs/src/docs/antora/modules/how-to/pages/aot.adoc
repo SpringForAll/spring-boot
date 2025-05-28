@@ -1,7 +1,7 @@
 [[howto.aot]]
-= 提前处理（Ahead-of-Time Processing）
+= AOT处理
 
-当人们使用 Spring Boot 应用程序的提前处理时，经常会遇到一些问题。
+当人们使用 Spring Boot 应用程序的AOT（Ahead-of-Time Processing）时，经常会遇到一些问题。
 本节将解答这些问题。
 
 
