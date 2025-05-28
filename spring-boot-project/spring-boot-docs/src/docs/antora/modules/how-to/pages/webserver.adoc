@@ -454,33 +454,31 @@ server:
 
 
 [[howto.webserver.use-behind-a-proxy-server]]
-== Running Behind a Front-end Proxy Server
+== 运行于前端代理服务器之后
 
-If your application is running behind a proxy, a load-balancer or in the cloud, the request information (like the host, port, scheme...) might change along the way.
-Your application may be running on `10.10.10.10:8080`, but HTTP clients should only see `example.org`.
+如果你的应用部署在代理、负载均衡器或云环境中，请求信息（如主机、端口、协议等）可能会在传递过程中发生变化。
+你的应用实际运行在 `10.10.10.10:8080`，但 HTTP 客户端应只看到 `example.org`。
 
-https://tools.ietf.org/html/rfc7239[RFC7239 "Forwarded Headers"] defines the `Forwarded` HTTP header; proxies can use this header to provide information about the original request.
-You can configure your application to read those headers and automatically use that information when creating links and sending them to clients in HTTP 302 responses, JSON documents or HTML pages.
-There are also non-standard headers, like `X-Forwarded-Host`, `X-Forwarded-Port`, `X-Forwarded-Proto`, `X-Forwarded-Ssl`, and `X-Forwarded-Prefix`.
+https://tools.ietf.org/html/rfc7239[RFC7239 "Forwarded Headers"] 定义了 `Forwarded` HTTP 头，代理可用该头传递原始请求信息。
+你可以配置应用读取这些头部，并在生成链接、HTTP 302 跳转、JSON 文档或 HTML 页面时自动使用这些信息。
+此外还有一些非标准头部，如 `X-Forwarded-Host`、`X-Forwarded-Port`、`X-Forwarded-Proto`、`X-Forwarded-Ssl` 和 `X-Forwarded-Prefix`。
 
-If the proxy adds the commonly used `X-Forwarded-For` and `X-Forwarded-Proto` headers, setting `server.forward-headers-strategy` to `NATIVE` is enough to support those.
-With this option, the Web servers themselves natively support this feature; you can check their specific documentation to learn about specific behavior.
+如果代理添加了常用的 `X-Forwarded-For` 和 `X-Forwarded-Proto` 头，只需将 `server.forward-headers-strategy` 设置为 `NATIVE` 即可支持。
+此选项下，Web 服务器自身原生支持该特性，具体行为可查阅各自文档。
 
-If this is not enough, Spring Framework provides a {url-spring-framework-docs}/web/webmvc/filters.html#filters-forwarded-headers[ForwardedHeaderFilter] for the servlet stack and a {url-spring-framework-docs}/web/webflux/reactive-spring.html#webflux-forwarded-headers[ForwardedHeaderTransformer] for the reactive stack.
-You can use them in your application by setting configprop:server.forward-headers-strategy[] to `FRAMEWORK`.
+如仍无法满足需求，Spring Framework 为 servlet 栈提供了 {url-spring-framework-docs}/web/webmvc/filters.html#filters-forwarded-headers[ForwardedHeaderFilter]，为 reactive 栈提供了 {url-spring-framework-docs}/web/webflux/reactive-spring.html#webflux-forwarded-headers[ForwardedHeaderTransformer]。
+可通过将 configprop:server.forward-headers-strategy[] 设为 `FRAMEWORK` 启用。
 
-TIP: If you are using Tomcat and terminating SSL at the proxy, configprop:server.tomcat.redirect-context-root[] should be set to `false`.
-This allows the `X-Forwarded-Proto` header to be honored before any redirects are performed.
+TIP: 若使用 Tomcat 并在代理处终止 SSL，应将 configprop:server.tomcat.redirect-context-root[] 设为 `false`，以便在重定向前优先处理 `X-Forwarded-Proto` 头。
 
-NOTE: If your application runs javadoc:org.springframework.boot.cloud.CloudPlatform#enum-constant-summary[in a supported Cloud Platform], the configprop:server.forward-headers-strategy[] property defaults to `NATIVE`.
-In all other instances, it defaults to `NONE`.
+NOTE: 若应用运行在 javadoc:org.springframework.boot.cloud.CloudPlatform#enum-constant-summary[受支持的云平台]，configprop:server.forward-headers-strategy[] 属性默认值为 `NATIVE`，其他情况默认为 `NONE`。
 
 
 
 [[howto.webserver.use-behind-a-proxy-server.tomcat]]
-=== Customize Tomcat's Proxy Configuration
+=== 定制 Tomcat 的代理配置
 
-If you use Tomcat, you can additionally configure the names of the headers used to carry "`forwarded`" information, as shown in the following example:
+如使用 Tomcat，可进一步配置用于传递“forwarded”信息的头部名称，示例如下：
 
 [configprops,yaml]
 ----
@@ -491,9 +489,9 @@ server:
       protocol-header: "x-your-protocol-header"
 ----
 
-Tomcat is also configured with a regular expression that matches internal proxies that are to be trusted.
-See the xref:appendix:application-properties/index.adoc#application-properties.server.server.tomcat.remoteip.internal-proxies[configprop:server.tomcat.remoteip.internal-proxies[] entry in the appendix] for its default value.
-You can customize the valve's configuration by adding an entry to `application.properties`, as shown in the following example:
+Tomcat 还配置了用于匹配受信任内部代理的正则表达式。
+默认值见 xref:appendix:application-properties/index.adoc#application-properties.server.server.tomcat.remoteip.internal-proxies[configprop:server.tomcat.remoteip.internal-proxies[] 附录]。
+可通过在 `application.properties` 添加如下配置自定义该阀门：
 
 [configprops,yaml]
 ----
@@ -503,27 +501,26 @@ server:
       internal-proxies: "192\\.168\\.\\d{1,3}\\.\\d{1,3}"
 ----
 
-NOTE: You can trust all proxies by setting the `internal-proxies` to empty (but do not do so in production).
+NOTE: 若将 `internal-proxies` 设为空则信任所有代理（生产环境请勿如此配置）。
 
-You can take complete control of the configuration of Tomcat's javadoc:org.apache.catalina.valves.RemoteIpValve[] by switching the automatic one off (to do so, set `server.forward-headers-strategy=NONE`) and adding a new valve instance using a javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] bean.
+如需完全控制 Tomcat 的 javadoc:org.apache.catalina.valves.RemoteIpValve[] 配置，可关闭自动配置（即设置 `server.forward-headers-strategy=NONE`），并通过 javadoc:org.springframework.boot.web.server.WebServerFactoryCustomizer[] bean 添加新阀门实例。
 
 
 
 [[howto.webserver.enable-multiple-connectors-in-tomcat]]
-== Enable Multiple Connectors with Tomcat
+== 启用 Tomcat 多连接器
 
-You can add an javadoc:org.apache.catalina.connector.Connector[] to the javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[], which can allow multiple connectors, including HTTP and HTTPS connectors, as shown in the following example:
+可向 javadoc:org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory[] 添加 javadoc:org.apache.catalina.connector.Connector[]，以支持多个连接器（如 HTTP 和 HTTPS），示例如下：
 
 include-code::MyTomcatConfiguration[]
 
 
 
 [[howto.webserver.enable-tomcat-mbean-registry]]
-== Enable Tomcat's MBean Registry
+== 启用 Tomcat 的 MBean 注册表
 
-Embedded Tomcat's MBean registry is disabled by default.
-This minimizes Tomcat's memory footprint.
-If you want to use Tomcat's MBeans, for example so that they can be used by Micrometer to expose metrics, you must use the configprop:server.tomcat.mbeanregistry.enabled[] property to do so, as shown in the following example:
+内嵌 Tomcat 默认禁用 MBean 注册表，以降低内存占用。
+如需使用 Tomcat 的 MBean（如通过 Micrometer 暴露指标），可通过 configprop:server.tomcat.mbeanregistry.enabled[] 属性启用，示例如下：
 
 [configprops,yaml]
 ----
@@ -536,20 +533,20 @@ server:
 
 
 [[howto.webserver.enable-multiple-listeners-in-undertow]]
-== Enable Multiple Listeners with Undertow
+== 启用 Undertow 多监听器
 
-Add an javadoc:org.springframework.boot.web.embedded.undertow.UndertowBuilderCustomizer[] to the javadoc:org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory[] and add a listener to the `io.undertow.Undertow.Builder`, as shown in the following example:
+向 javadoc:org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory[] 添加 javadoc:org.springframework.boot.web.embedded.undertow.UndertowBuilderCustomizer[]，并在 `io.undertow.Undertow.Builder` 上添加监听器，示例如下：
 
 include-code::MyUndertowConfiguration[]
 
 
 
 [[howto.webserver.create-websocket-endpoints-using-serverendpoint]]
-== Create WebSocket Endpoints Using @ServerEndpoint
+== 使用 @ServerEndpoint 创建 WebSocket 端点
 
-If you want to use javadoc:jakarta.websocket.server.ServerEndpoint[format=annotation] in a Spring Boot application that used an embedded container, you must declare a single javadoc:org.springframework.web.socket.server.standard.ServerEndpointExporter[] javadoc:org.springframework.context.annotation.Bean[format=annotation], as shown in the following example:
+如需在使用内嵌容器的 Spring Boot 应用中使用 javadoc:jakarta.websocket.server.ServerEndpoint[format=annotation]，需声明一个 javadoc:org.springframework.web.socket.server.standard.ServerEndpointExporter[] javadoc:org.springframework.context.annotation.Bean[format=annotation]，示例如下：
 
 include-code::MyWebSocketConfiguration[]
 
-The bean shown in the preceding example registers any javadoc:jakarta.websocket.server.ServerEndpoint[format=annotation] annotated beans with the underlying WebSocket container.
-When deployed to a standalone servlet container, this role is performed by a servlet container initializer, and the javadoc:org.springframework.web.socket.server.standard.ServerEndpointExporter[] bean is not required.
+上述 bean 会将所有 javadoc:jakarta.websocket.server.ServerEndpoint[format=annotation] 注解的 bean 注册到底层 WebSocket 容器。
+如部署到独立 servlet 容器，则由 servlet 容器初始化器完成该角色，无需 javadoc:org.springframework.web.socket.server.standard.ServerEndpointExporter[] bean。
